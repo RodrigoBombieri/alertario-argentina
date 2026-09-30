@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+
+<title>RSS CAP SMN</title>
+
+<style>
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f2f2f2;
+    margin:20px;
+}
+
+h1{
+    background:#005baa;
+    color:white;
+    padding:15px;
+    border-radius:5px;
+}
+
+.item{
+    background:white;
+    border-left:6px solid #005baa;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:5px;
+    box-shadow:0 2px 4px rgba(0,0,0,0.1);
+}
+
+.titulo{
+    font-size:22px;
+    font-weight:bold;
+    color:#005baa;
+}
+
+.fecha{
+    color:#666;
+    font-size:12px;
+    margin-top:8px;
+}
+
+.descripcion{
+    margin-top:12px;
+    line-height:1.5;
+    color:#222;
+}
+
+.link{
+    margin-top:15px;
+}
+
+.link a{
+    background:#cc0000;
+    color:white;
+    padding:8px 12px;
+    border-radius:4px;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.link a:hover{
+    background:#990000;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Servicio Meteorologico Nacional - RSS CAP</h1>
+
+
+
+
+
+
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_14.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Lluvias</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por lluvias persistentes e intensas. Se esperan valores de precipitación acumulada entre 30 y 50 mm, que pueden ser superados de forma puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132157_Lluvia_Llanura_alertas_alertas_1.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_13.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_12.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_11.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Lluvias</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por lluvias persistentes e intensas. Se esperan valores de precipitación acumulada entre 30 y 50 mm, que pueden ser superados de forma puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132157_Lluvia_Llanura_alertas_alertas_2.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Lluvias</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por lluvias persistentes e intensas. Se esperan valores de precipitación acumulada entre 30 y 50 mm, que pueden ser superados de forma puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132157_Lluvia_Llanura_alertas_alertas_3.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Viento</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por vientos del sudoeste, con velocidades entre 40 y 50 km/h y ráfagas que pueden alcanzar los 70 km/h</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132157_Viento_Llanura_alertas_alertas_2.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Viento</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por vientos del sudoeste, con velocidades entre 40 y 50 km/h y ráfagas que pueden alcanzar los 70 km/h</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132157_Viento_Llanura_alertas_alertas_1.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Nevadas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por nevadas de variada intensidad. Se esperan valores totales de nieve acumulada entre 15 y 30 centímetros, que pueden ser superados de forma local. En las zonas menos elevadas la precipitación podrá llegar a ser en forma de lluvia o lluvia y nieve mezclada.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132157_Nevada_Cordillera_alertas_alertas_1.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Lluvias</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por lluvias persistentes e intensas. Se esperan valores de precipitación acumulada entre 30 y 50 mm, que pueden ser superados de forma puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132157_Lluvia_Llanura_alertas_alertas_4.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_10.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_9.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_1.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_2.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas aisladas y algunas podrían ser localmente fuertes, acompañadas por granizo,  ráfagas intensas que pueden superar los 60 km/h, abundante precipitación en cortos periodos y actividad eléctrica frecuente. Se prevén valores de precipitación acumulada entre 15 y 40 mm, que pueden ser superados de forma local.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Cordillera_alertas_alertas_4.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas aisladas y algunas podrían ser localmente fuertes, acompañadas por granizo,  ráfagas intensas que pueden superar los 60 km/h, abundante precipitación en cortos periodos y actividad eléctrica frecuente. Se prevén valores de precipitación acumulada entre 15 y 40 mm, que pueden ser superados de forma local.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Cordillera_alertas_alertas_3.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas aisladas y algunas podrían ser localmente fuertes, acompañadas por granizo,  ráfagas intensas que pueden superar los 60 km/h, abundante precipitación en cortos periodos y actividad eléctrica frecuente. Se prevén valores de precipitación acumulada entre 15 y 40 mm, que pueden ser superados de forma local.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Cordillera_alertas_alertas_2.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_3.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_4.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_8.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_7.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_6.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas de variada intensidad, algunas localmente fuertes. Las mismas podrían estar acompañadas por intensas precipitaciones en cortos periodos, ocasional granizo, actividad eléctrica frecuente y ráfagas intensas. Se esperan valores de precipitación acumulada entre 30 y 60 mm, pudiendo ser superados de manera puntual.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Llanura_alertas_alertas_5.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<div class="item">
+
+<div class="titulo">
+Tormentas</div>
+
+<div class="fecha">
+Tue, 29 Sep 2026 19:00:01 GMT</div>
+
+
+<div class="descripcion">
+El área será afectada por tormentas aisladas y algunas podrían ser localmente fuertes, acompañadas por granizo,  ráfagas intensas que pueden superar los 60 km/h, abundante precipitación en cortos periodos y actividad eléctrica frecuente. Se prevén valores de precipitación acumulada entre 15 y 40 mm, que pueden ser superados de forma local.</div>
+
+<div class="link">
+
+<a href="https://ssl.smn.gob.ar/feeds/CAP/xml_generados/CAP_20260929132155_Tormenta_Cordillera_alertas_alertas_1.xml" target="_blank">
+
+Ver XML CAP
+
+</a>
+
+</div>
+
+</div>
+
+
+<script>window.__CF$cv$params={r:'a42d74ea588f2569',t:'MTc5MDcxMDc5NQ==',u:'01a0eeae4eac73efb8ac2276c562854c',ut:'LZilWmns9vkqxTsp1QKao8PHDmxRnGGaKin_Ukacsfk-1790710795-1.2.1.1-XgwZ98z.Z_0x.BwdgY7Oy.92ZUcmGK4a_PI49t7EjC_tEc_b7gatCYpV.AJBfIJIyBvZDblm0TlD705uFz8dxgSxC9rXIuLmRvGBGCj6.TM',i:60};(function(){if(!document.body)return;var s=document.createElement('script');s.src='/cdn-cgi/challenge-platform/scripts/precursor/main.js';document.head.appendChild(s);})();</script></body>
+</html>
+
+

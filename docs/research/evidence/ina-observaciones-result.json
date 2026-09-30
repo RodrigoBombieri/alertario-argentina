@@ -1,0 +1,6 @@
+{
+  "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series/1/observaciones?timestart=2026-06-29T00%3A00%3A00Z&timeend=2026-07-01T00%3A00%3A00Z",
+  "checkedAt": "2026-09-29T19:40:48.8971191+00:00",
+  "status": 200,
+  "contentType": "application/json"
+}

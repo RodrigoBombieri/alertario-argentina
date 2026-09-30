@@ -1,0 +1,39 @@
+# Decisiones y validaciones
+
+Fecha: 2026-09-29. **Propuestas de diseño** salvo restricciones solicitadas por el usuario. No equivalen a aprobación de contratos externos, presupuesto o despliegue.
+
+| ID | Decisión | Estado | Motivo / ADR |
+|---|---|---|---|
+| D01 | Mobile consume API propia para hidrología, avisos y geografía | Requisito confirmado | [ADR-001](docs/adr/001-backend-e-ingesta.md) |
+| D02 | Monolito modular + dos hosts API/worker + ingesta B | Propuesta recomendada | Desacople sin microservicios |
+| D03 | .NET 10 LTS + Minimal APIs por feature; sin MediatR/CQRS distribuido | Propuesta recomendada | Simplicidad y soporte; ADR-001 |
+| D04 | PostgreSQL/PostGIS; sin TimescaleDB ni Redis inicial | Propuesta recomendada | [ADR-002](docs/adr/002-persistencia.md) |
+| D05 | Flutter/Riverpod, repositories y cache SQLite | Propuesta recomendada | [ADR-003](docs/adr/003-mobile.md) |
+| D06 | Umbral ≠ aviso ≠ orden; motores determinísticos | Requisito confirmado y diseño propuesto | [ADR-004](docs/adr/004-semantica.md) |
+| D07 | Consulta sin cuenta, instalación seudónima para push | Propuesta recomendada | [ADR-005](docs/adr/005-identidad-y-push.md) |
+| D08 | MapLibre + datos OSM; tiles por elegir | Propuesta condicionada a spike/términos | [ADR-006](docs/adr/006-mapas.md) |
+| D09 | SMN CAP oficial; no scraping operativo ni endpoint interno | Requisito y gate | [ADR-007](docs/adr/007-fuentes-y-gates.md) |
+| D10 | MVP gratuito; sin IA, predicción, monetización ni multiempresa | Requisito confirmado | VISION/PRODUCT |
+| D11 | Hosting no elegido; comparar antes de contratar | Requisito confirmado | DEPLOYMENT |
+| D12 | Piloto limitado Cuenca del Plata, alcance de búsqueda nacional | Propuesta de alcance | Necesita aceptación de producto tras F1 |
+
+## Registro de preguntas pendientes, responsable y salida
+
+| Pendiente | Quién valida | Evidencia de cierre | Bloquea |
+|---|---|---|---|
+| Licencias/redistribución por red INA y dataset GeoRef | Responsable legal + organismos | Ficha/permiso fechado, atribución y usos autorizados | Publicación de datos afectados |
+| Feed SMN estable, completo y autorizado, SAT/ACP | Integraciones + SMN | URL documentada, muestras Alert/Update/Cancel, política de consulta | MUST avisos y pushes oficiales |
+| Zona horaria de metadata sin offset | Datos + proveedor | Definición por campo/dataset | Interpretar esos campos como instante |
+| Datum/unidad/vigencia/autoridad de umbrales | Especialista + fuente | Referencia comprobable y regla por serie | Comparación de umbrales |
+| Cadencia/retraso/ruido por serie | Datos/hidrología | Informe 14 días + aprobación de parámetros | Frescura/tendencia/reglas calculadas |
+| Estaciones/localidades piloto representativas | Producto/geoespacial | Lista curada con justificaciones | Promesa de cobertura piloto |
+| Android/iOS iniciales, macOS y dispositivos | Producto/mobile | Presupuesto y smoke de ambas plataformas | Compromiso de lanzamiento iOS |
+| Paquetes compatibles, gráficos accesibles y MapLibre | Mobile | Spike con versiones fijadas y licencia | Stack definitivo mobile |
+| Hosting, región, DB/PostGIS, backups, privacidad y coste | Operación/seguridad/producto | Cotización comparable + restore + ADR | Producción |
+| Responsable tratamiento y textos legales | Responsable legal | Política/contratos/canal de derechos aprobados | Beta pública con identificadores |
+| App exacta “Altura de los Ríos” | Producto | Enlace/package/editor inequívoco | Solo benchmark; no arquitectura |
+| Métricas UX y lenguaje “sin cambios destacados” | Producto + usuarios | Prueba de comprensión | Release público |
+
+## Regla para cambiar decisiones
+
+Modificar ADR con fecha, evidencia, alternativas y efectos en datos/contratos. No agregar una nueva tecnología solo para “escalar a futuro”. Redis requiere medición; TimescaleDB requiere prueba de volumen/operación; cuenta requiere necesidad del usuario; IA requiere evaluación de mejora frente a plantillas. Los cambios de derechos/semántica se revisan aunque no cambie un endpoint.

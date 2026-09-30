@@ -1,0 +1,6 @@
+{
+  "url": "https://alerta.ina.gob.ar/a5/obs/puntual/estaciones?nombre=Concordia&pagination=true&limit=5",
+  "checkedAt": "2026-09-29T19:40:48.4884862+00:00",
+  "status": 200,
+  "contentType": "application/json"
+}

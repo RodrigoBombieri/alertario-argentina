@@ -1,0 +1,97 @@
+[
+  {
+    "file": "georef-localidades-result.json",
+    "bytes": 1246,
+    "sha256": "F31CEC9D5DB9B25AF3510F60C51038EA5D7CD6D35B69F216117DED055110F389"
+  },
+  {
+    "file": "georef-localidades.txt",
+    "bytes": 831,
+    "sha256": "2A784B5FEC9785D80E2B9711AA3A66687C75D0CEB1A111BD4DDFE10AF0C38C9A"
+  },
+  {
+    "file": "georef-openapi.json",
+    "bytes": 99559,
+    "sha256": "521BA9A352C513A68BADE50CD14E65DF2B182AFC2DCD59817BA54FE62F7EAE5E"
+  },
+  {
+    "file": "ina-concordia-observaciones-result.json",
+    "bytes": 222,
+    "sha256": "21A1006B65A44188174F59BF3FC7B85E7F80DA8CA4B824ADBBC00947058AD8EB"
+  },
+  {
+    "file": "ina-concordia-observaciones.txt",
+    "bytes": 797,
+    "sha256": "98BD70CFAF870F6E894643ED98E3F366FE49860D3D9D38A99E31304B52A8C3F8"
+  },
+  {
+    "file": "ina-concordia-result.json",
+    "bytes": 220,
+    "sha256": "BCBA9E4007A4C05D2679C3555B854B9A5D71ED80F7454D00B1BA2F284398B75A"
+  },
+  {
+    "file": "ina-concordia-series-result.json",
+    "bytes": 152,
+    "sha256": "86A3FF90F39B6E40C36047FF43AF2AB214A394FC07BD489904F039122B472248"
+  },
+  {
+    "file": "ina-concordia-series.txt",
+    "bytes": 22248,
+    "sha256": "FBE9A7E8D5FDC2A3385F8766EAF6C8BFB491B6D291F6238DD6F5C3166836EA4F"
+  },
+  {
+    "file": "ina-concordia.txt",
+    "bytes": 3243,
+    "sha256": "B5D8AECA76A7C8B7674F399028AC62F908CE63EE15541D12AB0E7130435DFE3E"
+  },
+  {
+    "file": "ina-observaciones-result.json",
+    "bytes": 259,
+    "sha256": "E7FC496AA912F03028D9298AE28123A895E95CE36BC4C15E80FB477748D2B440"
+  },
+  {
+    "file": "ina-observaciones.txt",
+    "bytes": 3171,
+    "sha256": "0F4105381CFA0E0F900A287D9A466A71FA1F745A33693C476C3F7DF1EBB7E598"
+  },
+  {
+    "file": "ina-openapi.yaml",
+    "bytes": 196999,
+    "sha256": "1E53C99F423C950917EED89378ABA4B8F6571D6EBB72A92046F14A56603DA1A2"
+  },
+  {
+    "file": "ina-series-result.json",
+    "bytes": 2335,
+    "sha256": "0ACB83BB8869E8E444805EAE5376F007C8D071546E42EA9B55D5ABC474810D76"
+  },
+  {
+    "file": "ina-series.txt",
+    "bytes": 16606,
+    "sha256": "96C06D9A34AAD143F1E4C2B32D17FC7DE07A103C6E7AC4A571041FC23046009D"
+  },
+  {
+    "file": "smn-cap-example-result.json",
+    "bytes": 225,
+    "sha256": "1EB42402EAE033426A506E05FDF8E8A4C38F2AF8BC8322423197ACE5390E323A"
+  },
+  {
+    "file": "smn-cap-example.txt",
+    "bytes": 3200,
+    "sha256": "476FAB779C636AD0964DBDEAB23B4BA426983F0C36F32C61AB3E742308C8A3F5"
+  },
+  {
+    "file": "smn-cap-result.json",
+    "bytes": 2182,
+    "sha256": "A490C39EA8F92EC89BAF8D63E65B7FF38B5FF1908AFDF747B21BBD97E68D9DA8"
+  },
+  {
+    "file": "smn-cap.txt",
+    "bytes": 17517,
+    "sha256": "5BC624AD92C6F9C7465E273B2CCBE765B692F164AF74CB879A6A72EDEDF8A296"
+  },
+  {
+    "file": "smn-rss-page-result.json",
+    "bytes": 178,
+    "sha256": "3FAF8316D769EB58BD8B996F797411F3D333E4296001775D01C508A8772FFB8C"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "name": "georef-localidades",
+  "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Concordia&max=3",
+  "checkedAt": "2026-09-29T19:39:54.9356143+00:00",
+  "status": 200,
+  "contentType": "application/json",
+  "elapsedMs": 714,
+  "bodyPreview": "{\"cantidad\":2,\"inicio\":0,\"localidades\":[{\"categoria\":\"Localidad simple\",\"centroide\":{\"lat\":-31.391964817,\"lon\":-58.017007785},\"departamento\":{\"id\":\"30015\",\"nombre\":\"Concordia\"},\"gobierno_local\":{\"id\":\"300042\",\"nombre\":\"Concordia\"},\"id\":\"30015060\",\"localidad_censal\":{\"id\":\"30015060\",\"nombre\":\"Concordia\"},\"nombre\":\"Concordia\",\"provincia\":{\"id\":\"30\",\"nombre\":\"Entre Ríos\"}},{\"categoria\":\"Entidad\",\"centroide\":{\"lat\":-31.397450891,\"lon\":-58.01720343},\"departamento\":{\"id\":\"30015\",\"nombre\":\"Concordia\"},\"gobierno_local\":{\"id\":\"300042\",\"nombre\":\"Concordia\"},\"id\":\"3001506005\",\"localidad_censal\":{\"id\":\"30015060\",\"nombre\":\"Concordia\"},\"nombre\":\"Concordia\",\"provincia\":{\"id\":\"30\",\"nombre\":\"Entre Ríos\"}}],\"parametros\":{\"categoria\":\"Localidad simple,Componente de localidad compuesta,entidad\",\"max\":3,\"nombre\":\"Concordia\"},\"total\":2}\n"
+}
