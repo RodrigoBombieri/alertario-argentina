@@ -1,6 +1,6 @@
 # F1 — validación controlada de fuentes y piloto
 
-**Estado: evaluación F1 cerrada el 2 de octubre de 2026 con resultado NO-GO para el piloto productivo.** [Acta de cierre y trabajos de desbloqueo](CLOSURE.md). Las sondas se ejecutaron entre el 1 y el 2 de octubre UTC. Son consultas puntuales, no monitoreo de continuidad. [F0 conserva su fecha y evidencia originales](../VERIFICATION.md).
+**Estado: investigación exploratoria concluida el 2 de octubre de 2026 con resultado NO-GO; F1 no aceptada.** [Acta de evaluación y trabajos de desbloqueo](CLOSURE.md). Las sondas se ejecutaron entre el 1 y el 2 de octubre UTC. Son consultas puntuales, no monitoreo de continuidad. [F0 conserva su fecha y evidencia originales](../VERIFICATION.md).
 
 ## US-01 — permisos y contratos
 
@@ -71,4 +71,4 @@ El índice CAP oficial respondió HTTP 200 el **2/10/2026 01:26 UTC** como `text
 
 ## Gates posteriores al cierre exploratorio
 
-El [cierre de F1](CLOSURE.md) registra un resultado **NO-GO**: los criterios de aceptación de permiso, feed, 14 días, revisión hidrológica y relaciones localidad/estación no se cumplieron. Siguen como trabajos EXT-01–05 y bloquean el piloto productivo. GeoRef tiene licencia y cuota publicadas; falta aplicar su atribución y revisión legal del producto. Ningún archivo de esta carpeta es una allowlist de producción.
+El [acta de evaluación F1](CLOSURE.md) registra un resultado **NO-GO**: los criterios de aceptación de permiso, feed, 14 días, revisión hidrológica y relaciones localidad/estación no se cumplieron. Siguen como trabajos EXT-01–05 y bloquean la aceptación de F1 y el piloto productivo. GeoRef tiene licencia y cuota publicadas; falta aplicar su atribución y revisión legal del producto. Ningún archivo de esta carpeta es una allowlist de producción.

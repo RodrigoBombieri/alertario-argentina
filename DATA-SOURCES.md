@@ -4,7 +4,7 @@ Fecha de revisión: **2026-09-29**. Convenciones: **D** = documentación consult
 
 **Actualización F1, 1/10/2026:** [registro y nuevas evidencias](docs/research/f1/README.md). La licencia y cuotas de GeoRef quedaron documentadas en su página específica; INA/SMN y la selección de series siguen condicionados.
 
-**Cierre F1, 2/10/2026:** [resultado NO-GO](docs/research/f1/CLOSURE.md). Esta ficha sigue como inventario de fuentes, no como autorización de publicación.
+**Evaluación F1, 2/10/2026:** [resultado NO-GO](docs/research/f1/CLOSURE.md). F1 no está aceptada. Esta ficha sigue como inventario de fuentes, no como autorización de publicación.
 
 ## 1. Instituto Nacional del Agua
 

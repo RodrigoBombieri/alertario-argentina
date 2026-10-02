@@ -2,12 +2,12 @@
 
 Aplicación ciudadana para consultar información hidrológica oficial, entender sus cambios y seguir avisos de autoridades en Argentina.
 
-**Estado: F1 cerrada con NO-GO para piloto productivo; F2 tiene un backend sintético de revisión, sin infraestructura desplegada.** El [acta de F1](docs/research/f1/CLOSURE.md) registra los gates pendientes y el [corte F2](docs/implementation/F2.md) describe la API propia y sus pruebas. Las consultas puntuales a fuentes no certifican disponibilidad continua ni cierran los permisos pendientes de INA/SMN.
+**Estado: F1 y F2 no aceptadas como fases completas.** La evaluación exploratoria de F1 terminó con resultado NO-GO; sus [faltantes por motivos externos y pasos de resolución](docs/research/f1/CLOSURE.md#faltantes-por-motivos-externos) están registrados. F2 tiene un [backend sintético de revisión](docs/implementation/F2.md), sin infraestructura desplegada. Las consultas puntuales a fuentes no certifican disponibilidad continua ni cierran los permisos pendientes de INA/SMN.
 
 ## Empezar aquí
 
 1. [PLAN MAESTRO DE DESARROLLO — ALERTARÍO](PLAN-MAESTRO.md).
-2. [Fuentes y verificaciones](DATA-SOURCES.md), [contratos e integraciones](API-INTEGRATIONS.md), [evidencia inicial](docs/research/VERIFICATION.md) y [cierre F1](docs/research/f1/CLOSURE.md).
+2. [Fuentes y verificaciones](DATA-SOURCES.md), [contratos e integraciones](API-INTEGRATIONS.md), [evidencia inicial](docs/research/VERIFICATION.md) y [evaluación F1](docs/research/f1/CLOSURE.md).
 3. [Producto](PRODUCT.md), [arquitectura](ARCHITECTURE.md) y [dominio](DOMAIN.md).
 4. [Roadmap](ROADMAP.md), [backlog](BACKLOG.md) y [decisiones](DECISIONS.md).
 
@@ -38,7 +38,7 @@ Para probar el backend sintético: `dotnet test backend/AlertaRio.sln --no-resto
 
 ## Condiciones para comenzar el desarrollo
 
-F1 concluyó como evaluación acotada con resultado NO-GO. Para habilitar datos oficiales siguen pendientes permisos, cadencias por serie, correspondencia estación/serie/datum y descubrimiento estable de alertas SMN. Mientras se resuelven, se puede preparar el contrato propio mínimo y, tras aprobarlo, componentes sintéticos de F2, sin construir sobre suposiciones de esas propiedades.
+La evaluación acotada de F1 concluyó con resultado NO-GO; la fase F1 no está aceptada. Para habilitar datos oficiales siguen pendientes permisos, cadencias por serie, correspondencia estación/serie/datum y descubrimiento estable de alertas SMN. El contrato propio y los componentes sintéticos existentes en F2 son material de revisión, sin aprobación de fase ni suposiciones sobre esas propiedades.
 
 El stack recomendado es Flutter + Riverpod, ASP.NET Core 10, PostgreSQL + PostGIS y un worker del mismo backend. Redis, TimescaleDB, microservicios, cuentas ciudadanas y predicción quedan fuera del arranque. El hosting todavía no está elegido.
 

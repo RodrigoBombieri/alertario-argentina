@@ -1,10 +1,10 @@
 # Roadmap de ejecución
 
-Los números preservan las fases solicitadas; calidad y observabilidad mínima son transversales. Estado: **F0 documentación entregada; F1 cerrada con NO-GO para piloto productivo; corte técnico F2 sintético en revisión** ([acta F1](docs/research/f1/CLOSURE.md), [corte F2](docs/implementation/F2.md)). Los criterios de aceptación de F1 siguen pendientes por gates externos y medición de 14 días. No hay aplicación móvil ni infraestructura desplegada. Tamaños relativos S=acotado, M=varios componentes, L=riesgo/integración alta; no son días ni compromiso de calendario.
+Los números preservan las fases solicitadas; calidad y observabilidad mínima son transversales. Estado: **F0 documentación entregada; F1 y F2 no aceptadas** ([evaluación F1 con NO-GO](docs/research/f1/CLOSURE.md), [corte técnico F2 en revisión](docs/implementation/F2.md)). Los criterios de aceptación de F1 siguen pendientes por gates externos y medición de 14 días. No hay aplicación móvil ni infraestructura desplegada. Tamaños relativos S=acotado, M=varios componentes, L=riesgo/integración alta; no son días ni compromiso de calendario.
 
 Cada fase se divide en PRs/historias revisables. “Archivos” son destinos futuros excepto documentos ya existentes. Tareas en [BACKLOG](BACKLOG.md).
 
-El cierre NO-GO permite preparar el contrato mínimo de F2 y, una vez aprobado, construir componentes con datos sintéticos. No habilita fuentes oficiales en producción, tendencias/umbrales, avisos ni beta. EXT-01–05 en el acta trazan lo necesario para desbloquear esos trabajos.
+El resultado NO-GO permite revisar el contrato mínimo de F2 y probar componentes aislados con datos sintéticos, pero no satisface la dependencia F1 ni aprueba F2. No habilita fuentes oficiales en producción, tendencias/umbrales, avisos ni beta. EXT-01–05 en el acta trazan lo necesario para desbloquear esos trabajos.
 
 | Fase / tamaño | Objetivo y tareas | Archivos afectados | Dependencias | Criterio de aceptación | Tests / evidencia | Riesgos |
 |---|---|---|---|---|---|---|

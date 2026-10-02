@@ -4,7 +4,7 @@ Fecha: 2026-09-29. **Propuestas de diseño** salvo restricciones solicitadas por
 
 **Seguimiento 1/10/2026:** [F1 en curso](docs/research/f1/README.md). GeoRef publicó licencia CC BY 4.0 y cuotas en condiciones específicas; faltan revisión legal de publicación, permisos INA/SMN, 14 días de datos y aprobación hidrológica del piloto. D12 permanece propuesta.
 
-**Cierre 2/10/2026:** [F1 terminó como evaluación inicial con resultado NO-GO](docs/research/f1/CLOSURE.md). No se aprobaron series, umbrales, feed SMN ni cobertura del piloto. D12 y los pendientes de la tabla conservan su estado.
+**Evaluación 2/10/2026:** [la investigación inicial de F1 terminó con resultado NO-GO](docs/research/f1/CLOSURE.md); F1 no está aceptada. No se aprobaron series, umbrales, feed SMN ni cobertura del piloto. D12 y los pendientes de la tabla conservan su estado.
 
 | ID | Decisión | Estado | Motivo / ADR |
 |---|---|---|---|

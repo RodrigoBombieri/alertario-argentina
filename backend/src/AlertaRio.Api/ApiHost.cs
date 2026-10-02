@@ -10,7 +10,8 @@ public static class ApiHost
 
     public static WebApplication Build(
         WebApplicationOptions options,
-        Action<WebApplicationBuilder>? configure = null)
+        Action<WebApplicationBuilder>? configure = null,
+        Action<IServiceCollection>? configureServices = null)
     {
         var builder = WebApplication.CreateBuilder(options);
         configure?.Invoke(builder);
@@ -29,6 +30,7 @@ public static class ApiHost
             builder.Services.AddSingleton<IPublicDataReader, SyntheticPublicDataReader>();
         else
             builder.Services.AddSingleton<IPublicDataReader, UnavailablePublicDataReader>();
+        configureServices?.Invoke(builder.Services);
 
         var app = builder.Build();
         app.UseExceptionHandler();

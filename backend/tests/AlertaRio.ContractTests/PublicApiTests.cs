@@ -1,11 +1,16 @@
 using System.Net;
 using System.Text.Json;
 using AlertaRio.Api;
+using AlertaRio.Application.Ports;
+using AlertaRio.Application.PublicData;
 using AlertaRio.Core;
+using AlertaRio.Infrastructure.Providers;
+using AlertaRio.Infrastructure.Synthetic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Xunit;
 
 namespace AlertaRio.ContractTests;
@@ -101,6 +106,35 @@ public sealed class PublicApiTests
     }
 
     [Fact]
+    public async Task Changing_an_INA_catalog_wrapper_does_not_change_the_public_station_contract()
+    {
+        const string flat = """
+            [{"id":701,"nombre":"Estación de ejemplo","rio":"Río de ejemplo","public":true},
+             {"id":702,"nombre":"Oculta","rio":"Otro río","public":false}]
+            """;
+        const string wrapped = """
+            {"rows":[{"id":701,"nombre":"Estación de ejemplo","rio":"Río de ejemplo","public":true,"extra":"ignored"},
+                     {"id":702,"nombre":"Oculta","rio":"Otro río","public":false}],"total":2}
+            """;
+
+        await using var first = await RunningApi.StartAsync(synthetic: true,
+            reader: new CatalogFixtureReader(flat));
+        await using var second = await RunningApi.StartAsync(synthetic: true,
+            reader: new CatalogFixtureReader(wrapped));
+        using var flatResponse = await first.Client.GetAsync("/v1/stations/station-demo");
+        using var wrappedResponse = await second.Client.GetAsync("/v1/stations/station-demo");
+        Assert.Equal(HttpStatusCode.OK, flatResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, wrappedResponse.StatusCode);
+        using var flatBody = await ReadJson(flatResponse);
+        using var wrappedBody = await ReadJson(wrappedResponse);
+        Assert.True(JsonElement.DeepEquals(flatBody.RootElement, wrappedBody.RootElement));
+        Assert.Equal("station-demo", flatBody.RootElement.GetProperty("id").GetString());
+        Assert.True(flatBody.RootElement.GetProperty("synthetic").GetBoolean());
+        Assert.DoesNotContain("701", flatBody.RootElement.GetRawText());
+        Assert.DoesNotContain("Oculta", flatBody.RootElement.GetRawText());
+    }
+
+    [Fact]
     public void Core_has_no_application_or_infrastructure_dependency()
     {
         var references = typeof(DataProvenance).Assembly.GetReferencedAssemblies()
@@ -118,14 +152,21 @@ public sealed class PublicApiTests
     {
         public HttpClient Client { get; } = client;
 
-        public static async Task<RunningApi> StartAsync(bool synthetic, bool? configured = null)
+        public static async Task<RunningApi> StartAsync(
+            bool synthetic, bool? configured = null, IPublicDataReader? reader = null)
         {
             var environment = synthetic ? "Development" : "Production";
             var app = ApiHost.Build(new WebApplicationOptions
             {
                 EnvironmentName = environment,
                 ApplicationName = typeof(ApiHost).Assembly.GetName().Name
-            }, builder => builder.Configuration["SyntheticData:Enabled"] = (configured ?? synthetic).ToString());
+            }, builder => builder.Configuration["SyntheticData:Enabled"] = (configured ?? synthetic).ToString(),
+                services =>
+                {
+                    if (reader is null) return;
+                    services.RemoveAll<IPublicDataReader>();
+                    services.AddSingleton(reader);
+                });
             app.Urls.Add("http://127.0.0.1:0");
             await app.StartAsync();
             var server = app.Services.GetRequiredService<IServer>();
@@ -140,5 +181,34 @@ public sealed class PublicApiTests
             await app.StopAsync();
             await app.DisposeAsync();
         }
+    }
+
+    private sealed class CatalogFixtureReader(string json) : IPublicDataReader
+    {
+        private readonly SyntheticPublicDataReader fallback = new(TimeProvider.System);
+        private readonly InaStationCandidate candidate =
+            Assert.Single(InaStationCandidateParser.Parse(json));
+
+        public bool IsConfigured => true;
+        public bool IsSynthetic => true;
+        public IReadOnlyList<LocationDto> SearchLocations(string query, int limit) =>
+            fallback.SearchLocations(query, limit);
+        public LocationDto? GetLocation(string id) => fallback.GetLocation(id);
+        public IReadOnlyList<StationDto> GetStationsForLocation(string locationId) =>
+            fallback.GetStationsForLocation(locationId);
+        public IReadOnlyList<StationDto> ListStations(int limit) => fallback.ListStations(limit);
+        public StationDto? GetStation(string id)
+        {
+            var station = fallback.GetStation(id);
+            return station is null ? null : station with
+            {
+                Name = candidate.Name,
+                RiverName = candidate.RiverName
+            };
+        }
+        public StationSummaryDto? GetSummary(string stationId) => fallback.GetSummary(stationId);
+        public NoticeListDto GetNoticesForLocation(string locationId) =>
+            fallback.GetNoticesForLocation(locationId);
+        public IReadOnlyList<SourceDto> ListSources() => fallback.ListSources();
     }
 }
