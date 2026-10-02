@@ -4,6 +4,8 @@ Aplicación ciudadana para consultar información hidrológica oficial, entender
 
 **Estado: F1 y F2 no aceptadas como fases completas.** La evaluación exploratoria de F1 terminó con resultado NO-GO; sus [faltantes por motivos externos y pasos de resolución](docs/research/f1/CLOSURE.md#faltantes-por-motivos-externos) están registrados. F2 tiene un [backend sintético de revisión](docs/implementation/F2.md), sin infraestructura desplegada. Las consultas puntuales a fuentes no certifican disponibilidad continua ni cierran los permisos pendientes de INA/SMN.
 
+F3 comenzó con [normalización aislada y fixtures sintéticas](docs/implementation/F3.md); todavía no hay adapters operativos ni datos oficiales publicados.
+
 ## Empezar aquí
 
 1. [PLAN MAESTRO DE DESARROLLO — ALERTARÍO](PLAN-MAESTRO.md).

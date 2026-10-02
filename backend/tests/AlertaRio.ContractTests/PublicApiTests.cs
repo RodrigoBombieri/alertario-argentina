@@ -108,17 +108,29 @@ public sealed class PublicApiTests
     [Fact]
     public async Task Changing_an_INA_catalog_wrapper_does_not_change_the_public_station_contract()
     {
-        const string flat = """
-            [{"id":701,"nombre":"Estación de ejemplo","rio":"Río de ejemplo","public":true},
-             {"id":702,"nombre":"Oculta","rio":"Otro río","public":false}]
+        const string observed = """
+            {"estaciones":[
+              {"id":701,"nombre":"Estación de ejemplo","rio":"Río de ejemplo","public":true,
+               "red":{"public":true}},
+              {"id":702,"nombre":"Oculta","rio":"Otro río","public":false,
+               "red":{"public":true}},
+              {"id":703,"nombre":"Red oculta","rio":"Otro río","public":true,
+               "red":{"public":false}}
+            ],"is_last_page":true}
             """;
         const string wrapped = """
-            {"rows":[{"id":701,"nombre":"Estación de ejemplo","rio":"Río de ejemplo","public":true,"extra":"ignored"},
-                     {"id":702,"nombre":"Oculta","rio":"Otro río","public":false}],"total":2}
+            {"rows":[
+              {"id":701,"nombre":"Estación de ejemplo","rio":"Río de ejemplo","public":true,
+               "red":{"public":true},"extra":"ignored"},
+              {"id":702,"nombre":"Oculta","rio":"Otro río","public":false,
+               "red":{"public":true}},
+              {"id":703,"nombre":"Red oculta","rio":"Otro río","public":true,
+               "red":{"public":false}}
+            ],"total":3}
             """;
 
         await using var first = await RunningApi.StartAsync(synthetic: true,
-            reader: new CatalogFixtureReader(flat));
+            reader: new CatalogFixtureReader(observed));
         await using var second = await RunningApi.StartAsync(synthetic: true,
             reader: new CatalogFixtureReader(wrapped));
         using var flatResponse = await first.Client.GetAsync("/v1/stations/station-demo");
@@ -132,6 +144,7 @@ public sealed class PublicApiTests
         Assert.True(flatBody.RootElement.GetProperty("synthetic").GetBoolean());
         Assert.DoesNotContain("701", flatBody.RootElement.GetRawText());
         Assert.DoesNotContain("Oculta", flatBody.RootElement.GetRawText());
+        Assert.DoesNotContain("Red oculta", flatBody.RootElement.GetRawText());
     }
 
     [Fact]

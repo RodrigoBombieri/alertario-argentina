@@ -14,6 +14,8 @@ public static class InaStationCandidateParser
         var rows = root.ValueKind switch
         {
             JsonValueKind.Array => root,
+            JsonValueKind.Object when root.TryGetProperty("estaciones", out var stations)
+                && stations.ValueKind == JsonValueKind.Array => stations,
             JsonValueKind.Object when root.TryGetProperty("rows", out var wrappedRows)
                 && wrappedRows.ValueKind == JsonValueKind.Array => wrappedRows,
             _ => throw new JsonException("Unexpected INA station catalog wrapper.")
@@ -25,7 +27,11 @@ public static class InaStationCandidateParser
             if (row.ValueKind != JsonValueKind.Object)
                 throw new JsonException("Invalid INA station catalog row.");
             if (!row.TryGetProperty("public", out var visibility) ||
-                visibility.ValueKind != JsonValueKind.True)
+                visibility.ValueKind != JsonValueKind.True ||
+                !row.TryGetProperty("red", out var network) ||
+                network.ValueKind != JsonValueKind.Object ||
+                !network.TryGetProperty("public", out var networkVisibility) ||
+                networkVisibility.ValueKind != JsonValueKind.True)
                 continue;
 
             if (!row.TryGetProperty("id", out var id) ||
