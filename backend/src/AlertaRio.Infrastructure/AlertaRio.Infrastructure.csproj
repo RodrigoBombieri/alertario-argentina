@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../AlertaRio.Application/AlertaRio.Application.csproj" />
+    <ProjectReference Include="../AlertaRio.Core/AlertaRio.Core.csproj" />
+  </ItemGroup>
+</Project>

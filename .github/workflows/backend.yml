@@ -1,0 +1,31 @@
+name: Backend
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+      - 'contracts/openapi/**'
+      - '.github/workflows/backend.yml'
+  pull_request:
+    paths:
+      - 'backend/**'
+      - 'contracts/openapi/**'
+      - '.github/workflows/backend.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.401'
+      - name: Restore locked dependencies
+        run: dotnet restore backend/AlertaRio.sln --locked-mode
+      - name: Verify formatting
+        run: dotnet format backend/AlertaRio.sln --verify-no-changes --no-restore
+      - name: Build and run HTTP contract tests
+        run: dotnet test backend/AlertaRio.sln --configuration Release --no-restore

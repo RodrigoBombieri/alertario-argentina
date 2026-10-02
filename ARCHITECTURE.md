@@ -93,7 +93,7 @@ La [política OSM](https://operations.osmfoundation.org/policies/tiles/) prohíb
 
 ## Monorepo y árbol objetivo
 
-Este árbol es **diseño**, no carpetas de aplicación ya generadas. Crear cada parte en su fase.
+Este árbol es **diseño objetivo**. El [corte F2](docs/implementation/F2.md) ya creó la solución y los cinco proyectos backend; los demás módulos se incorporarán en su fase.
 
 ```text
 AlertaRio/

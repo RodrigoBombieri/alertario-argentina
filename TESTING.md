@@ -58,4 +58,4 @@ Pruebas con red lenta, modo avión, proceso terminado, cambio de hora del dispos
 
 Por PR: formato/análisis estático, unit/contract, integración de componentes cambiados y scan de secretos. Por release: suite completa, migración desde versión anterior, restauración de backup, smoke staging, accesibilidad y dispositivos. Los motores deben cubrir todos los casos semánticos enumerados; cobertura porcentual de líneas no es criterio único.
 
-Checks vivos de contrato: tarea operativa acotada separada de CI, según permiso fuente, sin fallar PR por caída externa. Registrar HTTP, tipo, tiempo y schema diff; nunca interpretar un 200 como dato fresco. No se ejecutaron pruebas de aplicación en esta etapa porque no hay aplicación.
+Checks vivos de contrato: tarea operativa acotada separada de CI, según permiso fuente, sin fallar PR por caída externa. Registrar HTTP, tipo, tiempo y schema diff; nunca interpretar un 200 como dato fresco. El [corte F2](docs/implementation/F2.md) incorpora pruebas HTTP de la API propia con datos sintéticos; CI no consulta organismos.

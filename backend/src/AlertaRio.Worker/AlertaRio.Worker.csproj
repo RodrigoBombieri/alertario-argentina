@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../AlertaRio.Application/AlertaRio.Application.csproj" />
+    <ProjectReference Include="../AlertaRio.Infrastructure/AlertaRio.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

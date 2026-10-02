@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "alertario.application": {
+        "type": "Project",
+        "dependencies": {
+          "AlertaRio.Core": "[1.0.0, )"
+        }
+      },
+      "alertario.core": {
+        "type": "Project"
+      },
+      "alertario.infrastructure": {
+        "type": "Project",
+        "dependencies": {
+          "AlertaRio.Application": "[1.0.0, )",
+          "AlertaRio.Core": "[1.0.0, )"
+        }
+      }
+    }
+  }
+}

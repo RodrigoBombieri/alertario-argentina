@@ -2,7 +2,7 @@
 
 Aplicación ciudadana para consultar información hidrológica oficial, entender sus cambios y seguir avisos de autoridades en Argentina.
 
-**Estado: F1 cerrada como evaluación inicial con resultado NO-GO para piloto productivo. No hay aplicación implementada ni infraestructura desplegada.** La investigación inicial cerró el 29 de septiembre de 2026; el [acta de F1](docs/research/f1/CLOSURE.md) registra las verificaciones y los gates pendientes al 2 de octubre. Las consultas puntuales no certifican disponibilidad continua ni cierran los permisos pendientes de INA/SMN.
+**Estado: F1 cerrada con NO-GO para piloto productivo; F2 tiene un backend sintético de revisión, sin infraestructura desplegada.** El [acta de F1](docs/research/f1/CLOSURE.md) registra los gates pendientes y el [corte F2](docs/implementation/F2.md) describe la API propia y sus pruebas. Las consultas puntuales a fuentes no certifican disponibilidad continua ni cierran los permisos pendientes de INA/SMN.
 
 ## Empezar aquí
 
@@ -10,6 +10,8 @@ Aplicación ciudadana para consultar información hidrológica oficial, entender
 2. [Fuentes y verificaciones](DATA-SOURCES.md), [contratos e integraciones](API-INTEGRATIONS.md), [evidencia inicial](docs/research/VERIFICATION.md) y [cierre F1](docs/research/f1/CLOSURE.md).
 3. [Producto](PRODUCT.md), [arquitectura](ARCHITECTURE.md) y [dominio](DOMAIN.md).
 4. [Roadmap](ROADMAP.md), [backlog](BACKLOG.md) y [decisiones](DECISIONS.md).
+
+Para probar el backend sintético: `dotnet test backend/AlertaRio.sln --no-restore` después de restaurar dependencias según [F2](docs/implementation/F2.md).
 
 ## Documentación
 

@@ -4,6 +4,8 @@ Jerarquía: **EPIC → FEATURE → USER STORY → TASK**. Estado inicial de impl
 
 **Cierre F1 (2/10/2026):** evaluación exploratoria cerrada con [resultado NO-GO](docs/research/f1/CLOSURE.md). US-01, US-02 y US-03 no cumplen aceptación y siguen abiertas; EXT-01–05 registran los desbloqueos externos. El inventario y las sondas no son una allowlist de producción.
 
+**F2 en curso:** [corte de backend sintético y contrato HTTP](docs/implementation/F2.md) para US-04. Las rutas, OpenAPI y pruebas están implementadas; falta revisión del contrato mínimo y la prueba de aislamiento del adapter en F3 antes de cerrar la historia.
+
 ## E01 — Fuentes y confianza
 
 ### F01 — Contratos verificables

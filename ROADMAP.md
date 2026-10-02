@@ -1,6 +1,6 @@
 # Roadmap de ejecución
 
-Los números preservan las fases solicitadas; calidad y observabilidad mínima son transversales. Estado: **F0 documentación entregada; F1 cerrada como evaluación inicial con NO-GO para piloto productivo** ([acta de cierre](docs/research/f1/CLOSURE.md)). Los criterios de aceptación de F1 no se cumplieron por gates externos y medición de 14 días pendientes. No hay aplicación implementada. Tamaños relativos S=acotado, M=varios componentes, L=riesgo/integración alta; no son días ni compromiso de calendario.
+Los números preservan las fases solicitadas; calidad y observabilidad mínima son transversales. Estado: **F0 documentación entregada; F1 cerrada con NO-GO para piloto productivo; corte técnico F2 sintético en revisión** ([acta F1](docs/research/f1/CLOSURE.md), [corte F2](docs/implementation/F2.md)). Los criterios de aceptación de F1 siguen pendientes por gates externos y medición de 14 días. No hay aplicación móvil ni infraestructura desplegada. Tamaños relativos S=acotado, M=varios componentes, L=riesgo/integración alta; no son días ni compromiso de calendario.
 
 Cada fase se divide en PRs/historias revisables. “Archivos” son destinos futuros excepto documentos ya existentes. Tareas en [BACKLOG](BACKLOG.md).
 

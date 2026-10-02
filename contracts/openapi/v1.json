@@ -1,0 +1,899 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "AlertaRio.Api | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/v1/locations": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "SearchLocations",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfLocationDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/locations/{id}/stations": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "GetLocationStations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfStationDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stations": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "ListStations",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfStationDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stations/{id}": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "GetStation",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StationDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stations/{id}/summary": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "GetStationSummary",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StationSummaryDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/notices": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "ListNotices",
+        "parameters": [
+          {
+            "name": "locationId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoticeListDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sources": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "ListSources",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfSourceDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ChangeDto": {
+        "required": [
+          "windowHours",
+          "delta",
+          "unit",
+          "referenceAt",
+          "actualDurationSeconds",
+          "method",
+          "trend",
+          "availability",
+          "unavailableReason"
+        ],
+        "type": "object",
+        "properties": {
+          "windowHours": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "delta": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "referenceAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "actualDurationSeconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "method": {
+            "type": "string"
+          },
+          "trend": {
+            "type": "string"
+          },
+          "availability": {
+            "type": "string"
+          },
+          "unavailableReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ListResponseOfLocationDto": {
+        "required": [
+          "synthetic",
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "synthetic": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationDto"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ListResponseOfSourceDto": {
+        "required": [
+          "synthetic",
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "synthetic": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceDto"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ListResponseOfStationDto": {
+        "required": [
+          "synthetic",
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "synthetic": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StationDto"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "LocationDto": {
+        "required": [
+          "id",
+          "name",
+          "provinceId",
+          "provinceName",
+          "synthetic"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "provinceId": {
+            "type": "string"
+          },
+          "provinceName": {
+            "type": "string"
+          },
+          "synthetic": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MeasurementDto": {
+        "required": [
+          "seriesId",
+          "value",
+          "unit",
+          "observedAt",
+          "sourceUpdatedAt",
+          "ingestedAt",
+          "quality",
+          "freshness",
+          "sourceId"
+        ],
+        "type": "object",
+        "properties": {
+          "seriesId": {
+            "type": "string"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sourceUpdatedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "ingestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "quality": {
+            "type": "string"
+          },
+          "freshness": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "string"
+          }
+        }
+      },
+      "NoticeCoverageDto": {
+        "required": [
+          "status",
+          "lastSuccessfulCheckedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "lastSuccessfulCheckedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "NoticeDto": {
+        "required": [
+          "id",
+          "title",
+          "issuer",
+          "sentAt",
+          "expiresAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "issuer": {
+            "type": "string"
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NoticeListDto": {
+        "required": [
+          "synthetic",
+          "items",
+          "coverage"
+        ],
+        "type": "object",
+        "properties": {
+          "synthetic": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NoticeDto"
+            }
+          },
+          "coverage": {
+            "$ref": "#/components/schemas/NoticeCoverageDto"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SourceDto": {
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "attribution",
+          "license",
+          "synthetic"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "attribution": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "synthetic": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StationDto": {
+        "required": [
+          "id",
+          "name",
+          "riverName",
+          "locationId",
+          "sourceId",
+          "seriesIds",
+          "synthetic"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "riverName": {
+            "type": "string"
+          },
+          "locationId": {
+            "type": "string"
+          },
+          "sourceId": {
+            "type": "string"
+          },
+          "seriesIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "synthetic": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StationSummaryDto": {
+        "required": [
+          "stationId",
+          "generatedAt",
+          "synthetic",
+          "height",
+          "discharge",
+          "dischargeUnavailableReason",
+          "changes",
+          "calculatedCondition",
+          "officialThresholds",
+          "notices",
+          "noticeCoverage",
+          "methodologyVersion",
+          "dataVersion"
+        ],
+        "type": "object",
+        "properties": {
+          "stationId": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "synthetic": {
+            "type": "boolean"
+          },
+          "height": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MeasurementDto"
+              }
+            ]
+          },
+          "discharge": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MeasurementDto"
+              }
+            ]
+          },
+          "dischargeUnavailableReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "changes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChangeDto"
+            }
+          },
+          "calculatedCondition": {
+            "type": "string"
+          },
+          "officialThresholds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ThresholdDto"
+            }
+          },
+          "notices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NoticeDto"
+            }
+          },
+          "noticeCoverage": {
+            "$ref": "#/components/schemas/NoticeCoverageDto"
+          },
+          "methodologyVersion": {
+            "type": "string"
+          },
+          "dataVersion": {
+            "type": "string"
+          }
+        }
+      },
+      "ThresholdDto": {
+        "required": [
+          "id",
+          "referenceValue",
+          "unit",
+          "authority",
+          "datum",
+          "validFrom",
+          "comparisonStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "referenceValue": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "authority": {
+            "type": "string"
+          },
+          "datum": {
+            "type": "string"
+          },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "comparisonStatus": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "AlertaRio.Api"
+    }
+  ]
+}

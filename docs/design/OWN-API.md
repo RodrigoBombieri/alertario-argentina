@@ -1,6 +1,6 @@
 # API propia propuesta v1
 
-**Diseño de AlertaRío, no endpoints de organismos.** OpenAPI ejecutable se generará en fase 2. HTTPS + JSON, IDs internos opacos, fechas RFC 3339 UTC, números JSON con punto y unidades canónicas. UI traduce formatos e idiomas.
+**Diseño de AlertaRío, no endpoints de organismos.** El [OpenAPI ejecutable del corte F2](../../contracts/openapi/v1.json) cubre un subconjunto sintético; las rutas restantes de esta página son diseño pendiente. HTTPS + JSON, IDs internos opacos, fechas RFC 3339 UTC, números JSON con punto y unidades canónicas. UI traduce formatos e idiomas. [Alcance F2](../implementation/F2.md).
 
 ## Recursos
 
@@ -62,7 +62,10 @@ Ejemplo ilustrativo de estructura propia (no respuesta gubernamental ni valores 
   "calculatedCondition": "noNotableChange",
   "officialThresholds": [],
   "notices": [],
-  "noticeCoverage": "unavailable",
+  "noticeCoverage": {
+    "status": "unavailable",
+    "lastSuccessfulCheckedAt": null
+  },
   "methodologyVersion": "trend-v1",
   "dataVersion": "opaque-version"
 }
