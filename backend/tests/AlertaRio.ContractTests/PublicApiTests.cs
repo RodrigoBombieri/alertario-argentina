@@ -111,7 +111,9 @@ public sealed class PublicApiTests
         const string observed = """
             {"estaciones":[
               {"id":701,"nombre":"Estación de ejemplo","rio":"Río de ejemplo","public":true,
-               "red":{"public":true}},
+               "tabla":"red-demo","id_externo":"owner-701",
+               "geom":{"type":"Point","coordinates":[-58.25,-31.25]},
+               "red":{"id":1,"public":true}},
               {"id":702,"nombre":"Oculta","rio":"Otro río","public":false,
                "red":{"public":true}},
               {"id":703,"nombre":"Red oculta","rio":"Otro río","public":true,
@@ -121,7 +123,9 @@ public sealed class PublicApiTests
         const string wrapped = """
             {"rows":[
               {"id":701,"nombre":"Estación de ejemplo","rio":"Río de ejemplo","public":true,
-               "red":{"public":true},"extra":"ignored"},
+               "tabla":"red-demo","id_externo":"owner-701",
+               "geom":{"type":"Point","coordinates":[-58.25,-31.25]},
+               "red":{"id":1,"public":true},"extra":"ignored"},
               {"id":702,"nombre":"Oculta","rio":"Otro río","public":false,
                "red":{"public":true}},
               {"id":703,"nombre":"Red oculta","rio":"Otro río","public":true,
