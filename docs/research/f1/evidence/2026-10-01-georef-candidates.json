@@ -1,0 +1,375 @@
+{
+  "schema": "alertario-f1-georef-candidates-v1",
+  "generatedAt": "2026-10-02T01:29:33.3833196+00:00",
+  "method": "12 sequential named locality GETs; one-second delay; max 5 each; candidates only",
+  "warning": "Name/centroid proximity does not establish a representative station for a locality.",
+  "results": [
+    {
+      "stationId": 14,
+      "stationName": "Posadas",
+      "province": "Misiones",
+      "stationCoordinates": [
+        -55.8833333333333,
+        -27.3666666666667
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Posadas&provincia=Misiones&max=5",
+      "checkedAt": "2026-10-02T01:29:20.6029198+00:00",
+      "status": 200,
+      "total": 2,
+      "candidates": [
+        {
+          "id": "54028030",
+          "name": "Posadas",
+          "category": "Componente de localidad compuesta",
+          "province": "Misiones",
+          "department": "Capital",
+          "centroid": {
+            "lat": -27.36642598,
+            "lon": -55.893980275
+          }
+        },
+        {
+          "id": "54028040",
+          "name": "Posadas (Extensión)",
+          "category": "Componente de localidad compuesta",
+          "province": "Misiones",
+          "department": "Capital",
+          "centroid": {
+            "lat": -27.452433675,
+            "lon": -55.852711487
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 19,
+      "stationName": "Corrientes",
+      "province": "Corrientes",
+      "stationCoordinates": [
+        -58.8388696,
+        -27.46364349
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Corrientes&provincia=Corrientes&max=5",
+      "checkedAt": "2026-10-02T01:29:21.8378668+00:00",
+      "status": 200,
+      "total": 1,
+      "candidates": [
+        {
+          "id": "18021020",
+          "name": "Corrientes",
+          "category": "Localidad simple",
+          "province": "Corrientes",
+          "department": "Capital",
+          "centroid": {
+            "lat": -27.463345014,
+            "lon": -58.839472846
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 23,
+      "stationName": "Goya",
+      "province": "Corrientes",
+      "stationCoordinates": [
+        -59.27303952,
+        -29.14376844
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Goya&provincia=Corrientes&max=5",
+      "checkedAt": "2026-10-02T01:29:22.9863261+00:00",
+      "status": 200,
+      "total": 1,
+      "candidates": [
+        {
+          "id": "18070020",
+          "name": "Goya",
+          "category": "Localidad simple",
+          "province": "Corrientes",
+          "department": "Goya",
+          "centroid": {
+            "lat": -29.140076381,
+            "lon": -59.259891257
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 29,
+      "stationName": "Paraná",
+      "province": "Entre Ríos",
+      "stationCoordinates": [
+        -60.5225697750899,
+        -31.7182378629681
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Paran%C3%A1&provincia=Entre%20R%C3%ADos&max=5",
+      "checkedAt": "2026-10-02T01:29:24.1339558+00:00",
+      "status": 200,
+      "total": 2,
+      "candidates": [
+        {
+          "id": "30084160",
+          "name": "Paraná",
+          "category": "Componente de localidad compuesta",
+          "province": "Entre Ríos",
+          "department": "Paraná",
+          "centroid": {
+            "lat": -31.740160162,
+            "lon": -60.527426049
+          }
+        },
+        {
+          "id": "30063060",
+          "name": "Villa Paranacito",
+          "category": "Localidad simple",
+          "province": "Entre Ríos",
+          "department": "Islas del Ibicuy",
+          "centroid": {
+            "lat": -33.715603477,
+            "lon": -58.6652645
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 34,
+      "stationName": "Rosario",
+      "province": "Santa Fe",
+      "stationCoordinates": [
+        -60.6308206029857,
+        -32.9432699442268
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Rosario&provincia=Santa%20Fe&max=5",
+      "checkedAt": "2026-10-02T01:29:25.3154063+00:00",
+      "status": 200,
+      "total": 1,
+      "candidates": [
+        {
+          "id": "82084270",
+          "name": "Rosario",
+          "category": "Componente de localidad compuesta",
+          "province": "Santa Fe",
+          "department": "Rosario",
+          "centroid": {
+            "lat": -32.947213384,
+            "lon": -60.633175576
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 36,
+      "stationName": "San Nicolás",
+      "province": "Buenos Aires",
+      "stationCoordinates": [
+        -60.1895279977149,
+        -33.3420008188866
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=San%20Nicol%C3%A1s&provincia=Buenos%20Aires&max=5",
+      "checkedAt": "2026-10-02T01:29:26.4478209+00:00",
+      "status": 200,
+      "total": 3,
+      "candidates": [
+        {
+          "id": "06763050",
+          "name": "San Nicolás de los Arroyos",
+          "category": "Componente de localidad compuesta",
+          "province": "Buenos Aires",
+          "department": "San Nicolás",
+          "centroid": {
+            "lat": -33.327581039,
+            "lon": -60.217058045
+          }
+        },
+        {
+          "id": "0200701005",
+          "name": "San Nicolás",
+          "category": "Entidad",
+          "province": "Ciudad Autónoma de Buenos Aires",
+          "department": "Comuna 1",
+          "centroid": {
+            "lat": -34.60377,
+            "lon": -58.381597089
+          }
+        },
+        {
+          "id": "0676305002",
+          "name": "San Nicolás de los Arroyos",
+          "category": "Entidad",
+          "province": "Buenos Aires",
+          "department": "San Nicolás",
+          "centroid": {
+            "lat": -33.338403956,
+            "lon": -60.221495504
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 61,
+      "stationName": "El Soberbio",
+      "province": "Misiones",
+      "stationCoordinates": [
+        -54.2,
+        -27.3
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=El%20Soberbio&provincia=Misiones&max=5",
+      "checkedAt": "2026-10-02T01:29:27.5799552+00:00",
+      "status": 200,
+      "total": 1,
+      "candidates": [
+        {
+          "id": "54056010",
+          "name": "El Soberbio",
+          "category": "Localidad simple",
+          "province": "Misiones",
+          "department": "Guaraní",
+          "centroid": {
+            "lat": -27.297511036,
+            "lon": -54.197545618
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 68,
+      "stationName": "Santo Tomé",
+      "province": "Corrientes",
+      "stationCoordinates": [
+        -56.0333333333333,
+        -28.55
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Santo%20Tom%C3%A9&provincia=Corrientes&max=5",
+      "checkedAt": "2026-10-02T01:29:28.7612968+00:00",
+      "status": 200,
+      "total": 1,
+      "candidates": [
+        {
+          "id": "18168040",
+          "name": "Santo Tomé",
+          "category": "Localidad simple",
+          "province": "Corrientes",
+          "department": "Santo Tomé",
+          "centroid": {
+            "lat": -28.549815807,
+            "lon": -56.034811077
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 72,
+      "stationName": "Paso de los Libres",
+      "province": "Corrientes",
+      "stationCoordinates": [
+        -57.0833333333333,
+        -29.7166666666667
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Paso%20de%20los%20Libres&provincia=Corrientes&max=5",
+      "checkedAt": "2026-10-02T01:29:29.8752603+00:00",
+      "status": 200,
+      "total": 1,
+      "candidates": [
+        {
+          "id": "18119030",
+          "name": "Paso de los Libres",
+          "category": "Localidad simple",
+          "province": "Corrientes",
+          "department": "Paso de los Libres",
+          "centroid": {
+            "lat": -29.713714811,
+            "lon": -57.085405399
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 74,
+      "stationName": "Monte Caseros",
+      "province": "Corrientes",
+      "stationCoordinates": [
+        -57.6333333333333,
+        -30.25
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Monte%20Caseros&provincia=Corrientes&max=5",
+      "checkedAt": "2026-10-02T01:29:30.9936826+00:00",
+      "status": 200,
+      "total": 1,
+      "candidates": [
+        {
+          "id": "18112050",
+          "name": "Monte Caseros",
+          "category": "Localidad simple",
+          "province": "Corrientes",
+          "department": "Monte Caseros",
+          "centroid": {
+            "lat": -30.24942296,
+            "lon": -57.629481767
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 79,
+      "stationName": "Concordia",
+      "province": "Entre Ríos",
+      "stationCoordinates": [
+        -58.0166666666667,
+        -31.4
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Concordia&provincia=Entre%20R%C3%ADos&max=5",
+      "checkedAt": "2026-10-02T01:29:32.1266105+00:00",
+      "status": 200,
+      "total": 2,
+      "candidates": [
+        {
+          "id": "30015060",
+          "name": "Concordia",
+          "category": "Localidad simple",
+          "province": "Entre Ríos",
+          "department": "Concordia",
+          "centroid": {
+            "lat": -31.391964817,
+            "lon": -58.017007785
+          }
+        },
+        {
+          "id": "3001506005",
+          "name": "Concordia",
+          "category": "Entidad",
+          "province": "Entre Ríos",
+          "department": "Concordia",
+          "centroid": {
+            "lat": -31.397450891,
+            "lon": -58.01720343
+          }
+        }
+      ]
+    },
+    {
+      "stationId": 81,
+      "stationName": "Concepción del Uruguay",
+      "province": "Entre Ríos",
+      "stationCoordinates": [
+        -58.2333333333333,
+        -32.4833333333333
+      ],
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Concepci%C3%B3n%20del%20Uruguay&provincia=Entre%20R%C3%ADos&max=5",
+      "checkedAt": "2026-10-02T01:29:33.2430694+00:00",
+      "status": 200,
+      "total": 1,
+      "candidates": [
+        {
+          "id": "30098040",
+          "name": "Concepción del Uruguay",
+          "category": "Localidad simple",
+          "province": "Entre Ríos",
+          "department": "Uruguay",
+          "centroid": {
+            "lat": -32.484661266,
+            "lon": -58.232120779
+          }
+        }
+      ]
+    }
+  ]
+}

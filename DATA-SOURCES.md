@@ -2,6 +2,10 @@
 
 Fecha de revisión: **2026-09-29**. Convenciones: **D** = documentación consultada; **H** = respuesta HTTP comprobada; **P** = pendiente. H no demuestra SLA, exactitud científica ni autorización de redistribución. [Registro reproducible](docs/research/VERIFICATION.md).
 
+**Actualización F1, 1/10/2026:** [registro y nuevas evidencias](docs/research/f1/README.md). La licencia y cuotas de GeoRef quedaron documentadas en su página específica; INA/SMN y la selección de series siguen condicionados.
+
+**Cierre F1, 2/10/2026:** [resultado NO-GO](docs/research/f1/CLOSURE.md). Esta ficha sigue como inventario de fuentes, no como autorización de publicación.
+
 ## 1. Instituto Nacional del Agua
 
 El [organismo describe su aplicación REST](https://www.argentina.gob.ar/node/228063) como acceso a estaciones, áreas, series observadas y simuladas, históricas y recientes, principalmente de la Cuenca del Plata. Incluye altura, caudal y precipitación, datos vectoriales y ráster. Esta capacidad general no demuestra que cada estación tenga todas las variables o pronóstico.
@@ -77,7 +81,7 @@ El contrato documenta `/provincias`, `/departamentos`, `/gobiernos-locales`, `/m
 
 **Uso MVP:** búsqueda, nombres e IDs oficiales y centroides. Importación periódica de catálogo local; no pedir dirección personal. Guardar IDs como texto con tipo y versión. GeoRef no provee por sí mismo una relación localidad/río representativo ni cuenca aguas arriba.
 
-Sin cuota ni SLA verificados. Documentación abierta y código público no resuelven por sí solos licencia de cada capa. Confirmar licencia del dataset descargado y atribuciones INDEC/IGN u otras antes de redistribuir. Clasificación MVP, con permiso específico pendiente.
+La [página específica de condiciones de GeoRef](https://www.argentina.gob.ar/georef/condiciones-de-uso-y-licencia), consultada el 1/10/2026, declara CC BY 4.0 para la información publicada por el servicio, atribución obligatoria como “Servicio Georef – argentina.gob.ar/georef” o enlace oficial, e indicación de cambios al redistribuir. Para usuarios fuera de APN publica cuotas de 10 consultas/s, 40/min, 2000/h y 10000/día. Autoriza uso, reutilización e integración, sin garantía de continuidad. Registrar esta evidencia y la revisión legal del producto antes de publicar; no trasladar la licencia de GeoRef a datos INA o SMN. En F1 se comprobaron GeoJSON y paginación acotada; ver [registro](docs/research/f1/README.md).
 
 ## 4. Complementarias: no agregarlas automáticamente
 
@@ -94,4 +98,4 @@ Sin cuota ni SLA verificados. Documentación abierta y código público no resue
 
 ## 5. Resultado legal/técnico
 
-Técnicamente comprobados: lectura pública acotada INA, localidad GeoRef y un CAP SMN. Autorización de distribución de un producto: **no completamente resuelta**. Exigir una ficha por dataset con titular, licencia o permiso, atribución, usos, retención, versión y fecha de revisión. No utilizar datos marcados no públicos. Las verificaciones no reemplazan revisión jurídica de publicación y tratamiento de datos personales.
+Técnicamente comprobados: lectura pública acotada INA, localidad GeoRef y un CAP SMN. GeoRef tiene condiciones de uso específicas documentadas; autorización de distribución del producto con INA/SMN: **no resuelta**. Exigir una ficha por dataset con titular, licencia o permiso, atribución, usos, retención, versión y fecha de revisión. No utilizar datos marcados no públicos. Las verificaciones no reemplazan revisión jurídica de publicación y tratamiento de datos personales.

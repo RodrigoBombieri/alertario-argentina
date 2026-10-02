@@ -2,12 +2,12 @@
 
 Aplicación ciudadana para consultar información hidrológica oficial, entender sus cambios y seguir avisos de autoridades en Argentina.
 
-**Estado: investigación y diseño. No hay aplicación implementada ni infraestructura desplegada.** Fecha de corte: 29 de septiembre de 2026. Las consultas puntuales realizadas no certifican disponibilidad continua ni permisos de redistribución.
+**Estado: F1 cerrada como evaluación inicial con resultado NO-GO para piloto productivo. No hay aplicación implementada ni infraestructura desplegada.** La investigación inicial cerró el 29 de septiembre de 2026; el [acta de F1](docs/research/f1/CLOSURE.md) registra las verificaciones y los gates pendientes al 2 de octubre. Las consultas puntuales no certifican disponibilidad continua ni cierran los permisos pendientes de INA/SMN.
 
 ## Empezar aquí
 
 1. [PLAN MAESTRO DE DESARROLLO — ALERTARÍO](PLAN-MAESTRO.md).
-2. [Fuentes y verificaciones](DATA-SOURCES.md), [contratos e integraciones](API-INTEGRATIONS.md) y [registro de evidencia](docs/research/VERIFICATION.md).
+2. [Fuentes y verificaciones](DATA-SOURCES.md), [contratos e integraciones](API-INTEGRATIONS.md), [evidencia inicial](docs/research/VERIFICATION.md) y [cierre F1](docs/research/f1/CLOSURE.md).
 3. [Producto](PRODUCT.md), [arquitectura](ARCHITECTURE.md) y [dominio](DOMAIN.md).
 4. [Roadmap](ROADMAP.md), [backlog](BACKLOG.md) y [decisiones](DECISIONS.md).
 
@@ -36,7 +36,7 @@ Aplicación ciudadana para consultar información hidrológica oficial, entender
 
 ## Condiciones para comenzar el desarrollo
 
-La fase siguiente es una prueba acotada de fuentes, no la aplicación completa. Debe resolver permisos, cadencias por serie, correspondencia estación/serie/datum y descubrimiento estable de alertas SMN. No construir sobre suposiciones de esas propiedades.
+F1 concluyó como evaluación acotada con resultado NO-GO. Para habilitar datos oficiales siguen pendientes permisos, cadencias por serie, correspondencia estación/serie/datum y descubrimiento estable de alertas SMN. Mientras se resuelven, se puede preparar el contrato propio mínimo y, tras aprobarlo, componentes sintéticos de F2, sin construir sobre suposiciones de esas propiedades.
 
 El stack recomendado es Flutter + Riverpod, ASP.NET Core 10, PostgreSQL + PostGIS y un worker del mismo backend. Redis, TimescaleDB, microservicios, cuentas ciudadanas y predicción quedan fuera del arranque. El hosting todavía no está elegido.
 

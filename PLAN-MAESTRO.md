@@ -2,6 +2,10 @@
 
 **AlertaRío Argentina · Diseño inicial v1 · Cierre documental: 30 de septiembre de 2026.**
 
+**Seguimiento posterior:** [F1 inició el 1 de octubre de 2026](docs/research/f1/README.md). Se documentaron licencia/cuotas GeoRef y un inventario candidato; permisos INA/SMN, feed SMN y observación de 14 días siguen abiertos. El resto de este plan conserva su fecha de cierre y describe el estado inicial.
+
+**Cierre de evaluación F1, 2 de octubre de 2026:** [acta NO-GO](docs/research/f1/CLOSURE.md). La fase exploratoria terminó sin satisfacer sus criterios de aceptación; sus gates siguen abiertos. Puede prepararse el contrato mínimo y, tras aprobarlo, avanzar F2 con datos sintéticos, sin habilitar publicación de fuentes oficiales.
+
 Investigación y consultas externas realizadas el **29 de septiembre de 2026**. Las capturas son evidencia histórica, no información vigente para tomar decisiones sobre un río. Estado: planificación entregada; aplicación, infraestructura y pruebas de software todavía no implementadas. Las decisiones técnicas son recomendaciones sujetas a los gates indicados.
 
 Este documento reúne el plan general. Los documentos enlazados desarrollan las especificaciones ejecutables por etapas y forman parte del entregable.

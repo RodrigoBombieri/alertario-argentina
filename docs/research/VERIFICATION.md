@@ -56,3 +56,7 @@ La estación/serie 1 se usó como sondeo acotado de contrato, no como selección
 Fuentes específicas están enlazadas junto a cada afirmación en los documentos. Puntos de entrada técnicos: [INA presentación oficial](https://www.argentina.gob.ar/node/228063), [INA A5](https://alerta.ina.gob.ar/a5/apiUI), [GeoRef recursos](https://www.argentina.gob.ar/georef/documentacion-y-recursos-georef-v21), [SMN registro OMM](https://alertingauthority.wmo.int/authorities.php?recId=4), [SMN CAP](https://ssl.smn.gob.ar/CAP/AR.php), [SMN WRF](https://registry.opendata.aws/smn-ar-wrf-dataset/).
 
 Las referencias no se presentan como autorización de operación. Fase 1 debe agregar fichas de permisos, pruebas de GeoJSON/paginación, identificación de series piloto y observaciones de continuidad. No actualizar capturas antiguas sin una nueva entrada fechada.
+
+**Entrada posterior:** [F1, 1/10/2026](f1/README.md) incorpora la licencia/cuotas GeoRef, 12 estaciones candidatas, series, muestras de observaciones y pruebas acotadas de GeoJSON/paginación. Este registro del 29/9 se conserva como evidencia histórica.
+
+**Cierre posterior:** [acta F1 del 2/10/2026](f1/CLOSURE.md), con resultado NO-GO y criterios aún pendientes.

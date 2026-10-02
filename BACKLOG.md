@@ -2,6 +2,8 @@
 
 Jerarquía: **EPIC → FEATURE → USER STORY → TASK**. Estado inicial de implementación: todo **pendiente**. Fase 0 produjo investigación/documentos, no cierra historias de software. Tallas relativas S/M/L; orden por fases del [ROADMAP](ROADMAP.md), no por atractivo visual. Responsables son roles a asignar.
 
+**Cierre F1 (2/10/2026):** evaluación exploratoria cerrada con [resultado NO-GO](docs/research/f1/CLOSURE.md). US-01, US-02 y US-03 no cumplen aceptación y siguen abiertas; EXT-01–05 registran los desbloqueos externos. El inventario y las sondas no son una allowlist de producción.
+
 ## E01 — Fuentes y confianza
 
 ### F01 — Contratos verificables

@@ -1,0 +1,5027 @@
+{
+  "schema": "alertario-f1-probe-v1",
+  "mode": "Series",
+  "generatedAt": "2026-10-02T01:25:34.4582818+00:00",
+  "method": "bounded sequential GET; one-second delay; no redirects; bodies omitted",
+  "results": [
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=14",
+      "checkedAt": "2026-10-02T01:25:19.4694526+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "e460d2894ac6132998bc344ebe8eba9f6216f5dc18ab949725f8cec4d67db0d2",
+      "countReturned": 15,
+      "series": [
+        {
+          "id": 14,
+          "stationId": 14,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1901-01-02T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 46561,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 863,
+          "stationId": 14,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1901-01-02T07:00:00",
+            "timeend": "2017-09-08T00:00:00",
+            "count": 43157,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 1259,
+          "stationId": 14,
+          "variable": "HQ",
+          "variableName": "par Altura/Caudal",
+          "procedure": "medición directa",
+          "unit": "m,m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3176,
+          "stationId": 14,
+          "variable": "a:H",
+          "variableName": "Aforos:Altura",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3220,
+          "stationId": 14,
+          "variable": "a:Q",
+          "variableName": "Aforos:Caudal",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1997-08-19T00:00:00",
+            "timeend": "1998-10-22T00:00:00",
+            "count": 13,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25492,
+          "stationId": 14,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 648,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26256,
+          "stationId": 14,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 20602,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26611,
+          "stationId": 14,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2017-09-08T00:00:00",
+            "count": 17350,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 24680,
+          "stationId": 14,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2017-09-01T00:00:00",
+            "count": 540,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25066,
+          "stationId": 14,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25651,
+          "stationId": 14,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25745,
+          "stationId": 14,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25839,
+          "stationId": 14,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2017-09-01T00:00:00",
+            "count": 284,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25933,
+          "stationId": 14,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2017-09-01T00:00:00",
+            "count": 284,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 42662,
+          "stationId": 14,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1990-04-01T00:00:00",
+            "timeend": "2017-09-01T00:00:00",
+            "count": 313,
+            "data_availability": "H"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=19",
+      "checkedAt": "2026-10-02T01:25:20.9103293+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "3f0c56c3e8bb5de351c7e53eaf4373a156a6a3ab1de87974bad12677099a195a",
+      "countReturned": 24,
+      "series": [
+        {
+          "id": 19,
+          "stationId": 19,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1901-01-02T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 47960,
+            "data_availability": "RT+S"
+          }
+        },
+        {
+          "id": 1540,
+          "stationId": 19,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 1541,
+          "stationId": 19,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 868,
+          "stationId": 19,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1910-01-02T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 44129,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 1538,
+          "stationId": 19,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 1539,
+          "stationId": 19,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Traza",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 1261,
+          "stationId": 19,
+          "variable": "HQ",
+          "variableName": "par Altura/Caudal",
+          "procedure": "medición directa",
+          "unit": "m,m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1981-01-20T00:00:00",
+            "timeend": "1996-06-25T00:00:00",
+            "count": 225,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 3178,
+          "stationId": 19,
+          "variable": "a:H",
+          "variableName": "Aforos:Altura",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1981-01-20T00:00:00",
+            "timeend": "1996-06-25T00:00:00",
+            "count": 225,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 3222,
+          "stationId": 19,
+          "variable": "a:Q",
+          "variableName": "Aforos:Caudal",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1981-01-20T00:00:00",
+            "timeend": "1996-06-25T00:00:00",
+            "count": 225,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25497,
+          "stationId": 19,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 648,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26261,
+          "stationId": 19,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1901-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 45842,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26616,
+          "stationId": 19,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1904-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 43699,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 30113,
+          "stationId": 19,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 30114,
+          "stationId": 19,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "Traza",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 24665,
+          "stationId": 19,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1910-01-01T00:00:00",
+            "timeend": "2026-08-01T00:00:00",
+            "count": 1369,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 25051,
+          "stationId": 19,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25600,
+          "stationId": 19,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25694,
+          "stationId": 19,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25788,
+          "stationId": 19,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25882,
+          "stationId": 19,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 26230,
+          "stationId": 19,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2023-09-04T00:00:00",
+            "timeend": "2026-09-14T00:00:00",
+            "count": 159,
+            "data_availability": "C+S"
+          }
+        },
+        {
+          "id": 34863,
+          "stationId": 19,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 26208,
+          "stationId": 19,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 42648,
+          "stationId": 19,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1990-01-01T00:00:00",
+            "timeend": "2026-08-01T00:00:00",
+            "count": 440,
+            "data_availability": "C"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=23",
+      "checkedAt": "2026-10-02T01:25:22.1990736+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "4e48326c678ef75c0ab618d826ecbec050657bc831ef8c4d279dbf149a507f0c",
+      "countReturned": 17,
+      "series": [
+        {
+          "id": 23,
+          "stationId": 23,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1903-06-17T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 46661,
+            "data_availability": "RT+S"
+          }
+        },
+        {
+          "id": 3524,
+          "stationId": 23,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 3382,
+          "stationId": 23,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 872,
+          "stationId": 23,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25501,
+          "stationId": 23,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 648,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26265,
+          "stationId": 23,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1903-06-16T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 44458,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26620,
+          "stationId": 23,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 24689,
+          "stationId": 23,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25074,
+          "stationId": 23,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25614,
+          "stationId": 23,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25708,
+          "stationId": 23,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25802,
+          "stationId": 23,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25896,
+          "stationId": 23,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 26234,
+          "stationId": 23,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2023-09-04T00:00:00",
+            "timeend": "2026-09-14T00:00:00",
+            "count": 159,
+            "data_availability": "C+S"
+          }
+        },
+        {
+          "id": 34866,
+          "stationId": 23,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 26212,
+          "stationId": 23,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 42670,
+          "stationId": 23,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=29",
+      "checkedAt": "2026-10-02T01:25:23.5111374+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "0993700e9e5e45c491dc16474dda6f1a9d7a9f027f3ca2a8e8b60611bc4131ed",
+      "countReturned": 26,
+      "series": [
+        {
+          "id": 29,
+          "stationId": 29,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1902-02-22T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 47018,
+            "data_availability": "RT+S"
+          }
+        },
+        {
+          "id": 3408,
+          "stationId": 29,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 3385,
+          "stationId": 29,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 878,
+          "stationId": 29,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-21T04:00:00",
+            "timeend": "2026-07-10T00:00:00",
+            "count": 4232,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 3462,
+          "stationId": 29,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3489,
+          "stationId": 29,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Traza",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 1262,
+          "stationId": 29,
+          "variable": "HQ",
+          "variableName": "par Altura/Caudal",
+          "procedure": "medición directa",
+          "unit": "m,m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3179,
+          "stationId": 29,
+          "variable": "a:H",
+          "variableName": "Aforos:Altura",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3223,
+          "stationId": 29,
+          "variable": "a:Q",
+          "variableName": "Aforos:Caudal",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1997-08-14T00:00:00",
+            "timeend": "1998-11-09T00:00:00",
+            "count": 13,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 29633,
+          "stationId": 29,
+          "variable": "Hgeo",
+          "variableName": "Altura geométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25507,
+          "stationId": 29,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 648,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26271,
+          "stationId": 29,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1902-12-31T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 44642,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 31525,
+          "stationId": 29,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "Análisis",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 26626,
+          "stationId": 29,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-21T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 2911,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 30111,
+          "stationId": 29,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 30112,
+          "stationId": 29,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "Traza",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 24695,
+          "stationId": 29,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-01T00:00:00",
+            "timeend": "2026-07-01T00:00:00",
+            "count": 109,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25080,
+          "stationId": 29,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25672,
+          "stationId": 29,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25766,
+          "stationId": 29,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25860,
+          "stationId": 29,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-01T00:00:00",
+            "timeend": "2022-09-01T00:00:00",
+            "count": 85,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25954,
+          "stationId": 29,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-01T00:00:00",
+            "timeend": "2022-09-01T00:00:00",
+            "count": 85,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 26238,
+          "stationId": 29,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2023-09-04T00:00:00",
+            "timeend": "2026-09-14T00:00:00",
+            "count": 159,
+            "data_availability": "C+S"
+          }
+        },
+        {
+          "id": 34870,
+          "stationId": 29,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 26216,
+          "stationId": 29,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 42676,
+          "stationId": 29,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=34",
+      "checkedAt": "2026-10-02T01:25:24.9284314+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "a3821d608019e5478713d71b30b950cb2834c0a2da3d42fb4c06c9a9341fe51d",
+      "countReturned": 21,
+      "series": [
+        {
+          "id": 34,
+          "stationId": 34,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1884-01-02T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 53719,
+            "data_availability": "RT+S"
+          }
+        },
+        {
+          "id": 3412,
+          "stationId": 34,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 3387,
+          "stationId": 34,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 883,
+          "stationId": 34,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-21T04:00:00",
+            "timeend": "2026-07-10T12:00:00",
+            "count": 3976,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 3466,
+          "stationId": 34,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3493,
+          "stationId": 34,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Traza",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 29644,
+          "stationId": 34,
+          "variable": "Hgeo",
+          "variableName": "Altura geométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25512,
+          "stationId": 34,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 648,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 29622,
+          "stationId": 34,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 26276,
+          "stationId": 34,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1884-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 51402,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26631,
+          "stationId": 34,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-21T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 2926,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 24700,
+          "stationId": 34,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-01T00:00:00",
+            "timeend": "2026-07-01T00:00:00",
+            "count": 108,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25085,
+          "stationId": 34,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25597,
+          "stationId": 34,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25691,
+          "stationId": 34,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25785,
+          "stationId": 34,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-01T00:00:00",
+            "timeend": "2022-09-01T00:00:00",
+            "count": 85,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25879,
+          "stationId": 34,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2015-07-01T00:00:00",
+            "timeend": "2022-09-01T00:00:00",
+            "count": 85,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 26243,
+          "stationId": 34,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2023-09-04T00:00:00",
+            "timeend": "2026-09-14T00:00:00",
+            "count": 159,
+            "data_availability": "C+S"
+          }
+        },
+        {
+          "id": 34873,
+          "stationId": 34,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 26221,
+          "stationId": 34,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 42681,
+          "stationId": 34,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=36",
+      "checkedAt": "2026-10-02T01:25:26.2428576+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "2216115887bd85d139b45172b9b7a29c269ff23a231c9b07a34df6d05d93f3b1",
+      "countReturned": 21,
+      "series": [
+        {
+          "id": 36,
+          "stationId": 36,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1904-01-02T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 45757,
+            "data_availability": "RT+S"
+          }
+        },
+        {
+          "id": 3414,
+          "stationId": 36,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 3441,
+          "stationId": 36,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 885,
+          "stationId": 36,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3468,
+          "stationId": 36,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3495,
+          "stationId": 36,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Traza",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 29648,
+          "stationId": 36,
+          "variable": "Hgeo",
+          "variableName": "Altura geométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3534,
+          "stationId": 36,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 648,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 29620,
+          "stationId": 36,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 26278,
+          "stationId": 36,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 20613,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26633,
+          "stationId": 36,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 24702,
+          "stationId": 36,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 24663,
+          "stationId": 36,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25581,
+          "stationId": 36,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25675,
+          "stationId": 36,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25769,
+          "stationId": 36,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25863,
+          "stationId": 36,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 26245,
+          "stationId": 36,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2023-09-04T00:00:00",
+            "timeend": "2026-09-14T00:00:00",
+            "count": 159,
+            "data_availability": "C+S"
+          }
+        },
+        {
+          "id": 34875,
+          "stationId": 36,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 26223,
+          "stationId": 36,
+          "variable": "Hms",
+          "variableName": "Altura hidrométrica media semanal",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 7,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 42683,
+          "stationId": 36,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=61",
+      "checkedAt": "2026-10-02T01:25:27.5389411+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "ee36a20698a2bb98ca4a81a752015820a2499f3d6046f3a661f6b3cfa010afdb",
+      "countReturned": 14,
+      "series": [
+        {
+          "id": 61,
+          "stationId": 61,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1980-04-25T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 15299,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 3273,
+          "stationId": 61,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 910,
+          "stationId": 61,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1980-04-25T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 16464,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 3266,
+          "stationId": 61,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25539,
+          "stationId": 61,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1980-04-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 491,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26303,
+          "stationId": 61,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1980-04-25T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 15228,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26658,
+          "stationId": 61,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1980-04-25T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 16412,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 24727,
+          "stationId": 61,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1980-04-01T00:00:00",
+            "timeend": "2026-08-01T00:00:00",
+            "count": 556,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 25112,
+          "stationId": 61,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25605,
+          "stationId": 61,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 306,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25699,
+          "stationId": 61,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 306,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25793,
+          "stationId": 61,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25887,
+          "stationId": 61,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 42708,
+          "stationId": 61,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1990-01-01T00:00:00",
+            "timeend": "2026-08-01T00:00:00",
+            "count": 440,
+            "data_availability": "C"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=68",
+      "checkedAt": "2026-10-02T01:25:29.0201162+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "2325705c30a618ab23a6700fae8a3893d88fad69b3b9e5122f0a0115b3b84830",
+      "countReturned": 15,
+      "series": [
+        {
+          "id": 68,
+          "stationId": 68,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1907-12-02T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 43013,
+            "data_availability": "RT+S"
+          }
+        },
+        {
+          "id": 7824,
+          "stationId": 68,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 9645,
+          "stationId": 68,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 917,
+          "stationId": 68,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1907-12-02T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 45149,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 7823,
+          "stationId": 68,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25546,
+          "stationId": 68,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 573,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26310,
+          "stationId": 68,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 18275,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26665,
+          "stationId": 68,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 20498,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 24734,
+          "stationId": 68,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-08-01T00:00:00",
+            "count": 678,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 25119,
+          "stationId": 68,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25602,
+          "stationId": 68,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 270,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25696,
+          "stationId": 68,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 270,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25790,
+          "stationId": 68,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25884,
+          "stationId": 68,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 42715,
+          "stationId": 68,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1990-01-01T00:00:00",
+            "timeend": "2026-08-01T00:00:00",
+            "count": 440,
+            "data_availability": "C"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=72",
+      "checkedAt": "2026-10-02T01:25:30.2194043+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "40fcd225f9ff590bd6645fa32f63158757ae74b56f3a684c555d9f1e49ba4a2c",
+      "countReturned": 16,
+      "series": [
+        {
+          "id": 72,
+          "stationId": 72,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1908-03-08T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 44745,
+            "data_availability": "RT+S"
+          }
+        },
+        {
+          "id": 3271,
+          "stationId": 72,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 9646,
+          "stationId": 72,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Traza",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "S"
+          }
+        },
+        {
+          "id": 921,
+          "stationId": 72,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1908-03-08T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 42626,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 3268,
+          "stationId": 72,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25550,
+          "stationId": 72,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 612,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26314,
+          "stationId": 72,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 19519,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26669,
+          "stationId": 72,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 20172,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 35955,
+          "stationId": 72,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 24738,
+          "stationId": 72,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-08-01T00:00:00",
+            "count": 677,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 25123,
+          "stationId": 72,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25603,
+          "stationId": 72,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 309,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25697,
+          "stationId": 72,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 309,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25791,
+          "stationId": 72,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25885,
+          "stationId": 72,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 42719,
+          "stationId": 72,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1990-01-01T00:00:00",
+            "timeend": "2026-08-01T00:00:00",
+            "count": 440,
+            "data_availability": "C"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=74",
+      "checkedAt": "2026-10-02T01:25:31.4526958+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "649828dcfe0b9cde33fc127228b8bbb4e2fe9924f39c30ff5438acae80d35aed",
+      "countReturned": 12,
+      "series": [
+        {
+          "id": 74,
+          "stationId": 74,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1905-03-14T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 39296,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 923,
+          "stationId": 74,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2006-01-01T04:00:00",
+            "timeend": "2026-07-15T00:00:00",
+            "count": 6040,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 25552,
+          "stationId": 74,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 503,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26316,
+          "stationId": 74,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 15741,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26671,
+          "stationId": 74,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2006-01-01T00:00:00",
+            "timeend": "2026-07-15T00:00:00",
+            "count": 4759,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 24740,
+          "stationId": 74,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2006-01-01T00:00:00",
+            "timeend": "2026-07-01T00:00:00",
+            "count": 177,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25125,
+          "stationId": 74,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25629,
+          "stationId": 74,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2006-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 200,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25723,
+          "stationId": 74,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2006-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 200,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25817,
+          "stationId": 74,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2006-01-01T00:00:00",
+            "timeend": "2021-11-01T00:00:00",
+            "count": 143,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25911,
+          "stationId": 74,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "2006-01-01T00:00:00",
+            "timeend": "2021-11-01T00:00:00",
+            "count": 143,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 42721,
+          "stationId": 74,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=79",
+      "checkedAt": "2026-10-02T01:25:32.6577274+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "6da1202769f05904597a0590079155f19912d957c2a085b6bec37195ebc92ae4",
+      "countReturned": 16,
+      "series": [
+        {
+          "id": 79,
+          "stationId": 79,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1931-01-01T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 37851,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 7836,
+          "stationId": 79,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 928,
+          "stationId": 79,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1931-01-01T07:00:00",
+            "timeend": "2026-07-15T00:00:00",
+            "count": 33118,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 7835,
+          "stationId": 79,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25557,
+          "stationId": 79,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 648,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26321,
+          "stationId": 79,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1970-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 20627,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26676,
+          "stationId": 79,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1971-01-01T00:00:00",
+            "timeend": "2026-07-15T00:00:00",
+            "count": 19449,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 24745,
+          "stationId": 79,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1971-01-01T00:00:00",
+            "timeend": "2026-07-01T00:00:00",
+            "count": 653,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25130,
+          "stationId": 79,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25592,
+          "stationId": 79,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25686,
+          "stationId": 79,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25780,
+          "stationId": 79,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 333,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25874,
+          "stationId": 79,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 333,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 31576,
+          "stationId": 79,
+          "variable": "H1h",
+          "variableName": "Altura hidrométrica horaria",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 1,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 31577,
+          "stationId": 79,
+          "variable": "Hgeo1h",
+          "variableName": "Altura geométrica horaria",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 1,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 42726,
+          "stationId": 79,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1990-01-01T00:00:00",
+            "timeend": "2026-07-01T00:00:00",
+            "count": 427,
+            "data_availability": "H"
+          }
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/series?estacion_id=81",
+      "checkedAt": "2026-10-02T01:25:33.8427180+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "3d1273f6a4442f4187e3b18bb8f552fe4f98ec32f4b1e631d03f4e3c376bbb54",
+      "countReturned": 16,
+      "series": [
+        {
+          "id": 81,
+          "stationId": 81,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1941-01-01T07:00:00",
+            "timeend": "2026-10-01T00:00:00",
+            "count": 30278,
+            "data_availability": "RT"
+          }
+        },
+        {
+          "id": 3270,
+          "stationId": 81,
+          "variable": "H",
+          "variableName": "Altura hidrométrica",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 930,
+          "stationId": 81,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Curva de gasto",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 3269,
+          "stationId": 81,
+          "variable": "Q",
+          "variableName": "Caudal",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25559,
+          "stationId": 81,
+          "variable": "Hmm",
+          "variableName": "Altura hidrométrica media mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1971-01-01T00:00:00",
+            "timeend": "2026-09-01T00:00:00",
+            "count": 636,
+            "data_availability": "C"
+          }
+        },
+        {
+          "id": 26323,
+          "stationId": 81,
+          "variable": "Hmd",
+          "variableName": "Altura hidrométrica media diaria",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1971-01-01T00:00:00",
+            "timeend": "2026-09-30T00:00:00",
+            "count": 20224,
+            "data_availability": "NRT"
+          }
+        },
+        {
+          "id": 26678,
+          "stationId": 81,
+          "variable": "Qmd",
+          "variableName": "Caudal medio diario",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 1,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 24747,
+          "stationId": 81,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25132,
+          "stationId": 81,
+          "variable": "Qmm",
+          "variableName": "caudal medio mensual",
+          "procedure": "Simulado",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25633,
+          "stationId": 81,
+          "variable": "Hmmin",
+          "variableName": "Altura hidrométrica mínima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25727,
+          "stationId": 81,
+          "variable": "Hmmax",
+          "variableName": "Altura hidrométrica máxima mensual",
+          "procedure": "medición directa",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": "1994-01-01T00:00:00",
+            "timeend": "2022-10-01T00:00:00",
+            "count": 345,
+            "data_availability": "H"
+          }
+        },
+        {
+          "id": 25821,
+          "stationId": 81,
+          "variable": "Qmmin",
+          "variableName": "Caudal mínimo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 25915,
+          "stationId": 81,
+          "variable": "Qmmax",
+          "variableName": "Caudal máximo mensual",
+          "procedure": "medición directa",
+          "unit": "m^3/s",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 31587,
+          "stationId": 81,
+          "variable": "H1h",
+          "variableName": "Altura hidrométrica horaria",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 1,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 31586,
+          "stationId": 81,
+          "variable": "Hgeo1h",
+          "variableName": "Altura geométrica horaria",
+          "procedure": "Simulado",
+          "unit": "m",
+          "timeSupport": {
+            "years": 0,
+            "months": 0,
+            "days": 0,
+            "hours": 1,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        },
+        {
+          "id": 42728,
+          "stationId": 81,
+          "variable": "Fcat",
+          "variableName": "Estado hidrológico",
+          "procedure": "medición directa",
+          "unit": "Flowcat",
+          "timeSupport": {
+            "years": 0,
+            "months": 1,
+            "days": 0,
+            "hours": 0,
+            "minutes": 0,
+            "seconds": 0,
+            "milliseconds": 0
+          },
+          "dateRange": {
+            "timestart": null,
+            "timeend": null,
+            "count": null,
+            "data_availability": "N"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "alertario-f1-probe-v1",
+  "mode": "GeoRef",
+  "generatedAt": "2026-10-02T01:26:39.4546845+00:00",
+  "method": "bounded sequential GET; one-second delay; no redirects; bodies omitted",
+  "results": [
+    {
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Concordia&max=2&inicio=0",
+      "checkedAt": "2026-10-02T01:26:36.8954604+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "184ad7c04b0ba6b8c49fe61d666d745cfc4cc17fd884dec2a4a20000fef90819",
+      "total": 2,
+      "countReturned": 2,
+      "topLevelKeys": [
+        "cantidad",
+        "inicio",
+        "localidades",
+        "parametros",
+        "total"
+      ]
+    },
+    {
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Concordia&max=2&inicio=2",
+      "checkedAt": "2026-10-02T01:26:38.1829008+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "bdf041f1fd56e16e6283545f33788ff1e9ccc892a14167957efaeb398c2041ee",
+      "total": 2,
+      "countReturned": 0,
+      "topLevelKeys": [
+        "cantidad",
+        "inicio",
+        "localidades",
+        "parametros",
+        "total"
+      ]
+    },
+    {
+      "url": "https://apis.datos.gob.ar/georef/api/v2.0/localidades?nombre=Concordia&max=2&formato=geojson",
+      "checkedAt": "2026-10-02T01:26:39.3225159+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "74dd569ef5ac5b5f09a8f7b13e4e92fd842f1e3c41f5d5b8d8399709d5ffa490",
+      "total": null,
+      "countReturned": 2,
+      "topLevelKeys": [
+        "features",
+        "type"
+      ]
+    }
+  ]
+}

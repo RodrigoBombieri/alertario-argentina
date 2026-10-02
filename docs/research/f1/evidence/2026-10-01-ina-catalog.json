@@ -1,0 +1,726 @@
+{
+  "schema": "alertario-f1-probe-v1",
+  "mode": "Catalog",
+  "generatedAt": "2026-10-02T01:25:08.4494347+00:00",
+  "method": "bounded sequential GET; one-second delay; no redirects; bodies omitted",
+  "results": [
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/estaciones?tabla=alturas_prefe&rio=URUGUAY&pagination=true&limit=30",
+      "checkedAt": "2026-10-02T01:25:06.3688941+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "3fb8b07f84ffd69e37cef5f4db560b9b06fab87de44a44a672e994eb293b5acb",
+      "countReturned": 28,
+      "isLastPage": true,
+      "stations": [
+        {
+          "id": 60,
+          "name": "Pepirí Miní",
+          "river": "URUGUAY",
+          "province": "MISIONES",
+          "owner": null,
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -53.933149,
+            -27.153744
+          ]
+        },
+        {
+          "id": 61,
+          "name": "El Soberbio",
+          "river": "URUGUAY",
+          "province": "MISIONES",
+          "owner": null,
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -54.2,
+            -27.3
+          ]
+        },
+        {
+          "id": 62,
+          "name": "Alicia",
+          "river": "URUGUAY",
+          "province": "MISIONES",
+          "owner": null,
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -54.3553,
+            -27.4375
+          ]
+        },
+        {
+          "id": 63,
+          "name": "Alba Posse",
+          "river": "URUGUAY",
+          "province": "MISIONES",
+          "owner": null,
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -54.678494,
+            -27.572
+          ]
+        },
+        {
+          "id": 64,
+          "name": "Panambí",
+          "river": "URUGUAY",
+          "province": "MISIONES",
+          "owner": null,
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -54.91305,
+            -27.730627
+          ]
+        },
+        {
+          "id": 65,
+          "name": "San Javier",
+          "river": "URUGUAY",
+          "province": "MISIONES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -55.1333333333333,
+            -27.8833333333333
+          ]
+        },
+        {
+          "id": 66,
+          "name": "Puerto Concepción",
+          "river": "URUGUAY",
+          "province": "MISIONES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -55.581369,
+            -28.119193
+          ]
+        },
+        {
+          "id": 67,
+          "name": "Garruchos",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -55.65,
+            -28.1833333333333
+          ]
+        },
+        {
+          "id": 68,
+          "name": "Santo Tomé",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -56.0333333333333,
+            -28.55
+          ]
+        },
+        {
+          "id": 69,
+          "name": "Alvear",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -56.55,
+            -29.1
+          ]
+        },
+        {
+          "id": 70,
+          "name": "La Cruz",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -56.633977,
+            -29.18062
+          ]
+        },
+        {
+          "id": 71,
+          "name": "Yapeyú",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -56.810674,
+            -29.470031
+          ]
+        },
+        {
+          "id": 72,
+          "name": "Paso de los Libres",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.0833333333333,
+            -29.7166666666667
+          ]
+        },
+        {
+          "id": 73,
+          "name": "Bompland",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.332887,
+            -29.872652
+          ]
+        },
+        {
+          "id": 74,
+          "name": "Monte Caseros",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.6333333333333,
+            -30.25
+          ]
+        },
+        {
+          "id": 75,
+          "name": "Mocoretá",
+          "river": "URUGUAY",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.81776,
+            -30.715682
+          ]
+        },
+        {
+          "id": 76,
+          "name": "Federación",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.914682,
+            -30.993221
+          ]
+        },
+        {
+          "id": 77,
+          "name": "Salto Grande Arriba",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.936945,
+            -31.27547
+          ]
+        },
+        {
+          "id": 78,
+          "name": "Salto Grande Abajo",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.936945,
+            -31.27547
+          ]
+        },
+        {
+          "id": 79,
+          "name": "Concordia",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.0166666666667,
+            -31.4
+          ]
+        },
+        {
+          "id": 80,
+          "name": "Colón",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.1166666666667,
+            -32.2333333333333
+          ]
+        },
+        {
+          "id": 81,
+          "name": "Concepción del Uruguay",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.2333333333333,
+            -32.4833333333333
+          ]
+        },
+        {
+          "id": 82,
+          "name": "Campichuelo",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.1834,
+            -32.70101
+          ]
+        },
+        {
+          "id": 84,
+          "name": "Boca Gualeguaychú",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.4166666666667,
+            -33.0666666666667
+          ]
+        },
+        {
+          "id": 89,
+          "name": "Aporte Salto Grande",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": null,
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.938011,
+            -31.273969
+          ]
+        },
+        {
+          "id": 90,
+          "name": "Erogado Salto Grande",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": null,
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.938011,
+            -31.273969
+          ]
+        },
+        {
+          "id": 99,
+          "name": "Gualeguaychú",
+          "river": "URUGUAY",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.5041666666667,
+            -33.0144444444444
+          ]
+        },
+        {
+          "id": 5430,
+          "name": "Federación Embalse",
+          "river": "Uruguay",
+          "province": null,
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.899273,
+            -30.994853
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://alerta.ina.gob.ar/a5/obs/puntual/estaciones?tabla=alturas_prefe&rio=PARANA&pagination=true&limit=30",
+      "checkedAt": "2026-10-02T01:25:07.9606252+00:00",
+      "status": 200,
+      "contentType": "application/json",
+      "sha256Utf8Content": "1291a5bf7855f9e39341644904bc9a95c2c697748dd217bcd32d6a045c6bbc65",
+      "countReturned": 30,
+      "isLastPage": false,
+      "stations": [
+        {
+          "id": 9,
+          "name": "Puerto Iguazú",
+          "river": "PARANAMED",
+          "province": "MISIONES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -54.5666666666667,
+            -25.5833333333333
+          ]
+        },
+        {
+          "id": 10,
+          "name": "Libertad",
+          "river": "PARANAMED",
+          "province": "MISIONES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -54.621134,
+            -25.916679
+          ]
+        },
+        {
+          "id": 11,
+          "name": "El Dorado",
+          "river": "PARANAMED",
+          "province": "MISIONES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -54.7,
+            -26.3833333333333
+          ]
+        },
+        {
+          "id": 12,
+          "name": "Libertador",
+          "river": "PARANAMED",
+          "province": "MISIONES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -55.0333333333333,
+            -26.8
+          ]
+        },
+        {
+          "id": 13,
+          "name": "Santa Ana",
+          "river": "PARANAMED",
+          "province": "MISIONES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -55.588412,
+            -27.33509
+          ]
+        },
+        {
+          "id": 14,
+          "name": "Posadas",
+          "river": "PARANAMED",
+          "province": "MISIONES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -55.8833333333333,
+            -27.3666666666667
+          ]
+        },
+        {
+          "id": 15,
+          "name": "Ituzaingó",
+          "river": "PARANAMED",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -56.7,
+            -27.5833333333333
+          ]
+        },
+        {
+          "id": 16,
+          "name": "Itá Ibaté",
+          "river": "PARANAMED",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -57.33326783,
+            -27.42336098
+          ]
+        },
+        {
+          "id": 17,
+          "name": "Itatí",
+          "river": "PARANAMED",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.24407387,
+            -27.26677773
+          ]
+        },
+        {
+          "id": 18,
+          "name": "Paso de la Patria",
+          "river": "PARANAMED",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.5833333333333,
+            -27.3333333333333
+          ]
+        },
+        {
+          "id": 19,
+          "name": "Corrientes",
+          "river": "PARANAMED",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.8388696,
+            -27.46364349
+          ]
+        },
+        {
+          "id": 21,
+          "name": "Empedrado",
+          "river": "PARANAINF",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.81852419,
+            -27.95412346
+          ]
+        },
+        {
+          "id": 22,
+          "name": "Bella Vista",
+          "river": "PARANAINF",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.05931723,
+            -28.51840072
+          ]
+        },
+        {
+          "id": 23,
+          "name": "Goya",
+          "river": "PARANAINF",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.27303952,
+            -29.14376844
+          ]
+        },
+        {
+          "id": 25,
+          "name": "Esquina",
+          "river": "PARANAINF",
+          "province": "CORRIENTES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.53663483,
+            -30.01924089
+          ]
+        },
+        {
+          "id": 26,
+          "name": "La Paz",
+          "river": "PARANAINF",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.6381167,
+            -30.73419972
+          ]
+        },
+        {
+          "id": 27,
+          "name": "Santa Elena",
+          "river": "PARANAINF",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.7833333333333,
+            -30.95
+          ]
+        },
+        {
+          "id": 28,
+          "name": "Hernandarias",
+          "river": "PARANAINF",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.99193936,
+            -31.22650904
+          ]
+        },
+        {
+          "id": 29,
+          "name": "Paraná",
+          "river": "PARANAINF",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -60.5225697750899,
+            -31.7182378629681
+          ]
+        },
+        {
+          "id": 30,
+          "name": "Santa Fe",
+          "river": "PARANAINF",
+          "province": "SANTAFE",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -60.7002319185745,
+            -31.6514772196376
+          ]
+        },
+        {
+          "id": 31,
+          "name": "Diamante",
+          "river": "PARANAINF",
+          "province": "ENTRERIOS",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -60.6432219715378,
+            -32.0715615377843
+          ]
+        },
+        {
+          "id": 33,
+          "name": "San Lorenzo (San Martín)",
+          "river": "PARANAINF",
+          "province": "SANTAFE",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -60.7256705696322,
+            -32.7336256031375
+          ]
+        },
+        {
+          "id": 34,
+          "name": "Rosario",
+          "river": "PARANAINF",
+          "province": "SANTAFE",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -60.6308206029857,
+            -32.9432699442268
+          ]
+        },
+        {
+          "id": 35,
+          "name": "Villa Constitución",
+          "river": "PARANAINF",
+          "province": "SANTAFE",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -60.3091044341421,
+            -33.2354221667103
+          ]
+        },
+        {
+          "id": 36,
+          "name": "San Nicolás",
+          "river": "PARANAINF",
+          "province": "BUENOSAIRES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -60.1895279977149,
+            -33.3420008188866
+          ]
+        },
+        {
+          "id": 37,
+          "name": "Ramallo",
+          "river": "PARANAINF",
+          "province": "BUENOSAIRES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.9957013181522,
+            -33.4780656197056
+          ]
+        },
+        {
+          "id": 38,
+          "name": "San Pedro",
+          "river": "PARANAINF",
+          "province": "BUENOSAIRES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.6497183332918,
+            -33.6745267329027
+          ]
+        },
+        {
+          "id": 40,
+          "name": "Zárate",
+          "river": "PARANADELASPALMAS",
+          "province": "BUENOSAIRES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -59.0108657589595,
+            -34.0987818311696
+          ]
+        },
+        {
+          "id": 41,
+          "name": "Campana",
+          "river": "PARANADELASPALMAS",
+          "province": "BUENOSAIRES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.9581750062675,
+            -34.1555854281116
+          ]
+        },
+        {
+          "id": 42,
+          "name": "Escobar",
+          "river": "PARANADELASPALMAS",
+          "province": "BUENOSAIRES",
+          "owner": "PNA",
+          "network": "escalas Prefectura Nacional",
+          "coordinates": [
+            -58.7333333333,
+            -34.3
+          ]
+        }
+      ]
+    }
+  ]
+}
