@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: alertario_dev
+      POSTGRES_USER: alertario_dev
+      POSTGRES_PASSWORD: local_only_change_me
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - alertario_pgdata:/var/lib/postgresql/data
+      - ./db/migrations/0001_initial.sql:/docker-entrypoint-initdb.d/20_initial.sql:ro
+      - ./db/tests/0001_smoke.sql:/opt/alertario/0001_smoke.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alertario_dev -d alertario_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+volumes:
+  alertario_pgdata:

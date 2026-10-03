@@ -13,7 +13,12 @@ public sealed class InaDataClientTests
         new(2026, 10, 1, 0, 0, 0, TimeSpan.Zero);
     private static readonly DateTimeOffset To =
         new(2026, 10, 2, 0, 0, 0, TimeSpan.Zero);
-    private static readonly InaSeriesContext Series = new(31, 3, "m", true, true);
+    private static readonly ApprovedInaSeries Series = InaSeriesApprovalGate.Select(
+        new InaSeriesCandidate(31, 21, 4, 2, "H", "Altura", 5,
+            "medición directa", 3, "m", new InaTimeSupport(0, 0, 0, 0, 0, 0, 0), null, null),
+        new InaSeriesApproval(31, 21, 4, "H", 5, "medición directa", 3, "m",
+            new InaTimeSupport(0, 0, 0, 0, 0, 0, 0), InaSeriesDataKind.Observed,
+            "synthetic-v1", "synthetic-rights-review", "synthetic-hydrology-review"));
 
     [Fact]
     public async Task Series_are_fetched_once_from_the_filtered_official_endpoint()
@@ -112,8 +117,8 @@ public sealed class InaDataClientTests
             client.FetchAsync(Series, From.ToOffset(TimeSpan.FromHours(-3)), To, IngestedAt));
         await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             client.FetchAsync(Series, From.AddMilliseconds(1), To, IngestedAt));
-        await Assert.ThrowsAsync<ArgumentException>(() =>
-            client.FetchAsync(Series with { IsInstantaneous = false }, From, To, IngestedAt));
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
+            client.FetchAsync(null!, From, To, IngestedAt));
         Assert.Empty(handler.Requests);
     }
 

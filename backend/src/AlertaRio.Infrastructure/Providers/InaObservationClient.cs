@@ -11,12 +11,13 @@ public sealed class InaObservationClient(HttpClient client)
     private const int MaxObservations = 500;
 
     public async Task<IReadOnlyList<InaObservationResult>> FetchAsync(
-        InaSeriesContext series, DateTimeOffset fromUtc, DateTimeOffset toUtc,
+        ApprovedInaSeries approvedSeries, DateTimeOffset fromUtc, DateTimeOffset toUtc,
         DateTimeOffset ingestedAt, CancellationToken cancellationToken = default)
     {
         if (client.BaseAddress != OfficialBase)
             throw new InvalidOperationException("INA client must use the official A5 base URL.");
-        ArgumentNullException.ThrowIfNull(series);
+        ArgumentNullException.ThrowIfNull(approvedSeries);
+        var series = approvedSeries.Context;
         if (series.ExternalSeriesId <= 0 || !series.IsObserved || !series.IsInstantaneous ||
             series.UnitId is null or <= 0 || string.IsNullOrWhiteSpace(series.Unit))
             throw new ArgumentException("An observed instantaneous series with a known unit is required.",

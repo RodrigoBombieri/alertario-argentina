@@ -4,7 +4,7 @@ Aplicación ciudadana para consultar información hidrológica oficial, entender
 
 **Estado: F1 y F2 no aceptadas como fases completas.** La evaluación exploratoria de F1 terminó con resultado NO-GO; sus [faltantes por motivos externos y pasos de resolución](docs/research/f1/CLOSURE.md#faltantes-por-motivos-externos) están registrados. F2 tiene un [backend sintético de revisión](docs/implementation/F2.md), sin infraestructura desplegada. Las consultas puntuales a fuentes no certifican disponibilidad continua ni cierran los permisos pendientes de INA/SMN.
 
-F3 comenzó con [normalización aislada y fixtures sintéticas](docs/implementation/F3.md); todavía no hay adapters operativos ni datos oficiales publicados.
+F3 continúa con [normalización aislada, selección revisada por serie y fixtures sintéticas](docs/implementation/F3.md). F4 comenzó con un [esquema PostGIS local aún sin validar en una base real](docs/implementation/F4.md). Todavía no hay adapters operativos ni datos oficiales publicados.
 
 ## Empezar aquí
 
