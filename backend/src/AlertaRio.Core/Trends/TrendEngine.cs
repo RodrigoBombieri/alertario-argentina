@@ -19,7 +19,9 @@ public sealed record TrendWindowResult(
     TrendAvailability Availability, string? Reason, bool? InteriorGaps);
 
 public sealed record TrendSnapshot(
-    DateTimeOffset? LatestObservedAt, TrendFreshness Freshness,
+    DateTimeOffset? LatestObservedAt, decimal? LatestValue,
+    string? LatestUnit, string? LatestDatum, int? LatestEpoch,
+    TrendFreshness Freshness,
     bool HasNewerSuspect, bool HasRecentSuspect,
     IReadOnlyList<TrendWindowResult> Windows,
     int? PrimaryWindowHours, string MethodologyVersion)
@@ -64,7 +66,8 @@ public static class TrendEngine
             .ToArray();
         var current = accepted.LastOrDefault();
         if (current is null)
-            return new TrendSnapshot(null, TrendFreshness.NoData, normalized.Length > 0,
+            return new TrendSnapshot(null, null, null, null, null,
+                TrendFreshness.NoData, normalized.Length > 0,
                 normalized.Any(sample => sample.Quality == TrendSampleQuality.Suspect),
                 Windows.Select(window => Unavailable(window, TrendAvailability.InsufficientData,
                     "noAcceptedMeasurement")).ToArray(), null, policy.MethodologyVersion);
@@ -84,7 +87,8 @@ public static class TrendEngine
         var primary = results.FirstOrDefault(result =>
             result.WindowHours is 6 or 12 or 24 &&
             result.Availability == TrendAvailability.Available)?.WindowHours;
-        return new TrendSnapshot(current.ObservedAt, freshness, hasNewerSuspect,
+        return new TrendSnapshot(current.ObservedAt, current.Value, current.Unit,
+            current.Datum, current.Epoch, freshness, hasNewerSuspect,
             hasRecentSuspect,
             results, primary, policy.MethodologyVersion);
     }

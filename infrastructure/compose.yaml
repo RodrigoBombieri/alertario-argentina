@@ -10,6 +10,9 @@ services:
     volumes:
       - alertario_pgdata:/var/lib/postgresql/data
       - ./db/migrations/0001_initial.sql:/docker-entrypoint-initdb.d/20_initial.sql:ro
+      - ./db/migrations/0002_ingestion_writer.sql:/docker-entrypoint-initdb.d/30_ingestion_writer.sql:ro
+      - ./db/migrations:/opt/alertario/migrations:ro
+      - ./db/tests:/opt/alertario/tests:ro
       - ./db/tests/0001_smoke.sql:/opt/alertario/0001_smoke.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U alertario_dev -d alertario_dev"]
