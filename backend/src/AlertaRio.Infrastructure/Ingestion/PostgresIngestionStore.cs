@@ -47,6 +47,26 @@ public sealed class PostgresIngestionStore(NpgsqlDataSource dataSource)
             ?? throw new InvalidDataException("Lease result was null."));
     }
 
+    public async Task<bool> RenewLeaseAsync(
+        string provider, string streamKey, string owner, TimeSpan duration,
+        CancellationToken cancellationToken = default)
+    {
+        if (duration <= TimeSpan.Zero || duration > TimeSpan.FromHours(1))
+            throw new ArgumentOutOfRangeException(nameof(duration));
+        await using var command = dataSource.CreateCommand(
+            "SELECT renew_ingestion_lease($1, $2, $3, $4)");
+        command.Parameters.Add(new NpgsqlParameter { Value = provider });
+        command.Parameters.Add(new NpgsqlParameter { Value = streamKey });
+        command.Parameters.Add(new NpgsqlParameter { Value = owner });
+        command.Parameters.Add(new NpgsqlParameter
+        {
+            Value = duration,
+            NpgsqlDbType = NpgsqlDbType.Interval
+        });
+        return (bool)(await command.ExecuteScalarAsync(cancellationToken)
+            ?? throw new InvalidDataException("Lease renewal result was null."));
+    }
+
     public async Task<IngestionBatchResult> CommitAsync(
         IngestionBatch batch, CancellationToken cancellationToken = default)
     {

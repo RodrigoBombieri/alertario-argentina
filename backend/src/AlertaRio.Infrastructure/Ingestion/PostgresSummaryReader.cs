@@ -1,3 +1,4 @@
+using System.Data;
 using AlertaRio.Application.Ports;
 using AlertaRio.Application.PublicData;
 using AlertaRio.Core.Trends;
@@ -16,7 +17,13 @@ public sealed class PostgresSummaryReader(
     {
         if (!Guid.TryParse(stationId, out var stationGuid)) return null;
         var now = clock.GetUtcNow();
-        await using var seriesCommand = dataSource.CreateCommand("""
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        await using var transaction = await connection.BeginTransactionAsync(
+            IsolationLevel.RepeatableRead, cancellationToken);
+        await using (var readOnlyCommand = new NpgsqlCommand(
+            "SET TRANSACTION READ ONLY", connection, transaction))
+            await readOnlyCommand.ExecuteNonQueryAsync(cancellationToken);
+        await using var seriesCommand = new NpgsqlCommand("""
             SELECT ms.id FROM measurement_series AS ms
             JOIN stations AS st ON st.id = ms.station_id
             JOIN data_sources AS d ON d.id = ms.source_id
@@ -24,7 +31,7 @@ public sealed class PostgresSummaryReader(
                   ms.unit = 'm' AND ms.approved AND ms.data_kind = 'observed' AND
                   ms.support_seconds = 0 AND d.permission_status = 'approved'
             ORDER BY ms.id LIMIT 2
-            """);
+            """, connection, transaction);
         seriesCommand.Parameters.Add(new NpgsqlParameter { Value = stationGuid });
         var series = new List<Guid>();
         await using (var reader = await seriesCommand.ExecuteReaderAsync(cancellationToken))
@@ -35,16 +42,16 @@ public sealed class PostgresSummaryReader(
             return Unavailable(stationId, now, "ambiguousHeightSeries");
 
         var seriesId = series[0];
-        var configuration = await new PostgresTrendPolicyReader(dataSource)
-            .ReadAsync(seriesId, now, cancellationToken);
+        var configuration = await PostgresTrendPolicyReader.ReadAsync(
+            connection, transaction, seriesId, now, cancellationToken);
         if (configuration is null)
             return Unavailable(stationId, now, "noApprovedPolicy");
-        var trend = await new PostgresTrendReader(dataSource)
-            .ReadAsync(seriesId, configuration.Policy, now, cancellationToken);
+        var trend = await PostgresTrendReader.ReadAsync(connection, transaction,
+            seriesId, configuration.Policy, now, cancellationToken);
         if (trend is null)
             return Unavailable(stationId, now, "noAcceptedMeasurement");
 
-        await using var latestCommand = dataSource.CreateCommand("""
+        await using var latestCommand = new NpgsqlCommand("""
             SELECT p.value, p.observed_end_at, p.source_updated_at,
                    p.ingested_at, p.revision, l.version, s.unit, s.datum_ref,
                    s.epoch, s.source_id
@@ -53,7 +60,7 @@ public sealed class PostgresSummaryReader(
               ON p.id = l.measurement_id AND p.series_id = l.series_id
             JOIN measurement_series AS s ON s.id = l.series_id
             WHERE l.series_id = $1
-            """);
+            """, connection, transaction);
         latestCommand.Parameters.Add(new NpgsqlParameter { Value = seriesId });
         decimal value;
         DateTimeOffset observedAt;
@@ -86,7 +93,7 @@ public sealed class PostgresSummaryReader(
             trend.LatestEpoch != epoch)
             return Unavailable(stationId, now, "dataChangedDuringRead");
 
-        await using var qualityCommand = dataSource.CreateCommand("""
+        await using var qualityCommand = new NpgsqlCommand("""
             SELECT EXISTS (
                 SELECT 1 FROM ingestion_checkpoints
                 WHERE stream_key = $1 AND coverage = 'complete'
@@ -97,7 +104,7 @@ public sealed class PostgresSummaryReader(
                 SELECT 1 FROM quarantined_records
                 WHERE stream_key = $1 AND received_at >= $2
             )
-            """);
+            """, connection, transaction);
         qualityCommand.Parameters.Add(new NpgsqlParameter { Value = seriesId.ToString("D") });
         qualityCommand.Parameters.Add(new NpgsqlParameter { Value = now.AddHours(-24) });
         var calculationApproved = (bool)(await qualityCommand.ExecuteScalarAsync(cancellationToken)
@@ -118,7 +125,7 @@ public sealed class PostgresSummaryReader(
                     state.DataStatus == DataStatus.Current
                     ? value >= threshold.Value ? "above" : "below"
                     : "unavailable")).ToArray();
-        return new StationSummaryDto(stationId, now, true,
+        var summary = new StationSummaryDto(stationId, now, true,
             new MeasurementDto(seriesId.ToString("D"), value, unit,
                 observedAt, sourceUpdatedAt, ingestedAt, "accepted",
                 Camel(trend.Freshness), sourceId.ToString("D")),
@@ -126,6 +133,8 @@ public sealed class PostgresSummaryReader(
             Camel(state.Condition),
             thresholds, [], new NoticeCoverageDto("notConfigured", null),
             configuration.Policy.MethodologyVersion, $"{version}:{revision}");
+        await transaction.CommitAsync(cancellationToken);
+        return summary;
     }
 
     private static StationSummaryDto Unavailable(

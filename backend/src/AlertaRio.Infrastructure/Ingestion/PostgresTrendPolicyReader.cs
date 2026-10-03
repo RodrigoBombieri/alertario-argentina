@@ -11,9 +11,18 @@ public sealed class PostgresTrendPolicyReader(NpgsqlDataSource dataSource)
     public async Task<ApprovedTrendConfiguration?> ReadAsync(
         Guid seriesId, DateTimeOffset now, CancellationToken cancellationToken = default)
     {
+        await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
+        return await ReadAsync(connection, null, seriesId, now, cancellationToken);
+    }
+
+    internal static async Task<ApprovedTrendConfiguration?> ReadAsync(
+        NpgsqlConnection connection, NpgsqlTransaction? transaction,
+        Guid seriesId, DateTimeOffset now,
+        CancellationToken cancellationToken = default)
+    {
         if (seriesId == Guid.Empty || now.Offset != TimeSpan.Zero)
             throw new ArgumentException("A series and UTC clock are required.");
-        await using var policyCommand = dataSource.CreateCommand("""
+        await using var policyCommand = new NpgsqlCommand("""
             SELECT p.cadence_seconds, p.allowed_lag_seconds, p.epsilon,
                    p.methodology_version, s.unit, s.datum_ref, s.epoch
             FROM series_trend_policies AS p
@@ -23,7 +32,7 @@ public sealed class PostgresTrendPolicyReader(NpgsqlDataSource dataSource)
                   s.data_kind = 'observed' AND s.support_seconds = 0 AND
                   d.permission_status = 'approved' AND
                   p.datum_ref = s.datum_ref AND p.epoch = s.epoch
-            """);
+            """, connection, transaction);
         policyCommand.Parameters.Add(new NpgsqlParameter { Value = seriesId });
         int cadenceSeconds;
         int lagSeconds;
@@ -44,14 +53,14 @@ public sealed class PostgresTrendPolicyReader(NpgsqlDataSource dataSource)
             epoch = reader.GetInt32(6);
         }
 
-        await using var thresholdCommand = dataSource.CreateCommand("""
+        await using var thresholdCommand = new NpgsqlCommand("""
             SELECT id, kind, value, valid_from, valid_until, authority
             FROM official_thresholds
             WHERE series_id = $1 AND approved AND unit = $2 AND
                   datum_ref = $3 AND epoch = $4 AND valid_from <= $5 AND
                   (valid_until IS NULL OR $5 < valid_until)
             ORDER BY kind, value, id
-            """);
+            """, connection, transaction);
         thresholdCommand.Parameters.Add(new NpgsqlParameter { Value = seriesId });
         thresholdCommand.Parameters.Add(new NpgsqlParameter { Value = unit });
         thresholdCommand.Parameters.Add(new NpgsqlParameter { Value = datum });

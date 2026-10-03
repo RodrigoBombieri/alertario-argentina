@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Data;
 using System.Net;
 using System.Text.Json;
 using AlertaRio.Api;
@@ -235,6 +236,101 @@ public sealed class IngestionRoundTripTests
                 "DELETE FROM ingestion_checkpoints WHERE provider = 'integration' AND stream_key = $1");
             command.Parameters.Add(new NpgsqlParameter { Value = stream });
             await command.ExecuteNonQueryAsync();
+        }
+    }
+
+    [Fact]
+    public async Task Renewal_requires_a_live_lease_owned_by_the_same_worker()
+    {
+        await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
+        var store = new PostgresIngestionStore(dataSource);
+        var stream = $"renew-{Guid.NewGuid():N}";
+        try
+        {
+            Assert.True(await store.ClaimLeaseAsync("integration", stream, "worker-a",
+                TimeSpan.FromSeconds(5)));
+            var firstUntil = (await store.ReadCheckpointAsync("integration", stream))?.LeaseUntil;
+            Assert.NotNull(firstUntil);
+            Assert.False(await store.RenewLeaseAsync("integration", stream, "worker-b",
+                TimeSpan.FromMinutes(1)));
+            Assert.True(await store.RenewLeaseAsync("integration", stream, "worker-a",
+                TimeSpan.FromMinutes(1)));
+            Assert.True((await store.ReadCheckpointAsync("integration", stream))?.LeaseUntil
+                > firstUntil);
+            Assert.False(await store.ClaimLeaseAsync("integration", stream, "worker-b",
+                TimeSpan.FromMinutes(1)));
+
+            await ExpireLeaseAsync(dataSource, stream);
+            Assert.False(await store.RenewLeaseAsync("integration", stream, "worker-a",
+                TimeSpan.FromMinutes(1)));
+            Assert.True(await store.ClaimLeaseAsync("integration", stream, "worker-b",
+                TimeSpan.FromMinutes(1)));
+            Assert.False(await store.RenewLeaseAsync("integration", stream, "worker-a",
+                TimeSpan.FromMinutes(1)));
+        }
+        finally
+        {
+            await using var command = dataSource.CreateCommand(
+                "DELETE FROM ingestion_checkpoints WHERE provider = 'integration' AND stream_key = $1");
+            command.Parameters.Add(new NpgsqlParameter { Value = stream });
+            await command.ExecuteNonQueryAsync();
+        }
+    }
+
+    [Fact]
+    public async Task Trend_readers_share_a_stable_snapshot_during_a_concurrent_revision()
+    {
+        await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
+        var sourceId = Guid.NewGuid();
+        var stationId = Guid.NewGuid();
+        var seriesId = Guid.NewGuid();
+        var stream = seriesId.ToString("D");
+        var now = DateTimeOffset.UtcNow;
+        var currentAt = now.AddMinutes(-5);
+        var oldAt = currentAt.AddHours(-6);
+        try
+        {
+            await SeedAsync(dataSource, sourceId, stationId, seriesId);
+            var store = new PostgresIngestionStore(dataSource);
+            Assert.True(await store.ClaimLeaseAsync("integration", stream, "snapshot-worker",
+                TimeSpan.FromMinutes(1)));
+            var batch = new IngestionBatch("integration", stream, "snapshot-worker",
+                "initial", "complete", now,
+                [Record(seriesId, oldAt, 7.20m, oldAt.AddMinutes(1), 'a'),
+                 Record(seriesId, currentAt, 7.50m, currentAt.AddMinutes(1), 'b')]);
+            Assert.Equal(2, (await store.CommitAsync(batch)).Inserted);
+
+            await using var connection = await dataSource.OpenConnectionAsync();
+            await using var transaction = await connection.BeginTransactionAsync(
+                IsolationLevel.RepeatableRead);
+            var configuration = await PostgresTrendPolicyReader.ReadAsync(
+                connection, transaction, seriesId, now);
+            Assert.NotNull(configuration);
+
+            var correction = Record(seriesId, oldAt, 7.30m,
+                oldAt.AddMinutes(2), 'c');
+            Assert.Equal(1, (await store.CommitAsync(batch with
+            {
+                Cursor = "corrected",
+                Records = [correction]
+            })).Revised);
+
+            var withinSnapshot = await PostgresTrendReader.ReadAsync(
+                connection, transaction, seriesId, configuration.Policy, now);
+            Assert.NotNull(withinSnapshot);
+            Assert.Equal(0.30m, Assert.Single(withinSnapshot.Windows,
+                window => window.WindowHours == 6).Delta);
+            await transaction.CommitAsync();
+
+            var afterSnapshot = await new PostgresTrendReader(dataSource)
+                .ReadAsync(seriesId, configuration.Policy, now);
+            Assert.NotNull(afterSnapshot);
+            Assert.Equal(0.20m, Assert.Single(afterSnapshot.Windows,
+                window => window.WindowHours == 6).Delta);
+        }
+        finally
+        {
+            await CleanupAsync(dataSource, sourceId, stationId, seriesId, stream);
         }
     }
 
