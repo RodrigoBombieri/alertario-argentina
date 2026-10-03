@@ -116,12 +116,14 @@ public sealed class ProviderCatalogClientTests
     public async Task Provider_status_and_response_size_fail_with_typed_errors()
     {
         using var rateHandler = new QueueHandler(
+            new HttpResponseMessage(HttpStatusCode.TooManyRequests),
             new HttpResponseMessage(HttpStatusCode.TooManyRequests));
         using var rateHttp = InaHttp(rateHandler);
         var rate = await Assert.ThrowsAsync<ProviderFetchException>(() =>
             new InaStationCatalogClient(rateHttp).FetchAsync("red-demo", "RIO"));
         Assert.Equal(ProviderFetchFailure.HttpStatus, rate.Failure);
         Assert.Equal(HttpStatusCode.TooManyRequests, rate.StatusCode);
+        Assert.Equal(2, rateHandler.Requests.Count);
 
         using var large = new HttpResponseMessage(HttpStatusCode.OK)
         {
@@ -134,6 +136,64 @@ public sealed class ProviderCatalogClientTests
         var size = await Assert.ThrowsAsync<ProviderFetchException>(() =>
             new InaStationCatalogClient(largeHttp).FetchAsync("red-demo", "RIO"));
         Assert.Equal(ProviderFetchFailure.TooLarge, size.Failure);
+    }
+
+    [Fact]
+    public async Task Transient_status_is_retried_once_with_the_same_url()
+    {
+        var unavailable = new HttpResponseMessage(HttpStatusCode.ServiceUnavailable);
+        unavailable.Headers.RetryAfter =
+            new System.Net.Http.Headers.RetryConditionHeaderValue(TimeSpan.Zero);
+        const string complete = """
+            {"estaciones":[
+              {"id":701,"tabla":"red-demo","nombre":"Estación A","rio":"Río de ejemplo",
+               "public":true,"red":{"id":1,"public":true},
+               "geom":{"type":"Point","coordinates":[-58.25,-31.25]}}
+            ],"is_last_page":true}
+            """;
+        using var handler = new QueueHandler(unavailable, Json(complete));
+        using var http = InaHttp(handler);
+
+        var result = await new InaStationCatalogClient(http).FetchAsync("red-demo", "RIO");
+
+        Assert.Single(result);
+        Assert.Equal(2, handler.Requests.Count);
+        Assert.Equal(handler.Requests[0], handler.Requests[1]);
+    }
+
+    [Fact]
+    public async Task Long_retry_after_and_redirects_are_not_followed()
+    {
+        var rateLimited = new HttpResponseMessage(HttpStatusCode.TooManyRequests);
+        rateLimited.Headers.RetryAfter =
+            new System.Net.Http.Headers.RetryConditionHeaderValue(TimeSpan.FromMinutes(1));
+        using var rateHandler = new QueueHandler(rateLimited);
+        using var rateHttp = InaHttp(rateHandler);
+        var rate = await Assert.ThrowsAsync<ProviderFetchException>(() =>
+            new InaStationCatalogClient(rateHttp).FetchAsync("red-demo", "RIO"));
+        Assert.Equal(ProviderFetchFailure.HttpStatus, rate.Failure);
+        Assert.Single(rateHandler.Requests);
+
+        var redirect = new HttpResponseMessage(HttpStatusCode.Found);
+        redirect.Headers.Location = new Uri("https://example.invalid/other");
+        using var redirectHandler = new QueueHandler(redirect);
+        using var redirectHttp = InaHttp(redirectHandler);
+        var moved = await Assert.ThrowsAsync<ProviderFetchException>(() =>
+            new InaStationCatalogClient(redirectHttp).FetchAsync("red-demo", "RIO"));
+        Assert.Equal(ProviderFetchFailure.Redirect, moved.Failure);
+        Assert.Single(redirectHandler.Requests);
+    }
+
+    [Fact]
+    public async Task A_transient_network_error_is_retried_once()
+    {
+        using var handler = new FailOnceHandler();
+        using var http = InaHttp(handler);
+
+        var result = await new InaSeriesCatalogClient(http).FetchAsync(21);
+
+        Assert.Empty(result);
+        Assert.Equal(2, handler.RequestCount);
     }
 
     [Fact]
@@ -171,6 +231,20 @@ public sealed class ProviderCatalogClientTests
             Requests.Add(request.RequestUri ?? throw new InvalidOperationException());
             if (queue.Count == 0) throw new InvalidOperationException("Unexpected provider call.");
             return Task.FromResult(queue.Dequeue());
+        }
+    }
+
+    private sealed class FailOnceHandler : HttpMessageHandler
+    {
+        public int RequestCount { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            RequestCount++;
+            if (RequestCount == 1)
+                throw new HttpRequestException("Temporary network error.");
+            return Task.FromResult(Json("{\"rows\":[]}"));
         }
     }
 }

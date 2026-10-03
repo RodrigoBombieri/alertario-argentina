@@ -85,4 +85,22 @@ public sealed class InaObservationNormalizerTests
         Assert.Throws<JsonException>(() => InaObservationNormalizer.Normalize(
             "{\"items\":[]}", Series, IngestedAt));
     }
+
+    [Fact]
+    public void Large_INA_observation_ids_remain_valid_and_detect_duplicates()
+    {
+        const string json = """
+            [
+              {"id":29286744105,"series_id":9,"unit_id":null,"valor":1,
+               "timestart":"2026-10-01T03:00:00Z"},
+              {"id":29286744105,"series_id":9,"unit_id":null,"valor":2,
+               "timestart":"2026-10-01T04:00:00Z"}
+            ]
+            """;
+
+        var results = InaObservationNormalizer.Normalize(json, Series, IngestedAt);
+
+        Assert.Equal(29286744105L, results[0].Candidate!.ExternalObservationId);
+        Assert.Equal("duplicateObservationId", results[1].Reason);
+    }
 }

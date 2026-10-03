@@ -6,7 +6,7 @@ Jerarquía: **EPIC → FEATURE → USER STORY → TASK**. Estado inicial de impl
 
 **F2 no aceptada:** [corte de backend sintético y contrato HTTP](docs/implementation/F2.md) para US-04. Las rutas, OpenAPI y pruebas están implementadas, incluida una prueba de aislamiento con wrappers INA sintéticos. Falta revisión de producto/datos del contrato mínimo; los faltantes F1 por motivos externos siguen abiertos y no habilitan datos reales.
 
-**F3 iniciada:** [normalización INA y GeoRef con fixtures sintéticas](docs/implementation/F3.md) para US-05/US-07. Conserva identidad de estación/red/serie y localidades; los clientes paginados de catálogo se prueban con handlers falsos y no están conectados a los hosts. Faltan intercambio persistente y series aprobadas para la API pública.
+**F3 iniciada:** [normalización INA y GeoRef con fixtures sintéticas](docs/implementation/F3.md) para US-05/US-07. Conserva identidad de estación/red/serie, localidades y observaciones; los clientes acotados y sus reintentos se prueban con handlers falsos y no están registrados en API ni Worker. La persistencia corresponde a F4; faltan series aprobadas para la API pública.
 
 ## E01 — Fuentes y confianza
 

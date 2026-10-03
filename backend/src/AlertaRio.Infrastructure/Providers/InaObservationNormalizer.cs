@@ -15,12 +15,12 @@ public enum InaObservationStatus
 }
 
 public sealed record InaObservationCandidate(
-    int ExternalObservationId, int ExternalSeriesId, decimal Value, string OriginalValue,
+    long ExternalObservationId, int ExternalSeriesId, decimal Value, string OriginalValue,
     string Unit, DateTimeOffset ObservedStartAt, DateTimeOffset? ObservedEndAt,
     DateTimeOffset? SourceUpdatedAt, DateTimeOffset IngestedAt);
 
 public sealed record InaObservationResult(
-    int? ExternalObservationId, InaObservationStatus Status, string? Reason,
+    long? ExternalObservationId, InaObservationStatus Status, string? Reason,
     InaObservationCandidate? Candidate);
 
 // Produces unapproved candidates from synthetic or permitted payloads; it never publishes data.
@@ -43,7 +43,7 @@ public static class InaObservationNormalizer
         };
 
         var results = new List<InaObservationResult>();
-        var seenIds = new HashSet<int>();
+        var seenIds = new HashSet<long>();
         foreach (var row in rows.EnumerateArray())
         {
             if (row.ValueKind != JsonValueKind.Object)
@@ -52,7 +52,7 @@ public static class InaObservationNormalizer
                 continue;
             }
 
-            var id = ReadInt(row, "id");
+            var id = ReadLong(row, "id");
             if (id is null)
             {
                 results.Add(Quarantine(null, "missingObservationId"));
@@ -138,6 +138,11 @@ public static class InaObservationNormalizer
         value.ValueKind == JsonValueKind.Number && value.TryGetInt32(out var parsed)
             ? parsed : null;
 
+    private static long? ReadLong(JsonElement row, string name) =>
+        row.TryGetProperty(name, out var value) &&
+        value.ValueKind == JsonValueKind.Number && value.TryGetInt64(out var parsed)
+            ? parsed : null;
+
     private static bool TryReadTime(
         JsonElement row, string name, bool required, out DateTimeOffset? timestamp)
     {
@@ -155,6 +160,6 @@ public static class InaObservationNormalizer
         return true;
     }
 
-    private static InaObservationResult Quarantine(int? id, string reason) =>
+    private static InaObservationResult Quarantine(long? id, string reason) =>
         new(id, InaObservationStatus.Quarantined, reason, null);
 }
