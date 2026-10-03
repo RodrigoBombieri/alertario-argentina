@@ -19,7 +19,8 @@ public sealed record CurrentLevel(
 public sealed record OfficialThreshold(
     string ReferenceId, Guid SeriesId, decimal Value, string Unit,
     string Datum, int Epoch, CalculatedCondition Condition,
-    DateTimeOffset ValidFrom, DateTimeOffset? ValidUntil, bool Approved);
+    DateTimeOffset ValidFrom, DateTimeOffset? ValidUntil, bool Approved,
+    string Authority = "");
 
 public sealed record FollowUpRule(int WindowHours, decimal MinimumRise, bool Approved);
 
@@ -77,7 +78,8 @@ public static class CalculatedStateEngine
             TrendFreshness.NoData => DataStatus.NoData,
             TrendFreshness.Stale => DataStatus.Stale,
             TrendFreshness.Unknown => DataStatus.Unverified,
-            _ when trend.HasRecentSuspect => DataStatus.QualityReview,
+            _ when trend.HasRecentSuspect || level is { ApprovedForCalculation: false } =>
+                DataStatus.QualityReview,
             _ => DataStatus.Current
         };
         var condition = CalculatedCondition.Unavailable;

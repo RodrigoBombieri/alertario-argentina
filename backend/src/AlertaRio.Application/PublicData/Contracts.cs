@@ -35,6 +35,6 @@ public sealed record NoticeListDto(bool Synthetic, IReadOnlyList<NoticeDto> Item
 public sealed record StationSummaryDto(
     string StationId, DateTimeOffset GeneratedAt, bool Synthetic,
     MeasurementDto? Height, MeasurementDto? Discharge, string? DischargeUnavailableReason,
-    IReadOnlyList<ChangeDto> Changes, string CalculatedCondition,
+    IReadOnlyList<ChangeDto> Changes, string DataStatus, string CalculatedCondition,
     IReadOnlyList<ThresholdDto> OfficialThresholds, IReadOnlyList<NoticeDto> Notices,
     NoticeCoverageDto NoticeCoverage, string MethodologyVersion, string DataVersion);

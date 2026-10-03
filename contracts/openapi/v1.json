@@ -771,6 +771,7 @@
           "discharge",
           "dischargeUnavailableReason",
           "changes",
+          "dataStatus",
           "calculatedCondition",
           "officialThresholds",
           "notices",
@@ -821,6 +822,9 @@
             "items": {
               "$ref": "#/components/schemas/ChangeDto"
             }
+          },
+          "dataStatus": {
+            "type": "string"
           },
           "calculatedCondition": {
             "type": "string"

@@ -53,7 +53,8 @@ public sealed class SyntheticPublicDataReader(TimeProvider clock) : IPublicDataR
 
         return new StationSummaryDto(
             StationId, clock.GetUtcNow(), true, height, null, "noApprovedSeries",
-            changes, "notCalculated", [], [], new NoticeCoverageDto("notConfigured", null),
+            changes, "notApplicable", "notCalculated", [], [],
+            new NoticeCoverageDto("notConfigured", null),
             "notApplied", "synthetic-v1");
     }
 

@@ -2,5 +2,6 @@
   <ItemGroup>
     <ProjectReference Include="../AlertaRio.Application/AlertaRio.Application.csproj" />
     <ProjectReference Include="../AlertaRio.Core/AlertaRio.Core.csproj" />
+    <PackageReference Include="Npgsql" Version="10.0.3" />
   </ItemGroup>
 </Project>

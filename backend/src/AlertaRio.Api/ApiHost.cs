@@ -1,6 +1,8 @@
 using AlertaRio.Api.Features;
 using AlertaRio.Application.Ports;
+using AlertaRio.Infrastructure.Ingestion;
 using AlertaRio.Infrastructure.Synthetic;
+using Npgsql;
 
 namespace AlertaRio.Api;
 
@@ -24,9 +26,19 @@ public static class ApiHost
             }));
         builder.Services.AddSingleton(TimeProvider.System);
 
+        var persistedSummaryEnabled = builder.Environment.IsDevelopment()
+            && builder.Configuration.GetValue<bool>("PersistedSummary:Enabled");
         var syntheticEnabled = builder.Environment.IsDevelopment()
             && builder.Configuration.GetValue<bool>("SyntheticData:Enabled");
-        if (syntheticEnabled)
+        if (persistedSummaryEnabled)
+        {
+            var connectionString = builder.Configuration.GetConnectionString("Ingestion")
+                ?? throw new InvalidOperationException("Ingestion connection string is required.");
+            builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
+            builder.Services.AddSingleton<IPersistedSummaryReader, PostgresSummaryReader>();
+            builder.Services.AddSingleton<IPublicDataReader, UnavailablePublicDataReader>();
+        }
+        else if (syntheticEnabled)
             builder.Services.AddSingleton<IPublicDataReader, SyntheticPublicDataReader>();
         else
             builder.Services.AddSingleton<IPublicDataReader, UnavailablePublicDataReader>();

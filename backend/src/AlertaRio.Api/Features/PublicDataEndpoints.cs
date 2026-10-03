@@ -65,9 +65,17 @@ internal static class PublicDataEndpoints
         .ProducesProblem(404)
         .ProducesProblem(503);
 
-        api.MapGet("/stations/{id}/summary", (string id, IPublicDataReader reader,
-            HttpContext context) =>
+        api.MapGet("/stations/{id}/summary", async (string id, IPublicDataReader reader,
+            HttpContext context, CancellationToken cancellationToken) =>
         {
+            var persisted = context.RequestServices.GetService<IPersistedSummaryReader>();
+            if (persisted is not null)
+            {
+                var projected = await persisted.GetSummaryAsync(id, cancellationToken);
+                return projected is null
+                    ? ApiProblems.Create(context, 404, "stationNotFound", "Station not found.")
+                    : Results.Ok(projected);
+            }
             if (!reader.IsConfigured) return Unconfigured(context);
             var summary = reader.GetSummary(id);
             return summary is null

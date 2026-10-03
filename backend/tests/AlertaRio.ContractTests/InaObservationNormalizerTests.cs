@@ -65,6 +65,15 @@ public sealed class InaObservationNormalizerTests
         }, results.Select(result => result.Reason));
         Assert.Equal(InaObservationStatus.Candidate, results[7].Status);
         Assert.Equal(0m, results[7].Candidate!.Value);
+        Assert.All(results.Take(2), result =>
+        {
+            Assert.Equal(InaObservationStatus.Missing, result.Status);
+            Assert.NotNull(result.Missing);
+            Assert.Equal(new DateTimeOffset(2026, 10, 1, 3, 0, 0, TimeSpan.Zero),
+                result.Missing.ObservedStartAt);
+        });
+        Assert.All(results.Where(result => result.Status == InaObservationStatus.Quarantined),
+            result => Assert.Equal(64, result.RawPayloadHash?.Length));
         Assert.All(results.Where((_, index) => index != 7),
             result => Assert.Null(result.Candidate));
     }

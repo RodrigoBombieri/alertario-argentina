@@ -59,6 +59,7 @@ Ejemplo ilustrativo de estructura propia (no respuesta gubernamental ni valores 
       "availability": "available"
     }
   ],
+  "dataStatus": "current",
   "calculatedCondition": "noNotableChange",
   "officialThresholds": [],
   "notices": [],

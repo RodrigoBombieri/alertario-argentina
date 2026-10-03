@@ -1,4 +1,6 @@
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -19,9 +21,15 @@ public sealed record InaObservationCandidate(
     string Unit, DateTimeOffset ObservedStartAt, DateTimeOffset? ObservedEndAt,
     DateTimeOffset? SourceUpdatedAt, DateTimeOffset IngestedAt);
 
+public sealed record InaMissingObservation(
+    long ExternalObservationId, int ExternalSeriesId,
+    DateTimeOffset ObservedStartAt, DateTimeOffset? ObservedEndAt,
+    DateTimeOffset? SourceUpdatedAt);
+
 public sealed record InaObservationResult(
     long? ExternalObservationId, InaObservationStatus Status, string? Reason,
-    InaObservationCandidate? Candidate);
+    InaObservationCandidate? Candidate, InaMissingObservation? Missing = null,
+    string? RawPayloadHash = null);
 
 // Produces unapproved candidates from synthetic or permitted payloads; it never publishes data.
 public static class InaObservationNormalizer
@@ -48,34 +56,34 @@ public static class InaObservationNormalizer
         {
             if (row.ValueKind != JsonValueKind.Object)
             {
-                results.Add(Quarantine(null, "invalidRow"));
+                results.Add(Quarantine(null, "invalidRow", row));
                 continue;
             }
 
             var id = ReadLong(row, "id");
             if (id is null)
             {
-                results.Add(Quarantine(null, "missingObservationId"));
+                results.Add(Quarantine(null, "missingObservationId", row));
                 continue;
             }
             if (!seenIds.Add(id.Value))
             {
-                results.Add(Quarantine(id, "duplicateObservationId"));
+                results.Add(Quarantine(id, "duplicateObservationId", row));
                 continue;
             }
             if (!series.IsObserved || !series.IsInstantaneous)
             {
-                results.Add(Quarantine(id, "unsupportedSeriesKind"));
+                results.Add(Quarantine(id, "unsupportedSeriesKind", row));
                 continue;
             }
             if (ReadInt(row, "series_id") != series.ExternalSeriesId)
             {
-                results.Add(Quarantine(id, "seriesMismatch"));
+                results.Add(Quarantine(id, "seriesMismatch", row));
                 continue;
             }
             if (series.UnitId is null || string.IsNullOrWhiteSpace(series.Unit))
             {
-                results.Add(Quarantine(id, "seriesUnitUnverified"));
+                results.Add(Quarantine(id, "seriesUnitUnverified", row));
                 continue;
             }
             if (!row.TryGetProperty("unit_id", out var unit) ||
@@ -83,28 +91,28 @@ public static class InaObservationNormalizer
                  (unit.ValueKind != JsonValueKind.Number ||
                   !unit.TryGetInt32(out var unitId) || unitId != series.UnitId)))
             {
-                results.Add(Quarantine(id, "unitConflict"));
+                results.Add(Quarantine(id, "unitConflict", row));
                 continue;
             }
             if (!TryReadTime(row, "timestart", required: true, out var observedStart))
             {
-                results.Add(Quarantine(id, "ambiguousObservedTime"));
+                results.Add(Quarantine(id, "ambiguousObservedTime", row));
                 continue;
             }
             if (!TryReadTime(row, "timeend", required: false, out var observedEnd) ||
                 observedEnd is not null && observedEnd < observedStart)
             {
-                results.Add(Quarantine(id, "invalidObservedInterval"));
+                results.Add(Quarantine(id, "invalidObservedInterval", row));
                 continue;
             }
             if (!TryReadTime(row, "timeupdate", required: false, out var sourceUpdated))
             {
-                results.Add(Quarantine(id, "ambiguousSourceUpdate"));
+                results.Add(Quarantine(id, "ambiguousSourceUpdate", row));
                 continue;
             }
             if (observedStart > ingestedAt)
             {
-                results.Add(Quarantine(id, "futureObservation"));
+                results.Add(Quarantine(id, "futureObservation", row));
                 continue;
             }
             if (!row.TryGetProperty("valor", out var rawValue) ||
@@ -113,13 +121,16 @@ public static class InaObservationNormalizer
                 string.Equals(rawValue.GetString(), "null", StringComparison.OrdinalIgnoreCase))
             {
                 results.Add(new InaObservationResult(id, InaObservationStatus.Missing,
-                    "missingValue", null));
+                    "missingValue", null,
+                    new InaMissingObservation(id.Value, series.ExternalSeriesId,
+                        observedStart!.Value.ToUniversalTime(), observedEnd?.ToUniversalTime(),
+                        sourceUpdated?.ToUniversalTime())));
                 continue;
             }
             if (rawValue.ValueKind != JsonValueKind.Number ||
                 !rawValue.TryGetDecimal(out var value))
             {
-                results.Add(Quarantine(id, "invalidValue"));
+                results.Add(Quarantine(id, "invalidValue", row));
                 continue;
             }
 
@@ -160,6 +171,8 @@ public static class InaObservationNormalizer
         return true;
     }
 
-    private static InaObservationResult Quarantine(long? id, string reason) =>
-        new(id, InaObservationStatus.Quarantined, reason, null);
+    private static InaObservationResult Quarantine(long? id, string reason, JsonElement row) =>
+        new(id, InaObservationStatus.Quarantined, reason, null, null,
+            Convert.ToHexStringLower(SHA256.HashData(
+                Encoding.UTF8.GetBytes(row.GetRawText()))));
 }

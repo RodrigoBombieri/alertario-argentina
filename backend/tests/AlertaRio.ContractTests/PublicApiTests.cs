@@ -30,6 +30,7 @@ public sealed class PublicApiTests
         Assert.Equal("station-demo", root.GetProperty("stationId").GetString());
         Assert.Equal("synthetic", root.GetProperty("height").GetProperty("quality").GetString());
         Assert.Equal("notApplicable", root.GetProperty("height").GetProperty("freshness").GetString());
+        Assert.Equal("notApplicable", root.GetProperty("dataStatus").GetString());
         Assert.Equal("noApprovedSeries", root.GetProperty("dischargeUnavailableReason").GetString());
         Assert.Equal(JsonValueKind.Null, root.GetProperty("discharge").ValueKind);
         Assert.Equal("notConfigured", root.GetProperty("noticeCoverage").GetProperty("status").GetString());
@@ -84,6 +85,15 @@ public sealed class PublicApiTests
             (await api.Client.GetAsync("/health/ready")).StatusCode);
         Assert.Equal(HttpStatusCode.OK,
             (await api.Client.GetAsync("/health/live")).StatusCode);
+    }
+
+    [Fact]
+    public async Task Persisted_summary_preview_cannot_be_enabled_in_production()
+    {
+        await using var api = await RunningApi.StartAsync(
+            synthetic: false, configured: false, persistedSummary: true);
+        using var response = await api.Client.GetAsync("/v1/stations/any/summary");
+        Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
     }
 
     [Fact]
@@ -170,14 +180,19 @@ public sealed class PublicApiTests
         public HttpClient Client { get; } = client;
 
         public static async Task<RunningApi> StartAsync(
-            bool synthetic, bool? configured = null, IPublicDataReader? reader = null)
+            bool synthetic, bool? configured = null, IPublicDataReader? reader = null,
+            bool persistedSummary = false)
         {
             var environment = synthetic ? "Development" : "Production";
             var app = ApiHost.Build(new WebApplicationOptions
             {
                 EnvironmentName = environment,
                 ApplicationName = typeof(ApiHost).Assembly.GetName().Name
-            }, builder => builder.Configuration["SyntheticData:Enabled"] = (configured ?? synthetic).ToString(),
+            }, builder =>
+            {
+                builder.Configuration["SyntheticData:Enabled"] = (configured ?? synthetic).ToString();
+                builder.Configuration["PersistedSummary:Enabled"] = persistedSummary.ToString();
+            },
                 services =>
                 {
                     if (reader is null) return;
