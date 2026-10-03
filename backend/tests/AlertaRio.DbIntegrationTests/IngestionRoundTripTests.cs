@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using NpgsqlTypes;
 using Xunit;
 
 namespace AlertaRio.DbIntegrationTests;
@@ -327,6 +328,138 @@ public sealed class IngestionRoundTripTests
             Assert.NotNull(afterSnapshot);
             Assert.Equal(0.20m, Assert.Single(afterSnapshot.Windows,
                 window => window.WindowHours == 6).Delta);
+        }
+        finally
+        {
+            await CleanupAsync(dataSource, sourceId, stationId, seriesId, stream);
+        }
+    }
+
+    [Fact]
+    public async Task Map_bbox_returns_only_approved_stations_inside_the_bounds()
+    {
+        await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
+        var sourceId = Guid.NewGuid();
+        var stationId = Guid.NewGuid();
+        var seriesId = Guid.NewGuid();
+        var stream = seriesId.ToString("D");
+        try
+        {
+            await SeedAsync(dataSource, sourceId, stationId, seriesId);
+            await using (var point = dataSource.CreateCommand("""
+                UPDATE stations
+                SET point = ST_SetSRID(ST_MakePoint(-58.25, -31.25), 4326)::geography
+                WHERE id = $1
+                """))
+            {
+                point.Parameters.Add(new NpgsqlParameter { Value = stationId });
+                await point.ExecuteNonQueryAsync();
+            }
+            await using var app = ApiHost.Build(new WebApplicationOptions
+            {
+                EnvironmentName = "Development",
+                ApplicationName = typeof(ApiHost).Assembly.GetName().Name
+            }, builder =>
+            {
+                builder.Configuration["PersistedSummary:Enabled"] = "true";
+                builder.Configuration["ConnectionStrings:Ingestion"] = ConnectionString;
+            });
+            app.Urls.Add("http://127.0.0.1:0");
+            await app.StartAsync();
+            try
+            {
+                var server = app.Services.GetRequiredService<IServer>();
+                var address = server.Features.Get<IServerAddressesFeature>()?.Addresses.Single()
+                    ?? throw new InvalidOperationException("Kestrel did not publish an address.");
+                using var client = new HttpClient { BaseAddress = new Uri(address) };
+                using var response = await client.GetAsync(
+                    "/v1/stations/map?bbox=-59,-32,-58,-31");
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+                var station = Assert.Single(body.RootElement.GetProperty("items").EnumerateArray());
+                Assert.Equal(stationId.ToString("D"), station.GetProperty("id").GetString());
+                Assert.Equal(-58.25, station.GetProperty("longitude").GetDouble());
+                Assert.Equal(-31.25, station.GetProperty("latitude").GetDouble());
+                Assert.Equal(HttpStatusCode.BadRequest,
+                    (await client.GetAsync("/v1/stations/map?bbox=-180,-90,180,90"))
+                    .StatusCode);
+                using var outside = await client.GetAsync(
+                    "/v1/stations/map?bbox=-61,-34,-60,-33");
+                Assert.Equal(HttpStatusCode.OK, outside.StatusCode);
+                using var empty = JsonDocument.Parse(await outside.Content.ReadAsStringAsync());
+                Assert.Empty(empty.RootElement.GetProperty("items").EnumerateArray());
+
+                await RevokeSourceAsync(dataSource, sourceId);
+                using var revoked = await client.GetAsync(
+                    "/v1/stations/map?bbox=-59,-32,-58,-31");
+                using var revokedBody = JsonDocument.Parse(
+                    await revoked.Content.ReadAsStringAsync());
+                Assert.Empty(revokedBody.RootElement.GetProperty("items").EnumerateArray());
+            }
+            finally
+            {
+                await app.StopAsync();
+            }
+        }
+        finally
+        {
+            await CleanupAsync(dataSource, sourceId, stationId, seriesId, stream);
+        }
+    }
+
+    [Fact]
+    public async Task Lost_connection_before_commit_rolls_back_measurement_and_cursor()
+    {
+        await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
+        var sourceId = Guid.NewGuid();
+        var stationId = Guid.NewGuid();
+        var seriesId = Guid.NewGuid();
+        var stream = seriesId.ToString("D");
+        var now = DateTimeOffset.UtcNow;
+        try
+        {
+            await SeedAsync(dataSource, sourceId, stationId, seriesId);
+            var store = new PostgresIngestionStore(dataSource);
+            Assert.True(await store.ClaimLeaseAsync("integration", stream, "lost-worker",
+                TimeSpan.FromMinutes(1)));
+            var record = Record(seriesId, now.AddMinutes(-5), 7.50m,
+                now.AddMinutes(-4), 'a');
+            var batch = new IngestionBatch("integration", stream, "lost-worker",
+                "after-write", "complete", now, [record]);
+
+            await using (var connection = await dataSource.OpenConnectionAsync())
+            {
+                await using var transaction = await connection.BeginTransactionAsync();
+                await using var command = new NpgsqlCommand("""
+                    SELECT inserted FROM commit_ingestion_outcomes(
+                        $1, $2, $3, $4, $5, $6, $7, $8)
+                    """, connection, transaction);
+                command.Parameters.Add(new NpgsqlParameter { Value = batch.Provider });
+                command.Parameters.Add(new NpgsqlParameter { Value = batch.StreamKey });
+                command.Parameters.Add(new NpgsqlParameter { Value = batch.LeaseOwner });
+                command.Parameters.Add(new NpgsqlParameter { Value = batch.Cursor! });
+                command.Parameters.Add(new NpgsqlParameter { Value = batch.Coverage });
+                command.Parameters.Add(new NpgsqlParameter { Value = batch.TransportSucceededAt });
+                command.Parameters.Add(new NpgsqlParameter
+                {
+                    Value = JsonSerializer.Serialize(batch.Records,
+                        new JsonSerializerOptions(JsonSerializerDefaults.Web)),
+                    NpgsqlDbType = NpgsqlDbType.Jsonb
+                });
+                command.Parameters.Add(new NpgsqlParameter
+                {
+                    Value = "[]",
+                    NpgsqlDbType = NpgsqlDbType.Jsonb
+                });
+                Assert.Equal(1, (int)(await command.ExecuteScalarAsync())!);
+                await connection.CloseAsync();
+            }
+
+            Assert.Equal(0, await CountMeasurementsAsync(dataSource, seriesId));
+            Assert.Null((await store.ReadCheckpointAsync("integration", stream))?.Cursor);
+            Assert.Equal(1, (await store.CommitAsync(batch)).Inserted);
+            Assert.Equal("after-write",
+                (await store.ReadCheckpointAsync("integration", stream))?.Cursor);
         }
         finally
         {

@@ -65,6 +65,12 @@ public sealed class PublicApiTests
 
         using var missingLocation = await api.Client.GetAsync("/v1/notices");
         Assert.Equal(HttpStatusCode.BadRequest, missingLocation.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest,
+            (await api.Client.GetAsync("/v1/stations/map?bbox=0,0,11,1"))
+            .StatusCode);
+        Assert.Equal(HttpStatusCode.ServiceUnavailable,
+            (await api.Client.GetAsync("/v1/stations/map?bbox=0,0,1,1"))
+            .StatusCode);
         using var notices = await api.Client.GetAsync("/v1/notices?locationId=location-demo");
         Assert.Equal(HttpStatusCode.OK, notices.StatusCode);
         using var noticeBody = await ReadJson(notices);
@@ -106,6 +112,7 @@ public sealed class PublicApiTests
         var paths = json.RootElement.GetProperty("paths");
         Assert.True(paths.TryGetProperty("/v1/locations", out _));
         Assert.True(paths.TryGetProperty("/v1/stations/{id}/summary", out _));
+        Assert.True(paths.TryGetProperty("/v1/stations/map", out _));
         Assert.True(paths.TryGetProperty("/v1/notices", out _));
         Assert.True(paths.TryGetProperty("/v1/sources", out _));
         Assert.False(json.RootElement.TryGetProperty("servers", out _));

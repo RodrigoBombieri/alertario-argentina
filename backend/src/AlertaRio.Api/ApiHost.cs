@@ -36,6 +36,7 @@ public static class ApiHost
                 ?? throw new InvalidOperationException("Ingestion connection string is required.");
             builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
             builder.Services.AddSingleton<IPersistedSummaryReader, PostgresSummaryReader>();
+            builder.Services.AddSingleton<IPersistedStationMapReader, PostgresStationMapReader>();
             builder.Services.AddSingleton<IPublicDataReader, UnavailablePublicDataReader>();
         }
         else if (syntheticEnabled)

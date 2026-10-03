@@ -1,3 +1,4 @@
+using System.Globalization;
 using AlertaRio.Application.Ports;
 using AlertaRio.Application.PublicData;
 
@@ -49,6 +50,26 @@ internal static class PublicDataEndpoints
         })
         .WithName("ListStations")
         .Produces<ListResponse<StationDto>>()
+        .ProducesProblem(400)
+        .ProducesProblem(503);
+
+        api.MapGet("/stations/map", async (string? bbox, int? limit,
+            HttpContext context, CancellationToken cancellationToken) =>
+        {
+            if (!TryParseBoundingBox(bbox, out var box))
+                return ApiProblems.Create(context, 400, "invalidBbox",
+                    "Bbox must be west,south,east,north in valid coordinates.");
+            if (limit is < 1 or > 500)
+                return ApiProblems.Create(context, 400, "invalidLimit",
+                    "Limit must be between 1 and 500.");
+            var mapReader = context.RequestServices.GetService<IPersistedStationMapReader>();
+            if (mapReader is null) return Unconfigured(context);
+            var stations = await mapReader.GetStationsAsync(box!, limit ?? 200,
+                cancellationToken);
+            return Results.Ok(new ListResponse<StationMapPointDto>(true, stations, null));
+        })
+        .WithName("ListStationsInMapBounds")
+        .Produces<ListResponse<StationMapPointDto>>()
         .ProducesProblem(400)
         .ProducesProblem(503);
 
@@ -115,4 +136,29 @@ internal static class PublicDataEndpoints
 
     private static IResult Unconfigured(HttpContext context) =>
         ApiProblems.Create(context, 503, "dataNotConfigured", "No public data source is configured.");
+
+    private static bool TryParseBoundingBox(string? raw, out StationBoundingBox? box)
+    {
+        box = null;
+        var parts = raw?.Split(',', StringSplitOptions.TrimEntries);
+        if (parts?.Length != 4) return false;
+        var coordinates = new double[4];
+        for (var i = 0; i < 4; i++)
+            if (!double.TryParse(parts[i], NumberStyles.Float,
+                    CultureInfo.InvariantCulture, out coordinates[i]) ||
+                !double.IsFinite(coordinates[i]))
+                return false;
+        if (coordinates[0] is < -180 or > 180 ||
+            coordinates[2] is < -180 or > 180 ||
+            coordinates[1] is < -90 or > 90 ||
+            coordinates[3] is < -90 or > 90 ||
+            coordinates[0] >= coordinates[2] ||
+            coordinates[1] >= coordinates[3] ||
+            coordinates[2] - coordinates[0] > 10 ||
+            coordinates[3] - coordinates[1] > 10)
+            return false;
+        box = new StationBoundingBox(coordinates[0], coordinates[1],
+            coordinates[2], coordinates[3]);
+        return true;
+    }
 }

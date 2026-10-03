@@ -8,6 +8,10 @@ public sealed record StationDto(
     string Id, string Name, string RiverName, string LocationId, string SourceId,
     IReadOnlyList<string> SeriesIds, bool Synthetic);
 
+public sealed record StationMapPointDto(
+    string Id, string Name, string RiverName, double Longitude,
+    double Latitude, bool Synthetic);
+
 public sealed record SourceDto(
     string Id, string Name, string Kind, string Attribution, string License, bool Synthetic);
 

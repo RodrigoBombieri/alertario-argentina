@@ -14,6 +14,7 @@ services:
       - ./db/migrations/0003_trend_policy.sql:/docker-entrypoint-initdb.d/40_trend_policy.sql:ro
       - ./db/migrations/0004_normalization_outcomes.sql:/docker-entrypoint-initdb.d/50_normalization_outcomes.sql:ro
       - ./db/migrations/0005_lease_renewal.sql:/docker-entrypoint-initdb.d/60_lease_renewal.sql:ro
+      - ./db/migrations/0006_station_map_index.sql:/docker-entrypoint-initdb.d/70_station_map_index.sql:ro
       - ./db/migrations:/opt/alertario/migrations:ro
       - ./db/tests:/opt/alertario/tests:ro
       - ./db/tests/0001_smoke.sql:/opt/alertario/0001_smoke.sql:ro

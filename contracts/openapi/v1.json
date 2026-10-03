@@ -170,6 +170,67 @@
         }
       }
     },
+    "/v1/stations/map": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "ListStationsInMapBounds",
+        "parameters": [
+          {
+            "name": "bbox",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResponseOfStationMapPointDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/stations/{id}": {
       "get": {
         "tags": [
@@ -504,6 +565,31 @@
           }
         }
       },
+      "ListResponseOfStationMapPointDto": {
+        "required": [
+          "synthetic",
+          "items",
+          "nextCursor"
+        ],
+        "type": "object",
+        "properties": {
+          "synthetic": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StationMapPointDto"
+            }
+          },
+          "nextCursor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "LocationDto": {
         "required": [
           "id",
@@ -756,6 +842,47 @@
             "items": {
               "type": "string"
             }
+          },
+          "synthetic": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StationMapPointDto": {
+        "required": [
+          "id",
+          "name",
+          "riverName",
+          "longitude",
+          "latitude",
+          "synthetic"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "riverName": {
+            "type": "string"
+          },
+          "longitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "latitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
           },
           "synthetic": {
             "type": "boolean"

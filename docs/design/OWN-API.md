@@ -1,6 +1,6 @@
 # API propia propuesta v1
 
-**Diseño de AlertaRío, no endpoints de organismos.** El [OpenAPI ejecutable del corte F2](../../contracts/openapi/v1.json) cubre un subconjunto sintético; las rutas restantes de esta página son diseño pendiente. HTTPS + JSON, IDs internos opacos, fechas RFC 3339 UTC, números JSON con punto y unidades canónicas. UI traduce formatos e idiomas. [Alcance F2](../implementation/F2.md).
+**Diseño de AlertaRío, no endpoints de organismos.** El [OpenAPI ejecutable](../../contracts/openapi/v1.json) cubre un subconjunto sintético y el preview espacial de Development; las rutas restantes de esta página son diseño pendiente. HTTPS + JSON, IDs internos opacos, fechas RFC 3339 UTC, números JSON con punto y unidades canónicas. UI traduce formatos e idiomas. [Alcance F2](../implementation/F2.md), [F6](../implementation/F6.md) y [F7](../implementation/F7.md).
 
 ## Recursos
 
@@ -9,6 +9,7 @@
 | GET `/v1/locations?query=&provinceId=&cursor=&limit=` | Búsqueda local; propuesta query 2–80 caracteres, limit 1–50 | Público |
 | GET `/v1/locations/{id}/stations?radiusKm=` | Candidatos y asociaciones revisadas; radio máximo propuesto 100 km | Público |
 | GET `/v1/stations?bbox=&riverId=&provinceId=&cursor=&limit=` | Lista/mapa; bbox validado; máximo 500 registros por página propuesto | Público |
+| GET `/v1/stations/map?bbox=oeste,sur,este,norte&limit=` | Preview Development con estaciones aprobadas dentro de bbox; límite 500 y ancho máximo 10° por eje | Público, sin datos en producción |
 | GET `/v1/stations/{id}` | Metadatos, series habilitadas y procedencia | Público |
 | GET `/v1/stations/{id}/summary` | Latest por variable, variaciones, ejes de estado y umbrales | Público |
 | GET `/v1/series/{id}/measurements?from=&to=&resolution=&cursor=` | Valores e intervalos, huecos, calidad y agregación declarada | Público |
