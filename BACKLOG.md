@@ -8,7 +8,9 @@ Jerarquía: **EPIC → FEATURE → USER STORY → TASK**. Estado inicial de impl
 
 **F3 iniciada:** [normalización INA y GeoRef con fixtures sintéticas](docs/implementation/F3.md) para US-05/US-07. Conserva identidad de estación/red/serie, localidades y observaciones; la búsqueda local preserva homónimos y los clientes acotados se prueban con handlers falsos. No están registrados en API ni Worker. La persistencia corresponde a F4; faltan series aprobadas para la API pública.
 
-**F4 iniciada:** [esquema inicial PostGIS e ingesta pendiente](docs/implementation/F4.md) para US-06. Hay migración y Compose local; falta ejecutarlos en PostgreSQL real e implementar el Worker transaccional. Ningún dato oficial se persiste.
+**F4 iniciada:** [esquema PostGIS e ingesta pendiente](docs/implementation/F4.md) para US-06. La migración y el smoke pasaron en PostgreSQL real local; falta implementar el Worker transaccional y probar replay/concurrencia. Ningún dato oficial se persiste.
+
+**F5 iniciada:** [motor de tendencias aislado](docs/implementation/F5.md) para US-09/10. Calcula ventanas con parámetros sintéticos y estados de insuficiencia; faltan C/L/ε aprobados, persistencia e integración con el contrato público. No emite avisos ni notificaciones.
 
 ## E01 — Fuentes y confianza
 
