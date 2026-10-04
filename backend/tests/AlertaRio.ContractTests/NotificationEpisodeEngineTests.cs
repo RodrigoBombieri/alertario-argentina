@@ -66,5 +66,5 @@ public sealed class NotificationEpisodeEngineTests
 
     private NotificationSignal Signal() => new(_seriesId, _now.AddMinutes(-5),
         DataStatus.Current, CalculatedCondition.AboveAlertThreshold,
-        true, true, false);
+        true, true, false, 1);
 }

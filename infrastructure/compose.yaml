@@ -17,6 +17,8 @@ services:
       - ./db/migrations/0006_station_map_index.sql:/docker-entrypoint-initdb.d/70_station_map_index.sql:ro
       - ./db/migrations/0007_quarantine_review.sql:/docker-entrypoint-initdb.d/80_quarantine_review.sql:ro
       - ./db/migrations/0008_notification_outbox.sql:/docker-entrypoint-initdb.d/90_notification_outbox.sql:ro
+      - ./db/migrations/0009_outbox_revalidation.sql:/docker-entrypoint-initdb.d/95_outbox_revalidation.sql:ro
+      - ./db/migrations/0010_cancel_unversioned_episodes.sql:/docker-entrypoint-initdb.d/96_cancel_unversioned_episodes.sql:ro
       - ./db/migrations:/opt/alertario/migrations:ro
       - ./db/tests:/opt/alertario/tests:ro
       - ./db/tests/0001_smoke.sql:/opt/alertario/0001_smoke.sql:ro

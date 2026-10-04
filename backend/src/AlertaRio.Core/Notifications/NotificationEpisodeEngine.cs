@@ -9,7 +9,7 @@ public sealed record NotificationRule(
 public sealed record NotificationSignal(
     Guid SeriesId, DateTimeOffset ObservedAt, DataStatus DataStatus,
     CalculatedCondition Condition, bool SourceApproved,
-    bool IsLatest, bool IsBackfill);
+    bool IsLatest, bool IsBackfill, long LatestVersion);
 
 public sealed record NotificationEpisode(
     Guid RuleId, CalculatedCondition Trigger, DateTimeOffset OpenedAt);

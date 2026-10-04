@@ -13,8 +13,9 @@ public sealed class PostgresNotificationStore(NpgsqlDataSource dataSource)
         CancellationToken cancellationToken = default)
     {
         if (ruleId == Guid.Empty || now.Offset != TimeSpan.Zero ||
-            signal.ObservedAt.Offset != TimeSpan.Zero)
-            throw new ArgumentException("Notification evaluation requires IDs and UTC instants.");
+            signal.ObservedAt.Offset != TimeSpan.Zero || signal.LatestVersion <= 0)
+            throw new ArgumentException(
+                "Notification evaluation requires IDs, UTC instants and a latest version.");
         await using var connection = await dataSource.OpenConnectionAsync(cancellationToken);
         await using var transaction = await connection.BeginTransactionAsync(
             IsolationLevel.ReadCommitted, cancellationToken);
@@ -60,6 +61,29 @@ public sealed class PostgresNotificationStore(NpgsqlDataSource dataSource)
         var rule = new NotificationRule(ruleId, seriesId, condition,
             TimeSpan.FromSeconds(maximumAgeSeconds),
             TimeSpan.FromSeconds(deliveryTtlSeconds), enabled);
+        await using var latestCommand = new NpgsqlCommand("""
+            SELECT l.version, m.observed_end_at,
+                   m.quality = 'accepted' AND ms.approved AND
+                   ms.data_kind = 'observed' AND d.permission_status = 'approved'
+            FROM series_latest AS l
+            JOIN measurements AS m ON m.id = l.measurement_id AND m.series_id = l.series_id
+            JOIN measurement_series AS ms ON ms.id = l.series_id
+            JOIN data_sources AS d ON d.id = ms.source_id
+            WHERE l.series_id = $1
+            """, connection, transaction);
+        latestCommand.Parameters.Add(new NpgsqlParameter { Value = seriesId });
+        long? latestVersion = null;
+        DateTimeOffset? latestObservedAt = null;
+        bool latestPublishable = false;
+        await using (var reader = await latestCommand.ExecuteReaderAsync(cancellationToken))
+        {
+            if (await reader.ReadAsync(cancellationToken))
+            {
+                latestVersion = reader.GetInt64(0);
+                latestObservedAt = reader.GetFieldValue<DateTimeOffset>(1);
+                latestPublishable = reader.GetBoolean(2);
+            }
+        }
         await using var episodeCommand = new NpgsqlCommand("""
             SELECT id, opened_at, rule_version FROM notification_episodes
             WHERE rule_id = $1 AND closed_at IS NULL FOR UPDATE
@@ -81,7 +105,9 @@ public sealed class PostgresNotificationStore(NpgsqlDataSource dataSource)
         }
         var checkedSignal = signal with
         {
-            SourceApproved = signal.SourceApproved && sourceApproved
+            SourceApproved = signal.SourceApproved && sourceApproved && latestPublishable,
+            IsLatest = signal.IsLatest && latestVersion == signal.LatestVersion &&
+                latestObservedAt == signal.ObservedAt
         };
         var decision = NotificationEpisodeEngine.Evaluate(
             rule, active, checkedSignal, now);
@@ -90,14 +116,16 @@ public sealed class PostgresNotificationStore(NpgsqlDataSource dataSource)
             var newEpisodeId = Guid.NewGuid();
             await using var insert = new NpgsqlCommand("""
                 INSERT INTO notification_episodes
-                    (id, rule_id, rule_version, opened_at, cause_observed_at, expires_at)
-                VALUES ($1, $2, $3, $4, $5, $6)
+                    (id, rule_id, rule_version, opened_at, cause_observed_at,
+                     cause_latest_version, expires_at)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
                 """, connection, transaction);
             insert.Parameters.Add(new NpgsqlParameter { Value = newEpisodeId });
             insert.Parameters.Add(new NpgsqlParameter { Value = ruleId });
             insert.Parameters.Add(new NpgsqlParameter { Value = ruleVersion });
             insert.Parameters.Add(new NpgsqlParameter { Value = now });
             insert.Parameters.Add(new NpgsqlParameter { Value = signal.ObservedAt });
+            insert.Parameters.Add(new NpgsqlParameter { Value = signal.LatestVersion });
             insert.Parameters.Add(new NpgsqlParameter { Value = decision.ExpiresAt!.Value });
             await insert.ExecuteNonQueryAsync(cancellationToken);
             await using var outbox = new NpgsqlCommand("""

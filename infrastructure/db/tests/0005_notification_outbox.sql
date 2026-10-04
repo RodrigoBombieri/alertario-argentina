@@ -11,6 +11,8 @@ DECLARE
     v_event uuid := gen_random_uuid();
     v_claim uuid;
     v_expired_count integer;
+    v_observed timestamptz := now() - interval '1 minute';
+    v_measurement bigint;
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM schema_migrations
                    WHERE version = '0008_notification_outbox') THEN
@@ -28,6 +30,13 @@ BEGIN
     VALUES (v_series, v_station, v_source, 'outbox-smoke', 'H', 1,
         'm', 'synthetic', 0, 'observed', 'synthetic-v1',
         'synthetic-rights', 'synthetic-hydrology', true);
+    INSERT INTO measurements
+        (series_id, observed_start_at, observed_end_at, value, quality,
+         ingested_at, payload_hash)
+    VALUES (v_series, v_observed, v_observed, 12, 'accepted', now(),
+        repeat('a', 64)) RETURNING id INTO v_measurement;
+    INSERT INTO series_latest (series_id, measurement_id, calculated_at)
+    VALUES (v_series, v_measurement, now());
     INSERT INTO notification_installations
         (id, credential_hash, platform, consent_version)
     VALUES (v_installation, decode(repeat('ab', 32), 'hex'), 'android', 'test-v1');
@@ -36,8 +45,9 @@ BEGIN
          delivery_ttl_seconds)
     VALUES (v_rule, v_installation, v_series, 'aboveAlertThreshold', 3600, 900);
     INSERT INTO notification_episodes
-        (id, rule_id, rule_version, opened_at, cause_observed_at, expires_at)
-    VALUES (v_episode, v_rule, 1, now(), now() - interval '1 minute',
+        (id, rule_id, rule_version, opened_at, cause_observed_at,
+         cause_latest_version, expires_at)
+    VALUES (v_episode, v_rule, 1, now(), v_observed, 1,
         now() + interval '15 minutes');
     INSERT INTO notification_outbox (id, episode_id, expires_at)
     VALUES (v_event, v_episode, now() + interval '15 minutes');
@@ -54,6 +64,11 @@ BEGIN
     IF accept_notification_outbox(v_event, 'worker-b') THEN
         RAISE EXCEPTION 'Wrong owner accepted a delivery';
     END IF;
+    UPDATE series_latest SET version = 2 WHERE series_id = v_series;
+    IF accept_notification_outbox(v_event, 'worker-a') THEN
+        RAISE EXCEPTION 'Changed latest version was accepted';
+    END IF;
+    UPDATE series_latest SET version = 1 WHERE series_id = v_series;
     IF NOT accept_notification_outbox(v_event, 'worker-a') THEN
         RAISE EXCEPTION 'Owner could not accept delivery';
     END IF;
@@ -66,10 +81,26 @@ BEGIN
     v_episode := gen_random_uuid();
     v_event := gen_random_uuid();
     INSERT INTO notification_episodes
-        (id, rule_id, rule_version, opened_at, cause_observed_at, expires_at)
-    VALUES (v_episode, v_rule, 1, now(), now(), now() + interval '15 minutes');
+        (id, rule_id, rule_version, opened_at, cause_observed_at,
+         cause_latest_version, expires_at)
+    VALUES (v_episode, v_rule, 1, now(), v_observed, 1,
+        now() + interval '15 minutes');
     INSERT INTO notification_outbox (id, episode_id, expires_at)
     VALUES (v_event, v_episode, now() + interval '15 minutes');
+    UPDATE series_latest SET version = 2 WHERE series_id = v_series;
+    IF EXISTS (SELECT 1 FROM claim_notification_outbox(
+        'worker-a', interval '1 minute', 1)) THEN
+        RAISE EXCEPTION 'Old latest version was still dispatchable';
+    END IF;
+    UPDATE series_latest SET version = 1 WHERE series_id = v_series;
+    UPDATE data_sources SET permission_status = 'denied'
+    WHERE id = v_source;
+    IF EXISTS (SELECT 1 FROM claim_notification_outbox(
+        'worker-a', interval '1 minute', 1)) THEN
+        RAISE EXCEPTION 'Revoked source was still dispatchable';
+    END IF;
+    UPDATE data_sources SET permission_status = 'approved'
+    WHERE id = v_source;
     UPDATE notification_installations SET revoked_at = clock_timestamp()
     WHERE id = v_installation;
     IF EXISTS (SELECT 1 FROM claim_notification_outbox(
@@ -82,9 +113,10 @@ BEGIN
     v_episode := gen_random_uuid();
     v_event := gen_random_uuid();
     INSERT INTO notification_episodes
-        (id, rule_id, rule_version, opened_at, cause_observed_at, expires_at)
+        (id, rule_id, rule_version, opened_at, cause_observed_at,
+         cause_latest_version, expires_at)
     VALUES (v_episode, v_rule, 1, now() - interval '2 hours',
-        now() - interval '2 hours', now() - interval '1 hour');
+        now() - interval '2 hours', 1, now() - interval '1 hour');
     INSERT INTO notification_outbox
         (id, episode_id, created_at, expires_at)
     VALUES (v_event, v_episode,

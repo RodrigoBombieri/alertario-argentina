@@ -38,6 +38,30 @@ public sealed class IngestionRoundTripTests
         try
         {
             await SeedAsync(dataSource, sourceId, stationId, seriesId);
+            var ingestor = new PostgresIngestionStore(dataSource);
+            var stream = seriesId.ToString("D");
+            var observedAt = now.AddMinutes(-5);
+            Assert.True(await ingestor.ClaimLeaseAsync("integration", stream,
+                "notification-worker", TimeSpan.FromMinutes(1)));
+            Assert.Equal(1, (await ingestor.CommitAsync(new IngestionBatch(
+                "integration", stream, "notification-worker", "notification-cursor",
+                "complete", now,
+                [Record(seriesId, observedAt, 12m, observedAt.AddMinutes(1), 'a')])))
+                .Inserted);
+            DateTimeOffset persistedObservedAt;
+            long persistedLatestVersion;
+            await using (var latest = dataSource.CreateCommand("""
+                SELECT m.observed_end_at, l.version FROM series_latest AS l
+                JOIN measurements AS m ON m.id = l.measurement_id
+                WHERE l.series_id = $1
+                """))
+            {
+                latest.Parameters.Add(new NpgsqlParameter { Value = seriesId });
+                await using var reader = await latest.ExecuteReaderAsync();
+                Assert.True(await reader.ReadAsync());
+                persistedObservedAt = reader.GetFieldValue<DateTimeOffset>(0);
+                persistedLatestVersion = reader.GetInt64(1);
+            }
             await using (var seed = dataSource.CreateBatch())
             {
                 Add(seed, """
@@ -54,9 +78,15 @@ public sealed class IngestionRoundTripTests
                 await seed.ExecuteNonQueryAsync();
             }
             var store = new PostgresNotificationStore(dataSource);
-            var signal = new NotificationSignal(seriesId, now.AddMinutes(-5),
+            var signal = new NotificationSignal(seriesId, persistedObservedAt,
                 DataStatus.Current, CalculatedCondition.AboveAlertThreshold,
-                true, true, false);
+                true, true, false, persistedLatestVersion);
+            Assert.Equal(NotificationTransition.None,
+                await store.EvaluateAsync(ruleId,
+                    signal with { LatestVersion = persistedLatestVersion + 1 }, now));
+            Assert.Equal(NotificationTransition.None,
+                await store.EvaluateAsync(ruleId,
+                    signal with { ObservedAt = now.AddMinutes(-6) }, now));
             var competingEvaluations = await Task.WhenAll(
                 store.EvaluateAsync(ruleId, signal, now),
                 store.EvaluateAsync(ruleId, signal, now));
