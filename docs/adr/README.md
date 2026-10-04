@@ -9,5 +9,6 @@ Todos los ADR siguientes están **propuestos**, con restricciones de producto co
 5. [Identidad y push](005-identidad-y-push.md)
 6. [Mapas](006-mapas.md)
 7. [Fuentes y gates](007-fuentes-y-gates.md)
+8. [Hosting candidato para beta](008-hosting-beta.md)
 
-Para futuros ADR: contexto, decisión, alternativas, consecuencias, validación, fecha y estado. Hosting requiere un ADR nuevo después de comparar ofertas; no aprobarlo por omisión.
+Para futuros ADR: contexto, decisión, alternativas, consecuencias, validación, fecha y estado. ADR-008 prepara la elección de hosting; la contratación y el despliegue siguen pendientes.

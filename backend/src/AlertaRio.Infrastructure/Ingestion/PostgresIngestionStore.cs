@@ -3,6 +3,7 @@ using System.Diagnostics.Metrics;
 using System.Text.Json;
 using Npgsql;
 using NpgsqlTypes;
+using AlertaRio.Infrastructure.Providers;
 
 namespace AlertaRio.Infrastructure.Ingestion;
 
@@ -45,6 +46,62 @@ public sealed class PostgresIngestionStore(NpgsqlDataSource dataSource)
         Meter.CreateCounter<long>("ingestion_records_quarantined_total");
     private static readonly Histogram<double> BatchDuration =
         Meter.CreateHistogram<double>("ingestion_batch_duration_seconds", "s");
+
+    public async Task<bool> CanCollectInaSeriesAsync(
+        Guid internalSeriesId, InaCollectionSelection selection,
+        CancellationToken cancellationToken = default)
+    {
+        await using var command = dataSource.CreateCommand("""
+            SELECT EXISTS (
+                SELECT 1 FROM measurement_series AS s
+                JOIN data_sources AS d ON d.id = s.source_id
+                JOIN station_external_refs AS r ON r.station_id = s.station_id
+                    AND r.source_id = s.source_id
+                WHERE s.id = $1 AND d.code LIKE 'ina-a5:%'
+                    AND d.permission_status = 'approved'
+                    AND d.rights_decision_id = $2
+                    AND s.rights_decision_id = $2
+                    AND s.approval_version = $3
+                    AND s.external_id = $4
+                    AND s.variable_code = $5
+                    AND s.procedure_id IS NOT DISTINCT FROM $6
+                    AND s.procedure_name = $7
+                    AND s.unit_id = $8 AND s.unit = $9
+                    AND s.data_kind = 'observed' AND s.support_seconds = 0
+                    AND r.network_key = $10 AND r.external_id = $11
+                    AND r.public_status
+            )
+            """);
+        command.Parameters.Add(new NpgsqlParameter { Value = internalSeriesId });
+        command.Parameters.Add(new NpgsqlParameter { Value = selection.RightsDecisionId });
+        command.Parameters.Add(new NpgsqlParameter { Value = selection.SelectionVersion });
+        command.Parameters.Add(new NpgsqlParameter
+        {
+            Value = selection.ExternalSeriesId.ToString(),
+            NpgsqlDbType = NpgsqlDbType.Text
+        });
+        command.Parameters.Add(new NpgsqlParameter { Value = selection.VariableCode });
+        command.Parameters.Add(new NpgsqlParameter
+        {
+            Value = (object?)selection.ProcedureId ?? DBNull.Value,
+            NpgsqlDbType = NpgsqlDbType.Integer
+        });
+        command.Parameters.Add(new NpgsqlParameter { Value = selection.ProcedureName });
+        command.Parameters.Add(new NpgsqlParameter { Value = selection.UnitId });
+        command.Parameters.Add(new NpgsqlParameter { Value = selection.Unit });
+        command.Parameters.Add(new NpgsqlParameter
+        {
+            Value = selection.NetworkId.ToString(),
+            NpgsqlDbType = NpgsqlDbType.Text
+        });
+        command.Parameters.Add(new NpgsqlParameter
+        {
+            Value = selection.ExternalStationId.ToString(),
+            NpgsqlDbType = NpgsqlDbType.Text
+        });
+        return (bool)(await command.ExecuteScalarAsync(cancellationToken)
+            ?? throw new InvalidDataException("INA collection gate returned no result."));
+    }
 
     public async Task<bool> ClaimLeaseAsync(
         string provider, string streamKey, string owner, TimeSpan duration,

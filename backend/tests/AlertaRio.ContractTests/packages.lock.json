@@ -136,6 +136,13 @@
           "AlertaRio.Core": "[1.0.0, )",
           "Npgsql": "[10.0.3, )"
         }
+      },
+      "alertario.worker": {
+        "type": "Project",
+        "dependencies": {
+          "AlertaRio.Application": "[1.0.0, )",
+          "AlertaRio.Infrastructure": "[1.0.0, )"
+        }
       }
     }
   }

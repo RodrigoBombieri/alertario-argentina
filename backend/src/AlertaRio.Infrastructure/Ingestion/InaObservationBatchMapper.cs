@@ -8,7 +8,7 @@ namespace AlertaRio.Infrastructure.Ingestion;
 public static class InaObservationBatchMapper
 {
     public static IngestionBatch Map(
-        ApprovedInaSeries approvedSeries, Guid internalSeriesId,
+        PermittedInaSeries approvedSeries, Guid internalSeriesId,
         IReadOnlyList<InaObservationResult> results,
         string streamKey, string leaseOwner, string? cursor,
         DateTimeOffset transportSucceededAt)

@@ -14,23 +14,34 @@ public sealed record InaSeriesApproval(
     int UnitId, string Unit, InaTimeSupport TimeSupport, InaSeriesDataKind DataKind,
     string ApprovalVersion, string RightsDecisionId, string HydrologyDecisionId);
 
-public sealed class ApprovedInaSeries
+public sealed record InaCollectionSelection(
+    int ExternalSeriesId, int ExternalStationId, int NetworkId,
+    string VariableCode, int? ProcedureId, string ProcedureName,
+    int UnitId, string Unit, InaTimeSupport TimeSupport, InaSeriesDataKind DataKind,
+    string SelectionVersion, string RightsDecisionId);
+
+public class PermittedInaSeries
 {
-    internal ApprovedInaSeries(InaSeriesContext context) => Context = context;
+    internal PermittedInaSeries(InaSeriesContext context) => Context = context;
 
     public InaSeriesContext Context { get; }
 }
 
-public static class InaSeriesApprovalGate
+public sealed class ApprovedInaSeries(InaSeriesContext context) : PermittedInaSeries(context)
 {
-    public static ApprovedInaSeries Select(
-        InaSeriesCandidate candidate, InaSeriesApproval approval)
+}
+
+// Collection requires documented source rights and an exact public-series match.
+// Hydrological approval remains a separate gate for publication and calculations.
+public static class InaCollectionGate
+{
+    public static PermittedInaSeries Select(
+        InaSeriesCandidate candidate, InaCollectionSelection approval)
     {
         ArgumentNullException.ThrowIfNull(candidate);
         ArgumentNullException.ThrowIfNull(approval);
-        if (string.IsNullOrWhiteSpace(approval.ApprovalVersion) ||
+        if (string.IsNullOrWhiteSpace(approval.SelectionVersion) ||
             string.IsNullOrWhiteSpace(approval.RightsDecisionId) ||
-            string.IsNullOrWhiteSpace(approval.HydrologyDecisionId) ||
             approval.DataKind != InaSeriesDataKind.Observed ||
             !candidate.IsInstantaneous || !approval.TimeSupport.IsInstantaneous ||
             candidate.ExternalSeriesId <= 0 || candidate.ExternalStationId <= 0 ||
@@ -44,10 +55,31 @@ public static class InaSeriesApprovalGate
             candidate.UnitId != approval.UnitId || candidate.Unit != approval.Unit ||
             candidate.TimeSupport != approval.TimeSupport)
             throw new InvalidDataException(
-                "INA series is not an approved, unchanged observed instantaneous series.");
+                "INA series is not an unchanged, rights-reviewed observed instantaneous series.");
 
-        return new ApprovedInaSeries(new InaSeriesContext(
+        return new PermittedInaSeries(new InaSeriesContext(
             candidate.ExternalSeriesId, candidate.UnitId, candidate.Unit,
             IsObserved: true, IsInstantaneous: true));
+    }
+}
+
+public static class InaSeriesApprovalGate
+{
+    public static ApprovedInaSeries Select(
+        InaSeriesCandidate candidate, InaSeriesApproval approval)
+    {
+        ArgumentNullException.ThrowIfNull(candidate);
+        ArgumentNullException.ThrowIfNull(approval);
+        if (string.IsNullOrWhiteSpace(approval.HydrologyDecisionId))
+            throw new InvalidDataException(
+                "INA series is not an approved, unchanged observed instantaneous series.");
+        var permitted = InaCollectionGate.Select(candidate,
+            new InaCollectionSelection(approval.ExternalSeriesId,
+                approval.ExternalStationId, approval.NetworkId,
+                approval.VariableCode, approval.ProcedureId,
+                approval.ProcedureName, approval.UnitId, approval.Unit,
+                approval.TimeSupport, approval.DataKind,
+                approval.ApprovalVersion, approval.RightsDecisionId));
+        return new ApprovedInaSeries(permitted.Context);
     }
 }

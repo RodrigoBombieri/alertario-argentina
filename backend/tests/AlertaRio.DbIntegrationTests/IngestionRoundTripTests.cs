@@ -6,6 +6,7 @@ using AlertaRio.Api;
 using AlertaRio.Core.Trends;
 using AlertaRio.Core.Notifications;
 using AlertaRio.Infrastructure.Ingestion;
+using AlertaRio.Infrastructure.Providers;
 using AlertaRio.Infrastructure.Notifications;
 using AlertaRio.Worker;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +25,67 @@ public sealed class IngestionRoundTripTests
         Environment.GetEnvironmentVariable("ALERTARIO_TEST_POSTGRES") ??
         "Host=127.0.0.1;Port=5433;Database=alertario_dev;" +
         "Username=alertario_dev;Password=local_only_change_me";
+
+    [Fact]
+    public async Task Ina_collection_requires_source_rights_and_public_series_but_not_hydrology()
+    {
+        await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
+        var sourceId = Guid.NewGuid();
+        var stationId = Guid.NewGuid();
+        var seriesId = Guid.NewGuid();
+        var selection = new InaCollectionSelection(31, 21, 4, "H", 5, "directa", 3,
+            "m", new InaTimeSupport(0, 0, 0, 0, 0, 0, 0),
+            InaSeriesDataKind.Observed, "candidate-v1", "synthetic-rights");
+        try
+        {
+            await using (var seed = dataSource.CreateBatch())
+            {
+                Add(seed, """
+                    INSERT INTO data_sources (id, code, name, permission_status,
+                        rights_decision_id, reviewed_at)
+                    VALUES ($1, $2, 'Synthetic INA source', 'approved',
+                        'synthetic-rights', now())
+                    """, sourceId, $"ina-a5:test-{sourceId:N}");
+                Add(seed, "INSERT INTO stations (id, name) VALUES ($1, 'Synthetic station')",
+                    stationId);
+                Add(seed, """
+                    INSERT INTO station_external_refs (station_id, source_id,
+                        network_key, external_id, public_status)
+                    VALUES ($1, $2, '4', '21', true)
+                    """, stationId, sourceId);
+                Add(seed, """
+                    INSERT INTO measurement_series (id, station_id, source_id,
+                        external_id, variable_code, procedure_id, procedure_name,
+                        unit_id, unit, support_seconds, data_kind,
+                        approval_version, rights_decision_id, approved)
+                    VALUES ($1, $2, $3, '31', 'H', 5, 'directa', 3, 'm', 0,
+                        'observed', 'candidate-v1', 'synthetic-rights', false)
+                    """, seriesId, stationId, sourceId);
+                await seed.ExecuteNonQueryAsync();
+            }
+            var store = new PostgresIngestionStore(dataSource);
+            Assert.True(await store.CanCollectInaSeriesAsync(seriesId, selection));
+            await using (var revoke = dataSource.CreateCommand(
+                "UPDATE data_sources SET permission_status = 'denied' WHERE id = $1"))
+            {
+                revoke.Parameters.Add(new NpgsqlParameter { Value = sourceId });
+                await revoke.ExecuteNonQueryAsync();
+            }
+            Assert.False(await store.CanCollectInaSeriesAsync(seriesId, selection));
+            Assert.False(await store.CanCollectInaSeriesAsync(seriesId,
+                selection with { RightsDecisionId = "other-rights" }));
+        }
+        finally
+        {
+            await using var cleanup = dataSource.CreateBatch();
+            Add(cleanup, "DELETE FROM measurement_series WHERE id = $1", seriesId);
+            Add(cleanup, "DELETE FROM station_external_refs WHERE station_id = $1",
+                stationId);
+            Add(cleanup, "DELETE FROM stations WHERE id = $1", stationId);
+            Add(cleanup, "DELETE FROM data_sources WHERE id = $1", sourceId);
+            await cleanup.ExecuteNonQueryAsync();
+        }
+    }
 
     [Fact]
     public async Task Storage_health_rejects_a_schema_without_migrations()

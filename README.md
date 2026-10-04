@@ -35,7 +35,7 @@ flutter run -d emulator-5556 --dart-define=API_BASE_URL=http://10.0.2.2:51737
 
 Si el emulador tiene otro ID, consultarlo con `flutter devices` y reemplazar `emulator-5556`. En la app, buscar `ejemplo` para abrir la localidad y estación ficticias. `/health/ready` indica si el backend de demo puede servir datos sintéticos; `/health/storage` verifica PostgreSQL y migraciones solo cuando se configura el modo persistido. Esta demo no representa cobertura ni alertas oficiales.
 
-Para probar el arranque inicial, iniciar la API con `SyntheticData__Enabled=false` y `ColdStart__Enabled=true`. `GET /v1/status` devuelve `mode=collecting` y `officialDataAvailable=false`; el modo presenta solo la muestra y **todavía no ejecuta un colector real**. Buscar `ejemplo` para ver la serie simulada de 14 días. El worker de ingesta real se activará únicamente tras definir la fuente, sus condiciones y la serie piloto.
+Para probar el arranque inicial, iniciar la API con `SyntheticData__Enabled=false` y `ColdStart__Enabled=true`. `GET /v1/status` devuelve `mode=collecting` y `officialDataAvailable=false`; el modo presenta solo la muestra y **no ejecuta un colector real**. Buscar `ejemplo` para ver la serie simulada de 14 días. El [worker INA opt-in](docs/runbooks/F4-INA-COLLECTION.md) ya está preparado, pero sigue apagado hasta registrar derechos y la selección exacta de la serie. La publicación requerirá después la revisión hidrológica. Los [contenedores de beta](DEPLOYMENT.md#contenedores-y-ambientes) permiten validar el empaquetado local, sin desplegar ni habilitar fuentes.
 
 ## Documentación
 

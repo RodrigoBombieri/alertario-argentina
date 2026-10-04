@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace AlertaRio.Infrastructure.Providers;
 
-// Returns unapproved normalized records; no production host registers this client.
+// Returns normalized candidates. Collection and publication have separate gates.
 public sealed class InaObservationClient(HttpClient client)
 {
     private static readonly Uri OfficialBase = new("https://alerta.ina.gob.ar/a5/");
@@ -11,7 +11,7 @@ public sealed class InaObservationClient(HttpClient client)
     private const int MaxObservations = 500;
 
     public async Task<IReadOnlyList<InaObservationResult>> FetchAsync(
-        ApprovedInaSeries approvedSeries, DateTimeOffset fromUtc, DateTimeOffset toUtc,
+        PermittedInaSeries approvedSeries, DateTimeOffset fromUtc, DateTimeOffset toUtc,
         DateTimeOffset ingestedAt, CancellationToken cancellationToken = default)
     {
         if (client.BaseAddress != OfficialBase)

@@ -1,0 +1,11 @@
+.git
+.github
+.env
+.env.*
+**/bin
+**/obj
+**/TestResults
+apps/mobile/build
+apps/mobile/.dart_tool
+docs
+infrastructure
