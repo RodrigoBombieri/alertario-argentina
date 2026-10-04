@@ -24,6 +24,7 @@ public sealed class SyntheticPublicDataReader(TimeProvider clock) : IPublicDataR
 
     public bool IsConfigured => true;
     public bool IsSynthetic => true;
+    public bool IsCollecting => false;
 
     public IReadOnlyList<LocationDto> SearchLocations(string query, int limit) =>
         Location.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ? [Location] : [];
@@ -41,7 +42,7 @@ public sealed class SyntheticPublicDataReader(TimeProvider clock) : IPublicDataR
     {
         if (stationId != StationId) return null;
 
-        var observationTime = clock.GetUtcNow().AddMinutes(-10);
+        var observationTime = SyntheticHistoryReader.LatestObservationAt(clock);
         var height = new MeasurementDto(
             SeriesId, 7.48m, "m", observationTime,
             observationTime.AddMinutes(2), observationTime.AddMinutes(4),

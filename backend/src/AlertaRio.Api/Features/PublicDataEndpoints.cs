@@ -11,6 +11,15 @@ internal static class PublicDataEndpoints
     {
         var api = app.MapGroup("/v1");
 
+        api.MapGet("/status", (IPublicDataReader reader) =>
+            Results.Ok(new PublicDataStatusDto(
+                reader.IsCollecting ? "collecting" :
+                reader.IsSynthetic ? "synthetic" :
+                reader.IsConfigured ? "live" : "unavailable",
+                reader.IsConfigured && !reader.IsSynthetic && !reader.IsCollecting)))
+            .WithName("GetPublicDataStatus")
+            .Produces<PublicDataStatusDto>();
+
         api.MapGet("/locations", (string? query, int? limit, IPublicDataReader reader,
             HttpContext context) =>
         {
@@ -63,6 +72,9 @@ internal static class PublicDataEndpoints
             if (limit is < 1 or > 500)
                 return ApiProblems.Create(context, 400, "invalidLimit",
                     "Limit must be between 1 and 500.");
+            var publicReader = context.RequestServices.GetRequiredService<IPublicDataReader>();
+            if (publicReader.IsCollecting)
+                return Results.Ok(new ListResponse<StationMapPointDto>(false, [], null));
             var mapReader = context.RequestServices.GetService<IPersistedStationMapReader>();
             if (mapReader is null) return Unconfigured(context);
             var stations = await mapReader.GetStationsAsync(box!, limit ?? 200,

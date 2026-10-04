@@ -26,6 +26,44 @@ public sealed class IngestionRoundTripTests
         "Username=alertario_dev;Password=local_only_change_me";
 
     [Fact]
+    public async Task Storage_health_rejects_a_schema_without_migrations()
+    {
+        var connection = new NpgsqlConnectionStringBuilder(ConnectionString)
+        {
+            SearchPath = $"missing_{Guid.NewGuid():N}"
+        };
+        await using var app = ApiHost.Build(new WebApplicationOptions
+        {
+            EnvironmentName = "Development",
+            ApplicationName = typeof(ApiHost).Assembly.GetName().Name
+        }, builder =>
+        {
+            builder.Configuration["PersistedSummary:Enabled"] = "true";
+            builder.Configuration["ConnectionStrings:Ingestion"] = connection.ConnectionString;
+        });
+        app.Urls.Add("http://127.0.0.1:0");
+        await app.StartAsync();
+        try
+        {
+            var server = app.Services.GetRequiredService<IServer>();
+            var address = server.Features.Get<IServerAddressesFeature>()?.Addresses.Single()
+                ?? throw new InvalidOperationException("Kestrel did not publish an address.");
+            using var client = new HttpClient { BaseAddress = new Uri(address) };
+            using var response = await client.GetAsync("/health/storage");
+            Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+            using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            Assert.Equal("schemaIncompatible",
+                body.RootElement.GetProperty("status").GetString());
+            Assert.Equal(HttpStatusCode.OK,
+                (await client.GetAsync("/health/live")).StatusCode);
+        }
+        finally
+        {
+            await app.StopAsync();
+        }
+    }
+
+    [Fact]
     public async Task Notification_episode_and_outbox_survive_replay_and_cancel_pending_delivery()
     {
         await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
@@ -304,6 +342,13 @@ public sealed class IngestionRoundTripTests
                     await pageOneResponse.Content.ReadAsStringAsync());
                 Assert.Equal(7.50m, Assert.Single(pageOne.RootElement
                     .GetProperty("points").EnumerateArray()).GetProperty("value").GetDecimal());
+                var newestPoint = Assert.Single(pageOne.RootElement
+                    .GetProperty("points").EnumerateArray());
+                Assert.Equal(1, newestPoint.GetProperty("revision").GetInt32());
+                Assert.NotEqual(JsonValueKind.Null,
+                    newestPoint.GetProperty("sourceUpdatedAt").ValueKind);
+                Assert.NotEqual(JsonValueKind.Null,
+                    newestPoint.GetProperty("ingestedAt").ValueKind);
                 var cursor = pageOne.RootElement.GetProperty("nextCursor").GetString();
                 Assert.NotNull(cursor);
                 using var pageTwoResponse = await client.GetAsync(

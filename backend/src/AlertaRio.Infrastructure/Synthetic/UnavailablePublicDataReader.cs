@@ -7,6 +7,7 @@ public sealed class UnavailablePublicDataReader : IPublicDataReader
 {
     public bool IsConfigured => false;
     public bool IsSynthetic => false;
+    public bool IsCollecting => false;
     public IReadOnlyList<LocationDto> SearchLocations(string query, int limit) => [];
     public LocationDto? GetLocation(string id) => null;
     public IReadOnlyList<StationDto> GetStationsForLocation(string locationId) => [];

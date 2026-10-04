@@ -6,6 +6,7 @@ public interface IPublicDataReader
 {
     bool IsConfigured { get; }
     bool IsSynthetic { get; }
+    bool IsCollecting { get; }
     IReadOnlyList<LocationDto> SearchLocations(string query, int limit);
     LocationDto? GetLocation(string id);
     IReadOnlyList<StationDto> GetStationsForLocation(string locationId);

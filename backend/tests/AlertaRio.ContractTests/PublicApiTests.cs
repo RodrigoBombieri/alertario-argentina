@@ -57,9 +57,36 @@ public sealed class PublicApiTests
         var root = json.RootElement;
         Assert.True(root.GetProperty("synthetic").GetBoolean());
         Assert.False(root.GetProperty("truncated").GetBoolean());
-        Assert.Equal(3, root.GetProperty("points").GetArrayLength());
-        Assert.Equal(7.48m, root.GetProperty("points")[2]
+        Assert.Equal(25, root.GetProperty("points").GetArrayLength());
+        Assert.Equal(7.48m, root.GetProperty("points")[24]
             .GetProperty("value").GetDecimal());
+        Assert.Equal(1, root.GetProperty("points")[24]
+            .GetProperty("revision").GetInt32());
+        Assert.NotEqual(JsonValueKind.Null, root.GetProperty("points")[24]
+            .GetProperty("sourceUpdatedAt").ValueKind);
+        Assert.NotEqual(JsonValueKind.Null, root.GetProperty("points")[24]
+            .GetProperty("ingestedAt").ValueKind);
+    }
+
+    [Fact]
+    public async Task Synthetic_history_fills_exactly_fourteen_days_without_official_claim()
+    {
+        await using var api = await RunningApi.StartAsync(synthetic: true);
+        var now = DateTimeOffset.UtcNow;
+        var from = Uri.EscapeDataString(now.AddDays(-15).ToString("O"));
+        var to = Uri.EscapeDataString(now.ToString("O"));
+        using var response = await api.Client.GetAsync(
+            $"/v1/series/series-demo-height/history?from={from}&to={to}&limit=500");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        using var json = await ReadJson(response);
+        var root = json.RootElement;
+        Assert.True(root.GetProperty("synthetic").GetBoolean());
+        Assert.Equal(JsonValueKind.Null, root.GetProperty("nextCursor").ValueKind);
+        var points = root.GetProperty("points").EnumerateArray().ToArray();
+        Assert.Equal(337, points.Length);
+        var newest = points[0].GetProperty("observedAt").GetDateTimeOffset();
+        var oldest = points[^1].GetProperty("observedAt").GetDateTimeOffset();
+        Assert.Equal(TimeSpan.FromDays(14), newest - oldest);
     }
 
     [Fact]
@@ -114,6 +141,44 @@ public sealed class PublicApiTests
         Assert.Equal(HttpStatusCode.ServiceUnavailable, storage.StatusCode);
         using var storageBody = await ReadJson(storage);
         Assert.Equal("notConfigured", storageBody.RootElement.GetProperty("status").GetString());
+        using var status = await api.Client.GetAsync("/v1/status");
+        using var statusBody = await ReadJson(status);
+        Assert.Equal("unavailable", statusBody.RootElement.GetProperty("mode").GetString());
+    }
+
+    [Fact]
+    public async Task Explicit_cold_start_serves_labeled_demo_without_claiming_official_coverage()
+    {
+        await using var api = await RunningApi.StartAsync(
+            synthetic: false, configured: false, coldStart: true);
+        using var status = await api.Client.GetAsync("/v1/status");
+        Assert.Equal(HttpStatusCode.OK, status.StatusCode);
+        using var statusBody = await ReadJson(status);
+        Assert.Equal("collecting", statusBody.RootElement.GetProperty("mode").GetString());
+        Assert.False(statusBody.RootElement.GetProperty("officialDataAvailable").GetBoolean());
+
+        using var search = await api.Client.GetAsync("/v1/locations?query=ejemplo");
+        Assert.Equal(HttpStatusCode.OK, search.StatusCode);
+        using var searchBody = await ReadJson(search);
+        Assert.True(searchBody.RootElement.GetProperty("synthetic").GetBoolean());
+        Assert.Single(searchBody.RootElement.GetProperty("items").EnumerateArray());
+        using var map = await api.Client.GetAsync("/v1/stations/map?bbox=-59,-32,-58,-31");
+        Assert.Equal(HttpStatusCode.OK, map.StatusCode);
+        using var mapBody = await ReadJson(map);
+        Assert.Empty(mapBody.RootElement.GetProperty("items").EnumerateArray());
+        using var summary = await api.Client.GetAsync("/v1/stations/station-demo/summary");
+        Assert.Equal(HttpStatusCode.OK, summary.StatusCode);
+        using var summaryBody = await ReadJson(summary);
+        Assert.True(summaryBody.RootElement.GetProperty("synthetic").GetBoolean());
+        using var notices = await api.Client.GetAsync("/v1/notices?locationId=location-demo");
+        Assert.Equal(HttpStatusCode.OK, notices.StatusCode);
+        using var noticesBody = await ReadJson(notices);
+        Assert.Equal("notConfigured", noticesBody.RootElement.GetProperty("coverage")
+            .GetProperty("status").GetString());
+        using var ready = await api.Client.GetAsync("/health/ready");
+        Assert.Equal(HttpStatusCode.OK, ready.StatusCode);
+        using var readyBody = await ReadJson(ready);
+        Assert.True(readyBody.RootElement.GetProperty("collecting").GetBoolean());
     }
 
     [Fact]
@@ -148,6 +213,7 @@ public sealed class PublicApiTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         using var json = await ReadJson(response);
         var paths = json.RootElement.GetProperty("paths");
+        Assert.True(paths.TryGetProperty("/v1/status", out _));
         Assert.True(paths.TryGetProperty("/v1/locations", out _));
         Assert.True(paths.TryGetProperty("/v1/stations/{id}/summary", out _));
         Assert.True(paths.TryGetProperty("/v1/stations/map", out _));
@@ -228,7 +294,8 @@ public sealed class PublicApiTests
 
         public static async Task<RunningApi> StartAsync(
             bool synthetic, bool? configured = null, IPublicDataReader? reader = null,
-            bool persistedSummary = false, string? connectionString = null)
+            bool persistedSummary = false, string? connectionString = null,
+            bool coldStart = false)
         {
             var environment = synthetic ? "Development" : "Production";
             var app = ApiHost.Build(new WebApplicationOptions
@@ -239,6 +306,7 @@ public sealed class PublicApiTests
             {
                 builder.Configuration["SyntheticData:Enabled"] = (configured ?? synthetic).ToString();
                 builder.Configuration["PersistedSummary:Enabled"] = persistedSummary.ToString();
+                builder.Configuration["ColdStart:Enabled"] = coldStart.ToString();
                 if (connectionString is not null)
                     builder.Configuration["ConnectionStrings:Ingestion"] = connectionString;
             },
@@ -272,6 +340,7 @@ public sealed class PublicApiTests
 
         public bool IsConfigured => true;
         public bool IsSynthetic => true;
+        public bool IsCollecting => false;
         public IReadOnlyList<LocationDto> SearchLocations(string query, int limit) =>
             fallback.SearchLocations(query, limit);
         public LocationDto? GetLocation(string id) => fallback.GetLocation(id);

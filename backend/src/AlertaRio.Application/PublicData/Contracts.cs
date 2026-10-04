@@ -2,6 +2,8 @@ namespace AlertaRio.Application.PublicData;
 
 public sealed record ListResponse<T>(bool Synthetic, IReadOnlyList<T> Items, string? NextCursor);
 
+public sealed record PublicDataStatusDto(string Mode, bool OfficialDataAvailable);
+
 public sealed record LocationDto(string Id, string Name, string ProvinceId, string ProvinceName, bool Synthetic);
 
 public sealed record StationDto(
@@ -20,7 +22,9 @@ public sealed record MeasurementDto(
     DateTimeOffset? SourceUpdatedAt, DateTimeOffset IngestedAt,
     string Quality, string Freshness, string SourceId);
 
-public sealed record HistoryPointDto(DateTimeOffset ObservedAt, decimal Value);
+public sealed record HistoryPointDto(
+    DateTimeOffset ObservedAt, decimal Value, DateTimeOffset? SourceUpdatedAt = null,
+    DateTimeOffset? IngestedAt = null, int? Revision = null);
 
 public sealed record SeriesHistoryDto(
     string SeriesId, string Unit, int? CadenceSeconds,

@@ -4,6 +4,10 @@
 
 **Seguimiento posterior, corregido 4/10/2026:** [F1 inició el 1 de octubre de 2026](docs/research/f1/README.md). Se documentaron licencia/cuotas GeoRef y un inventario candidato; condiciones INA/PNA, feed y términos del CAP SMN, y observación de 14 días siguen abiertos. No se presupone un permiso individual del SMN para datos abiertos. El resto de este plan conserva su fecha de cierre y describe el estado inicial.
 
+**Decisión de producto 4/10/2026:** el titular permite un arranque en frío, sin observaciones ni afirmaciones de cobertura. Los 14 días de datos reales se reúnen después de abrir la app y dejan de ser requisito previo de lanzamiento. Su análisis sigue siendo necesario antes de habilitar políticas de cadencia, tendencias, comparaciones de umbral o reglas por serie; transcurrir 14 días por sí solo no demuestra que los datos sean aptos. Ver [D14](DECISIONS.md) y [F12](docs/implementation/F12.md).
+
+**Ajuste D15, 4/10/2026:** para que la interfaz no esté vacía, el arranque muestra una estación ficticia y 14 días de lecturas horarias simuladas, etiquetadas. La recopilación real tendrá un historial separado cuando se habilite una fuente y no hereda ni completa la muestra. Ver [D15](DECISIONS.md).
+
 **Evaluación F1, 2 de octubre de 2026:** [acta NO-GO](docs/research/f1/CLOSURE.md). Terminó la investigación exploratoria, pero F1 no está aceptada y sus gates siguen abiertos. El backend sintético de F2 es material de revisión, no evidencia de aceptación de F1 o F2 ni habilitación para publicar fuentes oficiales.
 
 Investigación y consultas externas realizadas el **29 de septiembre de 2026**. Las capturas son evidencia histórica, no información vigente para tomar decisiones sobre un río. Esta sección conserva el estado de planificación inicial; el [corte técnico F2](docs/implementation/F2.md) registra el software construido posteriormente. Las decisiones técnicas son recomendaciones sujetas a los gates indicados.

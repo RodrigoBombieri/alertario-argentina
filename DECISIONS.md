@@ -22,6 +22,9 @@ Fecha: 2026-09-29. **Propuestas de diseño** salvo restricciones solicitadas por
 | D10 | MVP gratuito; sin IA, predicción, monetización ni multiempresa | Requisito confirmado | VISION/PRODUCT |
 | D11 | Hosting no elegido; comparar antes de contratar | Requisito confirmado | DEPLOYMENT |
 | D12 | Piloto limitado Cuenca del Plata, alcance de búsqueda nacional | Propuesta de alcance | Necesita aceptación de producto tras F1 |
+| D13 | Primera beta Android; US$100/mes como tope de referencia para cotizar infraestructura | Confirmado por el titular el 4/10/2026 para planificación, sin contratación ni autorización de pago | [Base operativa F12](docs/implementation/F12-OPERATING-BASELINE.md); hosting y dispositivos siguen pendientes |
+| D14 | Arranque en frío: la app puede abrirse sin observaciones y reunir datos reales durante los primeros 14 días | Confirmado por el titular el 4/10/2026; sustituye los 14 días como requisito previo de lanzamiento | [F1](docs/research/f1/CLOSURE.md) y [F12](docs/implementation/F12.md). Cada serie se evalúa después; el plazo solo no valida cadencia, datum, umbrales ni derechos de uso |
+| D15 | Mostrar 14 días de lecturas horarias simuladas desde el inicio y empezar el historial real por separado cuando la fuente quede habilitada | Confirmado por el titular el 4/10/2026; modifica la presentación vacía de D14 | La muestra conserva marca sintética y estación ficticia. No se mezcla con mediciones reales, no cuenta como 14 días de observación, no habilita alertas. La recolección real todavía depende de condiciones de fuente, serie aprobada y worker operativo |
 
 ## Registro de preguntas pendientes, responsable y salida
 
@@ -31,7 +34,7 @@ Fecha: 2026-09-29. **Propuestas de diseño** salvo restricciones solicitadas por
 | Feed SMN estable y completo, SAT/ACP; términos aplicables | Integraciones; consulta a SMN si falta documentación | URL documentada, muestras Alert/Update/Cancel, política de consulta y licencia/términos del recurso | MUST avisos y pushes oficiales |
 | Zona horaria de metadata sin offset | Datos + proveedor | Definición por campo/dataset | Interpretar esos campos como instante |
 | Datum/unidad/vigencia/autoridad de umbrales | Especialista + fuente | Referencia comprobable y regla por serie | Comparación de umbrales |
-| Cadencia/retraso/ruido por serie | Datos/hidrología | Informe 14 días + aprobación de parámetros | Frescura/tendencia/reglas calculadas |
+| Cadencia/retraso/ruido por serie | Datos/hidrología | Informe posterior al arranque con 14 días de datos reales + aprobación de parámetros; la muestra D15 no cuenta | Frescura/tendencia/reglas calculadas; no bloquea la demo inicial |
 | Estaciones/localidades piloto representativas | Producto/geoespacial | Lista curada con justificaciones | Promesa de cobertura piloto |
 | Android/iOS iniciales, macOS y dispositivos | Producto/mobile | Presupuesto y smoke de ambas plataformas | Compromiso de lanzamiento iOS |
 | Paquetes compatibles, gráficos accesibles y MapLibre | Mobile | Spike con versiones fijadas y licencia | Stack definitivo mobile |

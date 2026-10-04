@@ -40,6 +40,14 @@ internal static class StorageHealth
         {
             return "storageUnavailable";
         }
+        catch (PostgresException exception) when (exception.SqlState is "42P01" or "42703")
+        {
+            return "schemaIncompatible";
+        }
+        catch (InvalidCastException)
+        {
+            return "schemaIncompatible";
+        }
         catch (NpgsqlException)
         {
             return "storageUnavailable";

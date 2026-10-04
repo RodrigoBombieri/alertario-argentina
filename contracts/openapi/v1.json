@@ -5,6 +5,26 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/v1/status": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "GetPublicDataStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicDataStatusDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/locations": {
       "get": {
         "tags": [
@@ -651,6 +671,29 @@
               "string"
             ],
             "format": "double"
+          },
+          "sourceUpdatedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "ingestedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "revision": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
           }
         }
       },
@@ -940,6 +983,21 @@
               "null",
               "string"
             ]
+          }
+        }
+      },
+      "PublicDataStatusDto": {
+        "required": [
+          "mode",
+          "officialDataAvailable"
+        ],
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string"
+          },
+          "officialDataAvailable": {
+            "type": "boolean"
           }
         }
       },

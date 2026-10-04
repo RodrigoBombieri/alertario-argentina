@@ -43,7 +43,8 @@ public sealed class PostgresHistoryReader(
             cadence = reader.IsDBNull(1) ? null : reader.GetInt32(1);
         }
         await using var command = new NpgsqlCommand("""
-            SELECT p.observed_end_at, p.value
+            SELECT p.observed_end_at, p.value, p.source_updated_at,
+                   p.ingested_at, p.revision
             FROM publishable_measurements AS p
             WHERE p.series_id = $1 AND p.observed_start_at = p.observed_end_at AND
                   p.observed_end_at >= $2 AND p.observed_end_at < $3 AND
@@ -62,7 +63,9 @@ public sealed class PostgresHistoryReader(
         await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             while (await reader.ReadAsync(cancellationToken))
                 points.Add(new HistoryPointDto(
-                    reader.GetFieldValue<DateTimeOffset>(0), reader.GetDecimal(1)));
+                    reader.GetFieldValue<DateTimeOffset>(0), reader.GetDecimal(1),
+                    reader.IsDBNull(2) ? null : reader.GetFieldValue<DateTimeOffset>(2),
+                    reader.GetFieldValue<DateTimeOffset>(3), reader.GetInt32(4)));
         var hasMore = points.Count > limit;
         if (hasMore) points.RemoveAt(points.Count - 1);
         var nextCursor = hasMore ? points[^1].ObservedAt.ToUniversalTime().ToString("O") : null;
@@ -100,7 +103,8 @@ public sealed class PostgresHistoryReader(
         }
 
         await using var command = new NpgsqlCommand("""
-            SELECT p.observed_end_at, p.value
+            SELECT p.observed_end_at, p.value, p.source_updated_at,
+                   p.ingested_at, p.revision
             FROM publishable_measurements AS p
             WHERE p.series_id = $1 AND p.observed_start_at = p.observed_end_at AND
                   p.observed_end_at BETWEEN $2 AND $3
@@ -113,7 +117,9 @@ public sealed class PostgresHistoryReader(
         await using (var reader = await command.ExecuteReaderAsync(cancellationToken))
             while (await reader.ReadAsync(cancellationToken))
                 points.Add(new HistoryPointDto(
-                    reader.GetFieldValue<DateTimeOffset>(0), reader.GetDecimal(1)));
+                    reader.GetFieldValue<DateTimeOffset>(0), reader.GetDecimal(1),
+                    reader.IsDBNull(2) ? null : reader.GetFieldValue<DateTimeOffset>(2),
+                    reader.GetFieldValue<DateTimeOffset>(3), reader.GetInt32(4)));
         var truncated = points.Count > 2000;
         if (truncated) points.RemoveAt(points.Count - 1);
         points.Reverse();

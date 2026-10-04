@@ -39,6 +39,8 @@ Las series de altura 14, 19, 34 y 79 respondieron HTTP 200 para 28–30/9 UTC: *
 
 ### Plan de medición de 14 días, condicionado a presupuesto
 
+Tras D14, este plan es de maduración por serie **después** del arranque vacío de la app. No es una espera previa para abrir la interfaz. Solo puede consultar fuentes dentro de las condiciones y cuotas aplicables; al completar el período se evalúa la evidencia antes de activar cálculos de esa serie.
+
 1. Obtener del INA permiso/condiciones de monitoreo y presupuesto de consultas por red. Para las cuatro series iniciales, un muestreo diario durante 14 días supone **56 GET** más eventuales reintentos; evaluar frecuencia adicional solo si se busca certificar resolución subdiaria.
 2. Ejecutar sondas seriales con ventana móvil máxima de tres días, guardando hora de consulta, status, tipo, hash de respuesta y tiempos/huellas de observaciones, sin valores medidos en el reporte. Comparar IDs repetidos para detectar cambios de payload. No seguir `next_page` provisto por la fuente.
 3. Extender a las otras ocho series de altura y caudales elegibles solo tras revisar permiso y presupuesto. Registrar errores y ausencias como tales, no como cero ni como ausencia confirmada de datos.
@@ -71,4 +73,4 @@ El índice CAP oficial respondió HTTP 200 el **2/10/2026 01:26 UTC** como `text
 
 ## Gates posteriores al cierre exploratorio
 
-El [acta de evaluación F1](CLOSURE.md) registra un resultado **NO-GO**: los criterios de aceptación de permiso, feed, 14 días, revisión hidrológica y relaciones localidad/estación no se cumplieron. Siguen como trabajos EXT-01–05 y bloquean la aceptación de F1 y el piloto productivo. GeoRef tiene licencia y cuota publicadas; falta aplicar su atribución y revisión legal del producto. Ningún archivo de esta carpeta es una allowlist de producción.
+El [acta de evaluación F1](CLOSURE.md) registra un resultado **NO-GO** para publicar datos oficiales sin condiciones, feed y revisión de representatividad. D14 movió los 14 días a la maduración posterior al arranque vacío; EXT-03 bloquea cálculos por serie, no la apertura de una beta sin datos. Los demás trabajos EXT siguen abiertos. GeoRef tiene licencia y cuota publicadas; falta aplicar su atribución y revisión legal del producto. Ningún archivo de esta carpeta es una allowlist de producción.

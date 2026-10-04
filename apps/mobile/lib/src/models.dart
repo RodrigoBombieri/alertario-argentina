@@ -91,15 +91,40 @@ class Measurement {
 }
 
 class HistoryPoint {
-  const HistoryPoint(this.observedAt, this.value);
+  const HistoryPoint(
+    this.observedAt,
+    this.value, {
+    this.sourceUpdatedAt,
+    this.ingestedAt,
+    this.revision,
+  });
   final DateTime observedAt;
   final double value;
+  final DateTime? sourceUpdatedAt;
+  final DateTime? ingestedAt;
+  final int? revision;
 
   factory HistoryPoint.fromJson(Object? value) {
     final json = object(value);
     final number = (json['value'] as num).toDouble();
     if (!number.isFinite) throw const FormatException('Non-finite reading.');
-    return HistoryPoint(DateTime.parse(json['observedAt'] as String), number);
+    final revision = json['revision'] as int?;
+    if (revision != null && revision <= 0) {
+      throw const FormatException('Invalid history revision.');
+    }
+    return HistoryPoint(
+      DateTime.parse(json['observedAt'] as String),
+      number,
+      sourceUpdatedAt:
+          json['sourceUpdatedAt'] == null
+              ? null
+              : DateTime.parse(json['sourceUpdatedAt'] as String),
+      ingestedAt:
+          json['ingestedAt'] == null
+              ? null
+              : DateTime.parse(json['ingestedAt'] as String),
+      revision: revision,
+    );
   }
 }
 
@@ -152,6 +177,8 @@ class SeriesHistoryPage {
   const SeriesHistoryPage(
     this.seriesId,
     this.unit,
+    this.cadenceSeconds,
+    this.generatedAt,
     this.synthetic,
     this.from,
     this.to,
@@ -161,6 +188,8 @@ class SeriesHistoryPage {
 
   final String seriesId;
   final String unit;
+  final int? cadenceSeconds;
+  final DateTime generatedAt;
   final bool synthetic;
   final DateTime from;
   final DateTime to;
@@ -171,9 +200,11 @@ class SeriesHistoryPage {
     final json = object(value);
     final from = DateTime.parse(json['from'] as String);
     final to = DateTime.parse(json['to'] as String);
+    final cadence = json['cadenceSeconds'] as int?;
     final points = (json['points'] as List).map(HistoryPoint.fromJson).toList();
     if (!from.isBefore(to) ||
         to.difference(from) > const Duration(days: 31) ||
+        cadence != null && cadence <= 0 ||
         points.length > 500) {
       throw const FormatException('Invalid history page.');
     }
@@ -197,6 +228,8 @@ class SeriesHistoryPage {
     return SeriesHistoryPage(
       json['seriesId'] as String,
       json['unit'] as String,
+      cadence,
+      DateTime.parse(json['generatedAt'] as String),
       json['synthetic'] as bool,
       from,
       to,

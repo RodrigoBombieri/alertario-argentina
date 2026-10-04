@@ -33,6 +33,11 @@ class AlertaRioApi {
     return base.resolve(path).toString();
   }
 
+  Future<String> dataMode() async {
+    final response = await _client.get<Object?>(_url('/v1/status'));
+    return object(response.data)['mode'] as String;
+  }
+
   Future<List<Location>> searchLocations(String query) async {
     final response = await _client.get<Object?>(
       _url('/v1/locations'),

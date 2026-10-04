@@ -34,6 +34,28 @@ void main() {
     expect(find.text('DATOS SINTÉTICOS · solo para pruebas'), findsOneWidget);
     expect(find.text('Altura reciente · 24 horas'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Ver historial'));
+    await tester.tap(find.text('Ver historial'));
+    await tester.pumpAndSettle();
+    expect(find.text('7 días'), findsOneWidget);
+    expect(
+      find.textContaining('Gráfico de 100 lecturas cargadas'),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('30 días'));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Gráfico de 100 lecturas cargadas'),
+      findsOneWidget,
+    );
+    await tester.scrollUntilVisible(find.text('7.48 m'), 250);
+    await tester.tap(find.text('7.48 m'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Fuente publicó:'), findsOneWidget);
+    expect(find.textContaining('AlertaRío incorporó:'), findsOneWidget);
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
     await tester.tap(find.byTooltip('Guardar en favoritos'));
     await tester.pumpAndSettle();
     await tester.pageBack();

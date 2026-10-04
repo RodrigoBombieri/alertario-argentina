@@ -30,6 +30,7 @@ public static class ApiHost
             && builder.Configuration.GetValue<bool>("PersistedSummary:Enabled");
         var syntheticEnabled = builder.Environment.IsDevelopment()
             && builder.Configuration.GetValue<bool>("SyntheticData:Enabled");
+        var collectingEnabled = builder.Configuration.GetValue<bool>("ColdStart:Enabled");
         if (persistedSummaryEnabled)
         {
             var connectionString = builder.Configuration.GetConnectionString("Ingestion")
@@ -45,6 +46,11 @@ public static class ApiHost
             builder.Services.AddSingleton<IPublicDataReader, SyntheticPublicDataReader>();
             builder.Services.AddSingleton<IPersistedHistoryReader, SyntheticHistoryReader>();
         }
+        else if (collectingEnabled)
+        {
+            builder.Services.AddSingleton<IPublicDataReader, CollectingPublicDataReader>();
+            builder.Services.AddSingleton<IPersistedHistoryReader, SyntheticHistoryReader>();
+        }
         else
             builder.Services.AddSingleton<IPublicDataReader, UnavailablePublicDataReader>();
         configureServices?.Invoke(builder.Services);
@@ -58,7 +64,12 @@ public static class ApiHost
             .ExcludeFromDescription();
         app.MapGet("/health/ready", (IPublicDataReader reader, HttpContext context) =>
                 reader.IsConfigured
-                    ? Results.Ok(new { status = "ready", synthetic = reader.IsSynthetic })
+                    ? Results.Ok(new
+                    {
+                        status = "ready",
+                        synthetic = reader.IsSynthetic,
+                        collecting = reader.IsCollecting
+                    })
                     : ApiProblems.Create(context, StatusCodes.Status503ServiceUnavailable,
                         "dataNotConfigured", "No public data source is configured."))
             .ExcludeFromDescription();

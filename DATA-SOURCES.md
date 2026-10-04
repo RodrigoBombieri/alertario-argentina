@@ -46,7 +46,7 @@ Los GET ejecutados respondieron 200 sin credenciales ni sesión. La especificaci
 
 No se encontró un rate limit contractual, SLA, calendario general de publicación ni licencia específica que cubra inequívocamente todas las redes redistribuidas por INA. Marcar **pendiente** el permiso de almacenamiento, publicación, historial y eventual uso comercial por red. Los [términos de Argentina.gob.ar](https://www.argentina.gob.ar/terminos-y-condiciones) no se trasladan automáticamente a un servicio INA o a datos de terceros. La licencia del código A5 tampoco es licencia de cada dato.
 
-**Decisión:** proveedor principal MVP, condicionado a una lista de series públicas aprobadas. Solicitar confirmación al canal oficial del organismo sobre uso, cuotas, zona horaria, datum, umbrales y contacto técnico. No afirmar confiabilidad de largo plazo con una consulta. Medir al menos 14 días en fase 1/beta con poca carga.
+**Decisión:** proveedor principal MVP, condicionado a una lista de series públicas aprobadas. Solicitar confirmación al canal oficial del organismo sobre uso, cuotas, zona horaria, datum, umbrales y contacto técnico. No afirmar confiabilidad de largo plazo con una consulta. D14 permite iniciar la app sin datos; medir al menos 14 días por serie después del arranque, con poca carga y dentro de las cuotas aplicables, antes de aprobar cálculos dependientes de cadencia.
 
 ## 2. Servicio Meteorológico Nacional
 

@@ -50,7 +50,24 @@ class MemoryApi extends AlertaRioApi {
   MemoryApi() : super(baseUrl: 'https://example.invalid');
   bool offline = false;
   bool revoked = false;
+  String mode = 'synthetic';
   List<MapStation> mapStations = [];
+  final requestedHistoryDays = <int>[];
+
+  @override
+  Future<String> dataMode() async => mode;
+
+  @override
+  Future<List<Location>> searchLocations(String query) async =>
+      mode == 'collecting' && query == 'ejemplo'
+          ? [
+            const Location(
+              'location-demo',
+              'Localidad de ejemplo',
+              'Provincia de ejemplo',
+            ),
+          ]
+          : [];
 
   @override
   Future<List<MapStation>> stationsInBounds(String bbox) async => mapStations;
@@ -104,13 +121,20 @@ class MemoryApi extends AlertaRioApi {
     DateTime to,
     String? cursor,
   ) async {
-    final point =
-        cursor == null
-            ? HistoryPoint(to.subtract(const Duration(hours: 1)), 7.5)
-            : HistoryPoint(to.subtract(const Duration(hours: 2)), 7.3);
+    requestedHistoryDays.add(to.difference(from).inDays);
+    final observedAt = to.subtract(Duration(hours: cursor == null ? 1 : 2));
+    final point = HistoryPoint(
+      observedAt,
+      cursor == null ? 7.5 : 7.3,
+      sourceUpdatedAt: observedAt,
+      ingestedAt: observedAt.add(const Duration(minutes: 2)),
+      revision: 1,
+    );
     return SeriesHistoryPage(
       seriesId,
       'm',
+      3600,
+      DateTime.now().toUtc(),
       true,
       from,
       to,
@@ -199,6 +223,26 @@ void main() {
     expect(find.byType(TextField), findsNothing);
   });
 
+  testWidgets('cold start explains the absence of official data', (
+    tester,
+  ) async {
+    final api = MemoryApi()..mode = 'collecting';
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [apiProvider.overrideWithValue(api)],
+        child: const AlertaRioApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('14 días simulados'), findsOneWidget);
+    expect(find.text('Localidad de ejemplo'), findsOneWidget);
+    await tester.enterText(find.byType(TextField).first, 'ejemplo');
+    await tester.tap(find.text('Buscar localidad'));
+    await tester.pumpAndSettle();
+    expect(find.text('Localidad de ejemplo'), findsOneWidget);
+    expect(find.textContaining('sin avisos vigentes'), findsNothing);
+  });
+
   testWidgets('map without an approved style keeps the station list', (
     tester,
   ) async {
@@ -278,6 +322,15 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('7.50 m'), findsOneWidget);
+      await tester.ensureVisible(find.text('7.50 m'));
+      await tester.tap(find.text('7.50 m'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Fuente publicó:'), findsOneWidget);
+      expect(find.textContaining('AlertaRío incorporó:'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('Cargar lecturas anteriores'),
+        300,
+      );
       await tester.tap(find.text('Cargar lecturas anteriores'));
       await tester.pumpAndSettle();
       expect(find.text('7.50 m'), findsOneWidget);
@@ -285,4 +338,27 @@ void main() {
       expect(find.text('Cargar lecturas anteriores'), findsNothing);
     },
   );
+
+  testWidgets('extended history changes range and rebuilds the chart', (
+    tester,
+  ) async {
+    final api = MemoryApi();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [apiProvider.overrideWithValue(api)],
+        child: const MaterialApp(
+          home: ExtendedHistoryPage(seriesId: 'series-demo'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(api.requestedHistoryDays, [7]);
+    expect(find.textContaining('Gráfico de 1 lectura'), findsOneWidget);
+    await tester.tap(find.text('30 días'));
+    await tester.pumpAndSettle();
+    expect(api.requestedHistoryDays, [7, 30]);
+    expect(find.text('7.50 m'), findsOneWidget);
+    expect(find.text('7.30 m'), findsNothing);
+    expect(find.textContaining('gráfico es parcial'), findsOneWidget);
+  });
 }

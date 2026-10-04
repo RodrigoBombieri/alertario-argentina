@@ -22,12 +22,34 @@ class _HomePageState extends ConsumerState<HomePage> {
   List<Station> favorites = [];
   String? error;
   bool loading = false;
+  bool searched = false;
+  String? dataMode;
   int tab = 0;
 
   @override
   void initState() {
     super.initState();
     _loadFavorites();
+    _loadDataMode();
+  }
+
+  Future<void> _loadDataMode() async {
+    try {
+      final api = ref.read(apiProvider);
+      final mode = await api.dataMode();
+      if (mounted) setState(() => dataMode = mode);
+      if (mode == 'collecting' || mode == 'synthetic') {
+        final sample = await api.searchLocations('ejemplo');
+        if (mounted && !searched && query.text.isEmpty) {
+          setState(() {
+            query.text = 'ejemplo';
+            locations = sample;
+          });
+        }
+      }
+    } catch (_) {
+      // Connectivity errors are reported by the requested data view.
+    }
   }
 
   @override
@@ -54,6 +76,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
     setState(() {
       loading = true;
+      searched = true;
       error = null;
       stations = [];
     });
@@ -104,11 +127,29 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(title: const Text('AlertaRío Argentina')),
     body: SafeArea(
-      child: switch (tab) {
-        0 => _searchPage(),
-        1 => _favoritesPage(),
-        _ => MapListPage(onOpenStation: _openStation),
-      },
+      child: Column(
+        children: [
+          if (dataMode == 'collecting')
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Text(
+                    'DATOS DE MUESTRA · 14 días simulados para explorar la app. La recopilación de mediciones reales aún no está habilitada; no hay avisos oficiales verificados.',
+                  ),
+                ),
+              ),
+            ),
+          Expanded(
+            child: switch (tab) {
+              0 => _searchPage(),
+              1 => _favoritesPage(),
+              _ => MapListPage(onOpenStation: _openStation),
+            },
+          ),
+        ],
+      ),
     ),
     bottomNavigationBar: NavigationBar(
       selectedIndex: tab,
@@ -149,9 +190,15 @@ class _HomePageState extends ConsumerState<HomePage> {
           style: TextStyle(color: Theme.of(context).colorScheme.error),
         ),
       if (!loading && locations.isEmpty && error == null)
-        const Padding(
-          padding: EdgeInsets.all(16),
-          child: Text('Sin resultados cargados.'),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            !searched
+                ? 'Sin resultados cargados.'
+                : dataMode == 'collecting'
+                ? 'Todavía no hay localidades habilitadas.'
+                : 'No se encontraron localidades con ese nombre.',
+          ),
         ),
       for (final location in locations)
         ListTile(
@@ -330,10 +377,11 @@ class _StationPageState extends ConsumerState<StationPage> {
                           builder:
                               (_) => ExtendedHistoryPage(
                                 seriesId: summary.height!.seriesId,
+                                sourceId: summary.height!.sourceId,
                               ),
                         ),
                       ),
-                  child: const Text('Ver historial de 7 días'),
+                  child: const Text('Ver historial'),
                 ),
               const SizedBox(height: 12),
               Text(
@@ -396,9 +444,10 @@ class _StationPageState extends ConsumerState<StationPage> {
 }
 
 class ExtendedHistoryPage extends ConsumerStatefulWidget {
-  const ExtendedHistoryPage({super.key, required this.seriesId});
+  const ExtendedHistoryPage({super.key, required this.seriesId, this.sourceId});
 
   final String seriesId;
+  final String? sourceId;
 
   @override
   ConsumerState<ExtendedHistoryPage> createState() =>
@@ -406,12 +455,16 @@ class ExtendedHistoryPage extends ConsumerStatefulWidget {
 }
 
 class _ExtendedHistoryPageState extends ConsumerState<ExtendedHistoryPage> {
-  late final DateTime to = DateTime.now().toUtc();
-  late final DateTime from = to.subtract(const Duration(days: 7));
+  late DateTime to;
+  late DateTime from;
+  int rangeDays = 7;
+  int requestGeneration = 0;
   final List<HistoryPoint> points = [];
   String? cursor;
   String? error;
   String? unit;
+  int? cadenceSeconds;
+  DateTime? generatedAt;
   bool synthetic = false;
   bool loading = false;
   bool loaded = false;
@@ -419,11 +472,37 @@ class _ExtendedHistoryPageState extends ConsumerState<ExtendedHistoryPage> {
   @override
   void initState() {
     super.initState();
+    to = DateTime.now().toUtc();
+    from = to.subtract(Duration(days: rangeDays));
+    _load();
+  }
+
+  void _selectRange(int days) {
+    if (days == rangeDays) return;
+    requestGeneration++;
+    setState(() {
+      rangeDays = days;
+      to = DateTime.now().toUtc();
+      from = to.subtract(Duration(days: days));
+      points.clear();
+      cursor = null;
+      error = null;
+      unit = null;
+      cadenceSeconds = null;
+      generatedAt = null;
+      synthetic = false;
+      loaded = false;
+      loading = false;
+    });
     _load();
   }
 
   Future<void> _load() async {
     if (loading || loaded && cursor == null) return;
+    final generation = requestGeneration;
+    final requestedFrom = from;
+    final requestedTo = to;
+    final requestedCursor = cursor;
     setState(() {
       loading = true;
       error = null;
@@ -431,23 +510,35 @@ class _ExtendedHistoryPageState extends ConsumerState<ExtendedHistoryPage> {
     try {
       final page = await ref
           .read(apiProvider)
-          .historyPage(widget.seriesId, from, to, cursor);
-      if (!mounted) return;
+          .historyPage(
+            widget.seriesId,
+            requestedFrom,
+            requestedTo,
+            requestedCursor,
+          );
+      if (!mounted || generation != requestGeneration) return;
       if (page.seriesId != widget.seriesId ||
-          page.from.toUtc() != from ||
-          page.to.toUtc() != to ||
-          unit != null && page.unit != unit) {
+          page.from.toUtc() != requestedFrom ||
+          page.to.toUtc() != requestedTo ||
+          unit != null && page.unit != unit ||
+          loaded && page.cadenceSeconds != cadenceSeconds ||
+          loaded && page.synthetic != synthetic ||
+          points.isNotEmpty &&
+              page.points.isNotEmpty &&
+              !page.points.first.observedAt.isBefore(points.last.observedAt)) {
         throw const FormatException('Inconsistent history page.');
       }
       setState(() {
         points.addAll(page.points);
         cursor = page.nextCursor;
         unit = page.unit;
+        cadenceSeconds = page.cadenceSeconds;
+        generatedAt = page.generatedAt;
         synthetic = page.synthetic;
         loaded = true;
       });
     } catch (_) {
-      if (mounted) {
+      if (mounted && generation == requestGeneration) {
         setState(
           () =>
               error =
@@ -455,35 +546,89 @@ class _ExtendedHistoryPageState extends ConsumerState<ExtendedHistoryPage> {
         );
       }
     } finally {
-      if (mounted) setState(() => loading = false);
+      if (mounted && generation == requestGeneration) {
+        setState(() => loading = false);
+      }
     }
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Historial de 7 días')),
-    body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Text('Desde ${utc(from)} hasta ${utc(to)}'),
-        if (synthetic) const Text('DATOS SINTÉTICOS · solo para pruebas'),
-        if (loading) const LinearProgressIndicator(),
-        if (error != null) Text(error!),
-        if (loaded && points.isEmpty)
-          const Text('No hay lecturas en este rango.'),
-        for (final point in points)
-          ListTile(
-            title: Text('${point.value.toStringAsFixed(2)} ${unit ?? ''}'),
-            subtitle: Text(utc(point.observedAt)),
+  Widget build(BuildContext context) {
+    final chartPoints = points.take(2000).toList().reversed.toList();
+    final chart = SeriesHistory(
+      widget.seriesId,
+      unit ?? '',
+      cadenceSeconds,
+      generatedAt ?? to,
+      points.length > 2000,
+      chartPoints,
+    );
+    return Scaffold(
+      appBar: AppBar(title: const Text('Historial')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          SegmentedButton<int>(
+            segments: const [
+              ButtonSegment(value: 1, label: Text('24 h')),
+              ButtonSegment(value: 7, label: Text('7 días')),
+              ButtonSegment(value: 30, label: Text('30 días')),
+            ],
+            selected: {rangeDays},
+            onSelectionChanged: (selection) => _selectRange(selection.single),
           ),
-        if (!loading && (!loaded || cursor != null))
-          TextButton(
-            onPressed: _load,
-            child: Text(loaded ? 'Cargar lecturas anteriores' : 'Reintentar'),
-          ),
-      ],
-    ),
-  );
+          const SizedBox(height: 12),
+          Text('Desde ${utc(from)} hasta ${utc(to)}'),
+          if (widget.sourceId != null)
+            Text('Fuente de la serie: ${widget.sourceId}'),
+          if (synthetic) const Text('DATOS SINTÉTICOS · solo para pruebas'),
+          if (loading) const LinearProgressIndicator(),
+          if (error != null) Text(error!),
+          if (loaded && points.isEmpty)
+            const Text('No hay lecturas en este rango.'),
+          if (points.isNotEmpty) ...[
+            Text(
+              'Gráfico de ${chartPoints.length} '
+              '${chartPoints.length == 1 ? 'lectura cargada' : 'lecturas cargadas'}',
+            ),
+            if (cursor != null)
+              const Text(
+                'El gráfico es parcial. Cargá las páginas anteriores para ampliar el rango.',
+              ),
+            HistoryChart(history: chart, showReadings: false),
+          ],
+          for (final point in points)
+            ExpansionTile(
+              title: Text('${point.value.toStringAsFixed(2)} ${unit ?? ''}'),
+              subtitle: Text('Medido: ${utc(point.observedAt)}'),
+              children: [
+                ListTile(
+                  title: Text(
+                    point.sourceUpdatedAt == null
+                        ? 'Hora de publicación de la fuente: no informada'
+                        : 'Fuente publicó: ${utc(point.sourceUpdatedAt!)}',
+                  ),
+                ),
+                ListTile(
+                  title: Text(
+                    point.ingestedAt == null
+                        ? 'Hora de incorporación: no informada'
+                        : 'AlertaRío incorporó: ${utc(point.ingestedAt!)}',
+                  ),
+                ),
+                if (point.revision != null)
+                  ListTile(title: Text('Revisión: ${point.revision}')),
+              ],
+            ),
+          if (!loading && (!loaded || cursor != null))
+            TextButton(
+              onPressed: _load,
+              child: Text(loaded ? 'Cargar lecturas anteriores' : 'Reintentar'),
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class MapListPage extends ConsumerStatefulWidget {

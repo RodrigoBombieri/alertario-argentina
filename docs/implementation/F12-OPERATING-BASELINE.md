@@ -1,10 +1,10 @@
 # Propuesta operativa para la beta F12
 
-**Preparada el 4/10/2026. Pendiente de decisión del titular del proyecto; no es una contratación ni un despliegue.** Sirve para comparar costos y repartir tareas antes de abrir staging. Los gates de [F12](F12.md) siguen pendientes.
+**Preparada el 4/10/2026. El titular confirmó Android primero y US$100/mes como tope de referencia para cotizar el 4/10/2026; no es una contratación ni un despliegue.** Sirve para comparar costos y repartir tareas antes de abrir staging. Los gates de [F12](F12.md) siguen pendientes.
 
 ## Propuesta de alcance y presupuesto
 
-- **Tope inicial propuesto:** US$100 por mes para infraestructura del piloto, con alerta de gasto al 50% y al 80% del tope. Es una decisión presupuestaria sugerida, no un precio ni autorización de pago. Separar impuestos, dominio, proveedor de tiles, dispositivos, cuentas de tiendas y horas de operación; si alguno se necesita, presupuestarlo antes de comprometer el tope.
+- **Tope de referencia confirmado para cotizar:** US$100 por mes para infraestructura del piloto, con alerta de gasto al 50% y al 80% del tope. No es un precio ni autorización de pago. Separar impuestos, dominio, proveedor de tiles, dispositivos, cuentas de tiendas y horas de operación; si alguno se necesita, presupuestarlo antes de comprometer el tope.
 - **Candidato para cotizar:** Render Hobby con API web y worker siempre activo `0.5c-512mb` cada uno, PostgreSQL `0.5c-1g` y almacenamiento inicial de 5 GB. Según [precios publicados](https://render.com/pricing), los precios base son US$7 + US$7 + US$19 y US$0,30/GB de almacenamiento adicional a 1 GB incluido: alrededor de **US$34,20/mes de base** para 5 GB, antes de egreso, extras e impuestos. Confirmar en el checkout y medir si 512 MB alcanza para cada proceso; escalar cambia el costo. El plan gratuito no es base de beta persistente.
 - Render documenta [workers continuos](https://render.com/docs/background-workers), [PostGIS](https://render.com/docs/postgresql-extensions) y [recuperación puntual de PostgreSQL pago](https://render.com/docs/postgresql-backups). En Hobby la ventana PITR publicada es de 3 días; el backup lógico de largo plazo y el ensayo de restore requieren diseño y costo adicionales. El [restore local](../../infrastructure/db/verify-local-restore.ps1) no demuestra recuperación en Render.
 - Render sólo documenta [regiones en EE. UU., Alemania y Singapur](https://render.com/docs/regions). Antes de elegir región y proveedor, revisar latencia desde Argentina, términos de tratamiento/transferencia de identificadores de instalación y requisitos legales. Si no son aceptables, volver a comparar Railway/Azure/VPS en [DEPLOYMENT](../../DEPLOYMENT.md). Esta propuesta no cambia D11 a «hosting elegido».
@@ -25,13 +25,12 @@ Hasta que haya primario y suplente identificados, mantener las notificaciones y 
 
 ## Dispositivos y prueba de aceptación
 
-**Inventario mínimo propuesto:** un Android físico de gama media y un iPhone físico disponibles para pruebas repetidas; registrar modelo, versión de sistema, propietario/tenencia y posibilidad de probar red intermitente, notificaciones, accesibilidad y ahorro de batería. El emulador Android cubre desarrollo, pero no sustituye las pruebas de push y comportamiento de fondo. Para distribuir/compilar iOS, disponer además de macOS y credenciales de firma antes de comprometer la beta iOS. Si no se consigue, limitar formalmente la primera beta a Android, sin declarar iOS aceptado.
+**Alcance confirmado para la primera beta: Android.** Se necesita un Android físico de gama media para pruebas repetidas; registrar modelo, versión de sistema, propietario/tenencia y posibilidad de probar red intermitente, notificaciones, accesibilidad y ahorro de batería. El emulador Android cubre desarrollo, pero no sustituye las pruebas de push y comportamiento de fondo. iOS queda para una fase posterior y requerirá iPhone físico, macOS y credenciales de firma; no se declara aceptado.
 
-Conseguir 3–5 personas de prueba en localidades piloto, con consentimiento y canal de reporte. Ejecutar 14 días de operación observada después de permisos, configuración y pruebas de recuperación; registrar fallas de frescura, comprensión del estado, avisos, costos y feedback. Las pruebas con datos sintéticos no cuentan como beta oficial.
+Conseguir 3–5 personas de prueba, con consentimiento y canal de reporte. La beta Android puede comenzar con la muestra sintética D15; registrar disponibilidad, costos, comprensión de la etiqueta y feedback sin imponer una espera fija de 14 días para lanzarla o aceptarla. Cuando una fuente se active con condiciones verificadas, registrar frescura y fallas; contar aparte 14 días de datos reales por serie antes de aprobar cálculos. Las lecturas sintéticas no cuentan como observación real ni validación hidrológica.
 
 ## Decisiones que debe registrar el titular
 
-1. ¿Aprueba un **tope de referencia** de US$100/mes para cotizar, o indica otro monto? No se contratará nada por dejar este documento.
-2. ¿Quién será titular/representante, responsable operativo y suplente? Indicar nombres y disponibilidad.
-3. ¿Qué Android, iPhone y equipo macOS existen ya o se pueden prestar? No hace falta comprar hasta evaluar inventario.
-4. Tras cotización, latencia, privacidad y restore, registrar proveedor/región/plan definitivo en [DECISIONS](../../DECISIONS.md) y actualizar [F12](F12.md).
+1. ¿Quién será titular/representante, responsable operativo y suplente? Indicar nombres y disponibilidad.
+2. ¿Qué Android físico existe ya o se puede prestar? No hace falta comprar hasta evaluar inventario.
+3. Tras cotización, latencia, privacidad y restore, registrar proveedor/región/plan definitivo en [DECISIONS](../../DECISIONS.md) y actualizar [F12](F12.md). El tope confirmado no autoriza gastos por sí mismo.

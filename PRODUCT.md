@@ -2,7 +2,9 @@
 
 ## MVP y alcance geográfico
 
-MVP gratuito, consulta sin cuenta, Android e iOS como objetivo. Primera beta Android propuesta por coste de validación; la aceptación de iOS se verifica separadamente y necesita runner/macOS y dispositivos. Piloto de localidades de la Cuenca del Plata con series aprobadas; no prometer cobertura nacional uniforme. El país es el alcance de búsqueda, no una garantía de sensores en todas las localidades.
+MVP gratuito, consulta sin cuenta, Android e iOS como objetivo. El titular confirmó Android primero para la beta; la aceptación de iOS se verifica separadamente y necesita runner/macOS y dispositivos. Piloto de localidades de la Cuenca del Plata con series aprobadas; no prometer cobertura nacional uniforme. El país es el alcance de búsqueda, no una garantía de sensores en todas las localidades.
+
+D14 permite abrir la app antes de disponer de observaciones oficiales. D15 muestra una estación ficticia con 14 días simulados y una etiqueta persistente de muestra; no infiere seguridad ni cobertura de avisos. Los 14 días de datos reales se reúnen por separado después de habilitar cada fuente. La muestra no cumple por sí sola el MVP de consulta hidrológica y avisos.
 
 | MUST | SHOULD | COULD | NOT NOW |
 |---|---|---|---|

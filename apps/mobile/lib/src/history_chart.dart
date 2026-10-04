@@ -25,8 +25,13 @@ List<List<HistoryPoint>> contiguousHistorySegments(SeriesHistory history) {
 }
 
 class HistoryChart extends StatelessWidget {
-  const HistoryChart({super.key, required this.history});
+  const HistoryChart({
+    super.key,
+    required this.history,
+    this.showReadings = true,
+  });
   final SeriesHistory history;
+  final bool showReadings;
 
   @override
   Widget build(BuildContext context) {
@@ -64,24 +69,27 @@ class HistoryChart extends StatelessWidget {
           'Desde ${first.observedAt.toUtc().toIso8601String()} UTC '
           'hasta ${last.observedAt.toUtc().toIso8601String()} UTC',
         ),
-        ExpansionTile(
-          title: const Text('Lecturas en texto'),
-          children: [
-            for (final point in history.points.reversed.take(200))
-              ListTile(
-                title: Text(
-                  '${point.value.toStringAsFixed(2)} ${history.unit}',
+        if (showReadings)
+          ExpansionTile(
+            title: const Text('Lecturas en texto'),
+            children: [
+              for (final point in history.points.reversed.take(200))
+                ListTile(
+                  title: Text(
+                    '${point.value.toStringAsFixed(2)} ${history.unit}',
+                  ),
+                  subtitle: Text(
+                    '${point.observedAt.toUtc().toIso8601String()} UTC',
+                  ),
                 ),
-                subtitle: Text(
-                  '${point.observedAt.toUtc().toIso8601String()} UTC',
+              if (history.points.length > 200)
+                const ListTile(
+                  title: Text(
+                    'La lista muestra las 200 lecturas más recientes.',
+                  ),
                 ),
-              ),
-            if (history.points.length > 200)
-              const ListTile(
-                title: Text('La lista muestra las 200 lecturas más recientes.'),
-              ),
-          ],
-        ),
+            ],
+          ),
       ],
     );
   }
