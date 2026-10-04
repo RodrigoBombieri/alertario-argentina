@@ -102,7 +102,8 @@ public sealed class PostgresSummaryReader(
                 WHERE stream_key = $1 AND coverage <> 'complete'
             ) AND NOT EXISTS (
                 SELECT 1 FROM quarantined_records
-                WHERE stream_key = $1 AND received_at >= $2
+                WHERE stream_key = $1 AND received_at >= $2 AND
+                      review_status = 'open'
             )
             """, connection, transaction);
         qualityCommand.Parameters.Add(new NpgsqlParameter { Value = seriesId.ToString("D") });

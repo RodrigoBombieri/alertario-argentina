@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../main.dart';
+import 'history_chart.dart';
 import 'models.dart';
+import 'station_map.dart';
 
 String utc(DateTime value) => '${value.toUtc().toIso8601String()} UTC';
 
@@ -203,6 +205,8 @@ class StationPage extends ConsumerStatefulWidget {
 
 class _StationPageState extends ConsumerState<StationPage> {
   SummaryResult? result;
+  HistoryResult? history;
+  String? historyError;
   String? error;
   bool loading = true;
   bool favorite = false;
@@ -235,10 +239,27 @@ class _StationPageState extends ConsumerState<StationPage> {
     setState(() {
       loading = true;
       error = null;
+      history = null;
+      historyError = null;
     });
     try {
       final loaded = await ref.read(repositoryProvider).load(widget.station.id);
       if (mounted) setState(() => result = loaded);
+      final seriesId = loaded.summary.height?.seriesId;
+      if (seriesId != null) {
+        try {
+          final loadedHistory = await ref
+              .read(repositoryProvider)
+              .loadHistory(widget.station.id, seriesId);
+          if (mounted) setState(() => history = loadedHistory);
+        } catch (cause) {
+          if (mounted) {
+            setState(
+              () => historyError = 'No se pudo cargar el gráfico reciente.',
+            );
+          }
+        }
+      }
     } catch (cause) {
       if (mounted) {
         setState(
@@ -292,6 +313,15 @@ class _StationPageState extends ConsumerState<StationPage> {
               const SizedBox(height: 12),
               _measurement('Altura', summary.height),
               _measurement('Caudal', summary.discharge),
+              const SizedBox(height: 12),
+              Text(
+                'Altura reciente · 24 horas',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              if (history?.offline == true)
+                const Text('Gráfico guardado: puede estar desactualizado.'),
+              if (historyError != null) Text(historyError!),
+              if (history != null) HistoryChart(history: history!.history),
               const SizedBox(height: 12),
               Text(
                 'Variaciones por ventana',
@@ -363,6 +393,8 @@ class MapListPage extends ConsumerStatefulWidget {
 class _MapListPageState extends ConsumerState<MapListPage> {
   final bbox = TextEditingController(text: '-59,-32,-58,-31');
   List<MapStation> stations = [];
+  String riverFilter = '';
+  String provinceFilter = '';
   String? error;
   bool loading = false;
 
@@ -381,7 +413,19 @@ class _MapListPageState extends ConsumerState<MapListPage> {
       final result = await ref
           .read(apiProvider)
           .stationsInBounds(bbox.text.trim());
-      if (mounted) setState(() => stations = result);
+      if (mounted) {
+        setState(() {
+          stations = result;
+          if (!result.any((station) => station.riverName == riverFilter)) {
+            riverFilter = '';
+          }
+          if (!result.any(
+            (station) => station.provinceNames.contains(provinceFilter),
+          )) {
+            provinceFilter = '';
+          }
+        });
+      }
     } catch (cause) {
       if (mounted) {
         setState(
@@ -395,37 +439,112 @@ class _MapListPageState extends ConsumerState<MapListPage> {
   }
 
   @override
-  Widget build(BuildContext context) => ListView(
-    padding: const EdgeInsets.all(16),
-    children: [
-      const Text(
-        'Exploración en lista. El mapa con tiles espera un proveedor autorizado.',
-      ),
-      const SizedBox(height: 12),
-      TextField(
-        controller: bbox,
-        decoration: const InputDecoration(
-          labelText: 'Área: oeste,sur,este,norte',
-          border: OutlineInputBorder(),
+  Widget build(BuildContext context) {
+    final rivers =
+        stations
+            .map((station) => station.riverName)
+            .where((river) => river.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
+    final provinces =
+        stations.expand((station) => station.provinceNames).toSet().toList()
+          ..sort();
+    final visibleStations =
+        stations
+            .where(
+              (station) =>
+                  (riverFilter.isEmpty || station.riverName == riverFilter) &&
+                  (provinceFilter.isEmpty ||
+                      station.provinceNames.contains(provinceFilter)),
+            )
+            .toList();
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Text(
+          mapStyleConfigured
+              ? 'Explorá las estaciones en el mapa o elegilas en la lista.'
+              : 'Exploración en lista. El mapa requiere un proveedor de tiles autorizado.',
         ),
-      ),
-      const SizedBox(height: 8),
-      FilledButton(
-        onPressed: loading ? null : _load,
-        child: const Text('Buscar estaciones en el área'),
-      ),
-      if (loading) const LinearProgressIndicator(),
-      if (error != null) Text(error!),
-      if (!loading && stations.isEmpty && error == null)
-        const Text('No hay estaciones cargadas en esta área.'),
-      for (final station in stations)
-        ListTile(
-          title: Text(station.name),
-          subtitle: Text(
-            '${station.riverName.isEmpty ? 'Río no informado' : station.riverName} · ${station.latitude}, ${station.longitude}',
+        if (mapStyleConfigured) ...[
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 320,
+            child: StationMap(
+              stations: visibleStations,
+              onOpenStation: widget.onOpenStation,
+            ),
           ),
-          onTap: () => widget.onOpenStation(station),
+        ],
+        const SizedBox(height: 12),
+        TextField(
+          controller: bbox,
+          decoration: const InputDecoration(
+            labelText: 'Área: oeste,sur,este,norte',
+            border: OutlineInputBorder(),
+          ),
         ),
-    ],
-  );
+        const SizedBox(height: 8),
+        FilledButton(
+          onPressed: loading ? null : _load,
+          child: const Text('Buscar estaciones en el área'),
+        ),
+        if (loading) const LinearProgressIndicator(),
+        if (error != null) Text(error!),
+        if (rivers.length > 1)
+          InputDecorator(
+            decoration: const InputDecoration(labelText: 'Filtrar por río'),
+            child: DropdownButton<String>(
+              value: riverFilter,
+              isExpanded: true,
+              items: [
+                const DropdownMenuItem(
+                  value: '',
+                  child: Text('Todos los ríos'),
+                ),
+                for (final river in rivers)
+                  DropdownMenuItem(
+                    value: river,
+                    child: Text(river.isEmpty ? 'Río no informado' : river),
+                  ),
+              ],
+              onChanged: (value) => setState(() => riverFilter = value ?? ''),
+            ),
+          ),
+        if (provinces.length > 1)
+          InputDecorator(
+            decoration: const InputDecoration(
+              labelText: 'Filtrar por provincia asociada',
+            ),
+            child: DropdownButton<String>(
+              value: provinceFilter,
+              isExpanded: true,
+              items: [
+                const DropdownMenuItem(
+                  value: '',
+                  child: Text('Todas las provincias asociadas'),
+                ),
+                for (final province in provinces)
+                  DropdownMenuItem(value: province, child: Text(province)),
+              ],
+              onChanged:
+                  (value) => setState(() => provinceFilter = value ?? ''),
+            ),
+          ),
+        if (!loading && stations.isEmpty && error == null)
+          const Text('No hay estaciones cargadas en esta área.'),
+        for (final station in visibleStations)
+          ListTile(
+            title: Text(station.name),
+            subtitle: Text(
+              '${station.riverName.isEmpty ? 'Río no informado' : station.riverName} · '
+              '${station.provinceNames.isEmpty ? 'Sin provincia asociada' : station.provinceNames.join(', ')} · '
+              '${station.latitude}, ${station.longitude}',
+            ),
+            onTap: () => widget.onOpenStation(station),
+          ),
+      ],
+    );
+  }
 }

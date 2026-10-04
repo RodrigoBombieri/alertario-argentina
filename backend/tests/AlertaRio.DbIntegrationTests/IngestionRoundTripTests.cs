@@ -164,6 +164,16 @@ public sealed class IngestionRoundTripTests
                     .EnumerateArray(), change =>
                         change.GetProperty("windowHours").GetInt32() == 6);
                 Assert.Equal(0.20m, sixHours.GetProperty("delta").GetDecimal());
+                using var historyResponse = await client.GetAsync(
+                    $"/v1/series/{seriesId:D}/recent");
+                Assert.Equal(HttpStatusCode.OK, historyResponse.StatusCode);
+                using var history = JsonDocument.Parse(
+                    await historyResponse.Content.ReadAsStringAsync());
+                var points = history.RootElement.GetProperty("points").EnumerateArray()
+                    .ToArray();
+                Assert.Equal(2, points.Length);
+                Assert.Equal(7.30m, points[0].GetProperty("value").GetDecimal());
+                Assert.Equal(7.50m, points[1].GetProperty("value").GetDecimal());
                 Assert.Equal("notConfigured", body.RootElement.GetProperty("noticeCoverage")
                     .GetProperty("status").GetString());
                 Assert.Empty(body.RootElement.GetProperty("notices").EnumerateArray());
@@ -178,6 +188,7 @@ public sealed class IngestionRoundTripTests
                 {
                     LeaseOwner = "worker-b",
                     Cursor = "cursor-7",
+                    Coverage = "partial",
                     Records = [high]
                 })).Inserted);
                 using var highResponse = await client.GetAsync(
@@ -196,9 +207,54 @@ public sealed class IngestionRoundTripTests
                 Assert.Equal("notConfigured", highBody.RootElement
                     .GetProperty("noticeCoverage").GetProperty("status").GetString());
 
+                await using (var quarantineIdCommand = dataSource.CreateCommand(
+                    "SELECT id FROM quarantined_records " +
+                    "WHERE provider = $1 AND stream_key = $2 AND review_status = 'open'"))
+                {
+                    quarantineIdCommand.Parameters.Add(new NpgsqlParameter { Value = "integration" });
+                    quarantineIdCommand.Parameters.Add(new NpgsqlParameter { Value = stream });
+                    var quarantineId = (long)(await quarantineIdCommand.ExecuteScalarAsync()
+                        ?? throw new InvalidOperationException("Missing quarantine fixture."));
+                    await using var reviewCommand = dataSource.CreateCommand(
+                        "SELECT review_quarantined_record($1, $2, $3, $4)");
+                    reviewCommand.Parameters.Add(new NpgsqlParameter { Value = quarantineId });
+                    reviewCommand.Parameters.Add(new NpgsqlParameter { Value = "dismissed" });
+                    reviewCommand.Parameters.Add(new NpgsqlParameter { Value = "integration-test" });
+                    reviewCommand.Parameters.Add(new NpgsqlParameter
+                    {
+                        Value = "Synthetic rejected fixture inspected"
+                    });
+                    Assert.True((bool)(await reviewCommand.ExecuteScalarAsync() ?? false));
+                    Assert.False((bool)(await reviewCommand.ExecuteScalarAsync() ?? false));
+                }
+                using var stillPartialResponse = await client.GetAsync(
+                    $"/v1/stations/{stationId:D}/summary");
+                using var stillPartialBody = JsonDocument.Parse(
+                    await stillPartialResponse.Content.ReadAsStringAsync());
+                Assert.Equal("qualityReview", stillPartialBody.RootElement
+                    .GetProperty("dataStatus").GetString());
+
+                Assert.Equal(1, (await store.CommitAsync(batch with
+                {
+                    LeaseOwner = "worker-b",
+                    Cursor = "cursor-8",
+                    Coverage = "complete",
+                    Records = [high]
+                })).Unchanged);
+                using var reviewedResponse = await client.GetAsync(
+                    $"/v1/stations/{stationId:D}/summary");
+                Assert.Equal(HttpStatusCode.OK, reviewedResponse.StatusCode);
+                using var reviewedBody = JsonDocument.Parse(
+                    await reviewedResponse.Content.ReadAsStringAsync());
+                Assert.NotEqual("qualityReview", reviewedBody.RootElement
+                    .GetProperty("dataStatus").GetString());
+
                 await RevokeSourceAsync(dataSource, sourceId);
                 Assert.Equal(HttpStatusCode.NotFound,
                     (await client.GetAsync($"/v1/stations/{stationId:D}/summary")).StatusCode);
+                Assert.Equal(HttpStatusCode.NotFound,
+                    (await client.GetAsync($"/v1/series/{seriesId:D}/recent"))
+                    .StatusCode);
             }
             finally
             {
@@ -342,6 +398,7 @@ public sealed class IngestionRoundTripTests
         var sourceId = Guid.NewGuid();
         var stationId = Guid.NewGuid();
         var seriesId = Guid.NewGuid();
+        var locationId = Guid.NewGuid();
         var stream = seriesId.ToString("D");
         try
         {
@@ -354,6 +411,30 @@ public sealed class IngestionRoundTripTests
             {
                 point.Parameters.Add(new NpgsqlParameter { Value = stationId });
                 await point.ExecuteNonQueryAsync();
+            }
+            await using (var catalog = dataSource.CreateBatch())
+            {
+                Add(catalog, """
+                    INSERT INTO catalog_snapshots (source_id, version, status, row_count)
+                    VALUES ($1, 'map-test', 'complete', 1)
+                    """, sourceId);
+                Add(catalog, """
+                    INSERT INTO locations (id, source_id, external_id, catalog_version,
+                        name, normalized_name, category, province_id, province_name)
+                    VALUES ($1, $2, 'fixture-location', 'map-test', 'Fixture locality',
+                        'fixture locality', 'localidad', 'ER', 'Entre Ríos')
+                    """, locationId, sourceId);
+                Add(catalog, """
+                    INSERT INTO active_catalogs (source_id, catalog_version)
+                    VALUES ($1, 'map-test')
+                    """, sourceId);
+                Add(catalog, """
+                    INSERT INTO location_station_associations
+                        (id, location_id, station_id, valid_from, status, reason, reviewed_by)
+                    VALUES ($1, $2, $3, now() - interval '1 day', 'approved',
+                        'Synthetic map association', 'integration-test')
+                    """, Guid.NewGuid(), locationId, stationId);
+                await catalog.ExecuteNonQueryAsync();
             }
             await using var app = ApiHost.Build(new WebApplicationOptions
             {
@@ -380,6 +461,8 @@ public sealed class IngestionRoundTripTests
                 Assert.Equal(stationId.ToString("D"), station.GetProperty("id").GetString());
                 Assert.Equal(-58.25, station.GetProperty("longitude").GetDouble());
                 Assert.Equal(-31.25, station.GetProperty("latitude").GetDouble());
+                Assert.Equal("Entre Ríos", Assert.Single(station
+                    .GetProperty("provinceNames").EnumerateArray()).GetString());
                 Assert.Equal(HttpStatusCode.BadRequest,
                     (await client.GetAsync("/v1/stations/map?bbox=-180,-90,180,90"))
                     .StatusCode);
@@ -403,6 +486,13 @@ public sealed class IngestionRoundTripTests
         }
         finally
         {
+            await using var catalogCleanup = dataSource.CreateBatch();
+            Add(catalogCleanup, "DELETE FROM location_station_associations " +
+                "WHERE station_id = $1", stationId);
+            Add(catalogCleanup, "DELETE FROM active_catalogs WHERE source_id = $1", sourceId);
+            Add(catalogCleanup, "DELETE FROM locations WHERE source_id = $1", sourceId);
+            Add(catalogCleanup, "DELETE FROM catalog_snapshots WHERE source_id = $1", sourceId);
+            await catalogCleanup.ExecuteNonQueryAsync();
             await CleanupAsync(dataSource, sourceId, stationId, seriesId, stream);
         }
     }

@@ -59,6 +59,13 @@ class AlertaRioApi {
     return object(response.data);
   }
 
+  Future<Map<String, dynamic>> historyJson(String seriesId) async {
+    final response = await _client.get<Object?>(
+      _url('/v1/series/${Uri.encodeComponent(seriesId)}/recent'),
+    );
+    return object(response.data);
+  }
+
   Future<List<MapStation>> stationsInBounds(String bbox) async {
     final response = await _client.get<Object?>(
       _url('/v1/stations/map'),
@@ -85,6 +92,7 @@ class SummaryRepository {
       final status = error.response?.statusCode;
       if (status == 403 || status == 404) {
         await store.deleteSummary(stationId);
+        await store.deleteHistoryForStation(stationId);
         rethrow;
       }
       if (status != null && status != 503) rethrow;
@@ -94,6 +102,37 @@ class SummaryRepository {
         return SummaryResult(StationSummary.fromEncoded(cached), true);
       } on Object {
         await store.deleteSummary(stationId);
+        rethrow;
+      }
+    }
+  }
+
+  Future<HistoryResult> loadHistory(String stationId, String seriesId) async {
+    try {
+      final json = await api.historyJson(seriesId);
+      final history = SeriesHistory.fromJson(json);
+      if (history.seriesId != seriesId) {
+        throw const FormatException('History series ID mismatch.');
+      }
+      await store.saveHistory(stationId, seriesId, jsonEncode(json));
+      return HistoryResult(history, false);
+    } on DioException catch (error) {
+      final status = error.response?.statusCode;
+      if (status == 403 || status == 404) {
+        await store.deleteHistory(seriesId);
+        rethrow;
+      }
+      if (status != null && status != 503) rethrow;
+      final cached = await store.readHistory(seriesId);
+      if (cached == null) rethrow;
+      try {
+        final history = SeriesHistory.fromEncoded(cached);
+        if (history.seriesId != seriesId) {
+          throw const FormatException('History series ID mismatch.');
+        }
+        return HistoryResult(history, true);
+      } on Object {
+        await store.deleteHistory(seriesId);
         rethrow;
       }
     }

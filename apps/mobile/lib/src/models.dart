@@ -41,10 +41,12 @@ class MapStation extends Station {
     super.name,
     super.riverName,
     this.longitude,
-    this.latitude,
-  );
+    this.latitude, {
+    this.provinceNames = const [],
+  });
   final double longitude;
   final double latitude;
+  final List<String> provinceNames;
 
   factory MapStation.fromJson(Object? value) {
     final json = object(value);
@@ -54,18 +56,21 @@ class MapStation extends Station {
       json['riverName'] as String,
       (json['longitude'] as num).toDouble(),
       (json['latitude'] as num).toDouble(),
+      provinceNames: (json['provinceNames'] as List).cast<String>(),
     );
   }
 }
 
 class Measurement {
   const Measurement(
+    this.seriesId,
     this.value,
     this.unit,
     this.observedAt,
     this.freshness,
     this.sourceId,
   );
+  final String seriesId;
   final double value;
   final String unit;
   final DateTime observedAt;
@@ -75,6 +80,7 @@ class Measurement {
   factory Measurement.fromJson(Object? value) {
     final json = object(value);
     return Measurement(
+      json['seriesId'] as String,
       (json['value'] as num).toDouble(),
       json['unit'] as String,
       DateTime.parse(json['observedAt'] as String),
@@ -82,6 +88,70 @@ class Measurement {
       json['sourceId'] as String,
     );
   }
+}
+
+class HistoryPoint {
+  const HistoryPoint(this.observedAt, this.value);
+  final DateTime observedAt;
+  final double value;
+
+  factory HistoryPoint.fromJson(Object? value) {
+    final json = object(value);
+    final number = (json['value'] as num).toDouble();
+    if (!number.isFinite) throw const FormatException('Non-finite reading.');
+    return HistoryPoint(DateTime.parse(json['observedAt'] as String), number);
+  }
+}
+
+class SeriesHistory {
+  const SeriesHistory(
+    this.seriesId,
+    this.unit,
+    this.cadenceSeconds,
+    this.generatedAt,
+    this.truncated,
+    this.points,
+  );
+  final String seriesId;
+  final String unit;
+  final int? cadenceSeconds;
+  final DateTime generatedAt;
+  final bool truncated;
+  final List<HistoryPoint> points;
+
+  factory SeriesHistory.fromJson(Object? value) {
+    final json = object(value);
+    final cadence = json['cadenceSeconds'] as int?;
+    final points = (json['points'] as List).map(HistoryPoint.fromJson).toList();
+    if (cadence != null && cadence <= 0) {
+      throw const FormatException('Invalid cadence.');
+    }
+    if (points.length > 2000) {
+      throw const FormatException('Too many history points.');
+    }
+    for (var index = 1; index < points.length; index++) {
+      if (!points[index].observedAt.isAfter(points[index - 1].observedAt)) {
+        throw const FormatException('History points must be chronological.');
+      }
+    }
+    return SeriesHistory(
+      json['seriesId'] as String,
+      json['unit'] as String,
+      cadence,
+      DateTime.parse(json['generatedAt'] as String),
+      json['truncated'] as bool,
+      points,
+    );
+  }
+
+  static SeriesHistory fromEncoded(String encoded) =>
+      SeriesHistory.fromJson(jsonDecode(encoded));
+}
+
+class HistoryResult {
+  const HistoryResult(this.history, this.offline);
+  final SeriesHistory history;
+  final bool offline;
 }
 
 class Change {

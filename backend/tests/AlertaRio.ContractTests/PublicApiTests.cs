@@ -47,6 +47,22 @@ public sealed class PublicApiTests
     }
 
     [Fact]
+    public async Task Synthetic_recent_history_has_points_and_no_official_claim()
+    {
+        await using var api = await RunningApi.StartAsync(synthetic: true);
+        using var response = await api.Client.GetAsync(
+            "/v1/series/series-demo-height/recent");
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        using var json = await ReadJson(response);
+        var root = json.RootElement;
+        Assert.True(root.GetProperty("synthetic").GetBoolean());
+        Assert.False(root.GetProperty("truncated").GetBoolean());
+        Assert.Equal(3, root.GetProperty("points").GetArrayLength());
+        Assert.Equal(7.48m, root.GetProperty("points")[2]
+            .GetProperty("value").GetDecimal());
+    }
+
+    [Fact]
     public async Task Public_routes_validate_inputs_and_report_unknown_resources()
     {
         await using var api = await RunningApi.StartAsync(synthetic: true);
@@ -89,6 +105,9 @@ public sealed class PublicApiTests
         Assert.Equal("dataNotConfigured", json.RootElement.GetProperty("code").GetString());
         Assert.Equal(HttpStatusCode.ServiceUnavailable,
             (await api.Client.GetAsync("/health/ready")).StatusCode);
+        Assert.Equal(HttpStatusCode.ServiceUnavailable,
+            (await api.Client.GetAsync("/v1/series/series-demo-height/recent"))
+            .StatusCode);
         Assert.Equal(HttpStatusCode.OK,
             (await api.Client.GetAsync("/health/live")).StatusCode);
     }
@@ -113,6 +132,7 @@ public sealed class PublicApiTests
         Assert.True(paths.TryGetProperty("/v1/locations", out _));
         Assert.True(paths.TryGetProperty("/v1/stations/{id}/summary", out _));
         Assert.True(paths.TryGetProperty("/v1/stations/map", out _));
+        Assert.True(paths.TryGetProperty("/v1/series/{id}/recent", out _));
         Assert.True(paths.TryGetProperty("/v1/notices", out _));
         Assert.True(paths.TryGetProperty("/v1/sources", out _));
         Assert.False(json.RootElement.TryGetProperty("servers", out _));

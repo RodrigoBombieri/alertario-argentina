@@ -108,6 +108,21 @@ internal static class PublicDataEndpoints
         .ProducesProblem(404)
         .ProducesProblem(503);
 
+        api.MapGet("/series/{id}/recent", async (string id, HttpContext context,
+            CancellationToken cancellationToken) =>
+        {
+            var historyReader = context.RequestServices.GetService<IPersistedHistoryReader>();
+            if (historyReader is null) return Unconfigured(context);
+            var history = await historyReader.GetRecentAsync(id, cancellationToken);
+            return history is null
+                ? ApiProblems.Create(context, 404, "seriesNotFound", "Series not found.")
+                : Results.Ok(history);
+        })
+        .WithName("GetRecentSeriesHistory")
+        .Produces<SeriesHistoryDto>()
+        .ProducesProblem(404)
+        .ProducesProblem(503);
+
         api.MapGet("/notices", (string? locationId, IPublicDataReader reader,
             HttpContext context) =>
         {

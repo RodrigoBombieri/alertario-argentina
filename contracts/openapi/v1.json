@@ -331,6 +331,56 @@
         }
       }
     },
+    "/v1/series/{id}/recent": {
+      "get": {
+        "tags": [
+          "AlertaRio.Api"
+        ],
+        "operationId": "GetRecentSeriesHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeriesHistoryDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/notices": {
       "get": {
         "tags": [
@@ -487,6 +537,27 @@
               "null",
               "string"
             ]
+          }
+        }
+      },
+      "HistoryPointDto": {
+        "required": [
+          "observedAt",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "value": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
           }
         }
       },
@@ -779,6 +850,51 @@
           }
         }
       },
+      "SeriesHistoryDto": {
+        "required": [
+          "seriesId",
+          "unit",
+          "cadenceSeconds",
+          "generatedAt",
+          "synthetic",
+          "truncated",
+          "points"
+        ],
+        "type": "object",
+        "properties": {
+          "seriesId": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "cadenceSeconds": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "synthetic": {
+            "type": "boolean"
+          },
+          "truncated": {
+            "type": "boolean"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoryPointDto"
+            }
+          }
+        }
+      },
       "SourceDto": {
         "required": [
           "id",
@@ -855,6 +971,7 @@
           "riverName",
           "longitude",
           "latitude",
+          "provinceNames",
           "synthetic"
         ],
         "type": "object",
@@ -883,6 +1000,12 @@
               "string"
             ],
             "format": "double"
+          },
+          "provinceNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "synthetic": {
             "type": "boolean"

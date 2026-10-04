@@ -6,6 +6,8 @@ Fecha: 2026-09-29. **Propuestas de diseño** salvo restricciones solicitadas por
 
 **Evaluación 2/10/2026:** [la investigación inicial de F1 terminó con resultado NO-GO](docs/research/f1/CLOSURE.md); F1 no está aceptada. No se aprobaron series, umbrales, feed SMN ni cobertura del piloto. D12 y los pendientes de la tabla conservan su estado.
 
+**Spike técnico 3/10/2026:** [F7](docs/implementation/F7.md) integra `maplibre_gl` 0.22.0 con URL de estilo opcional y lista de respaldo. La versión 0.27.1 exigió actualizar Kotlin/Gradle/SDK Android; se mantuvo el toolchain actual para este prototipo. D08 sigue condicionada a pruebas reales, condiciones del proveedor de tiles, atribución y presupuesto.
+
 | ID | Decisión | Estado | Motivo / ADR |
 |---|---|---|---|
 | D01 | Mobile consume API propia para hidrología, avisos y geografía | Requisito confirmado | [ADR-001](docs/adr/001-backend-e-ingesta.md) |

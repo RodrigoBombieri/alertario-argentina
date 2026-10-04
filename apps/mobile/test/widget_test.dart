@@ -1,6 +1,8 @@
 import 'package:alertario_mobile/main.dart';
 import 'package:alertario_mobile/src/api.dart';
+import 'package:alertario_mobile/src/history_chart.dart';
 import 'package:alertario_mobile/src/models.dart';
+import 'package:alertario_mobile/src/pages.dart';
 import 'package:alertario_mobile/src/store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 class MemoryStore extends LocalStore {
   final saved = <String, String>{};
+  final savedHistory = <String, String>{};
   final favoriteStations = <String, Station>{};
 
   @override
@@ -27,12 +30,30 @@ class MemoryStore extends LocalStore {
   Future<String?> readSummary(String id) async => saved[id];
   @override
   Future<void> deleteSummary(String id) async => saved.remove(id);
+  @override
+  Future<void> saveHistory(
+    String stationId,
+    String seriesId,
+    String json,
+  ) async => savedHistory[seriesId] = json;
+  @override
+  Future<String?> readHistory(String seriesId) async => savedHistory[seriesId];
+  @override
+  Future<void> deleteHistory(String seriesId) async =>
+      savedHistory.remove(seriesId);
+  @override
+  Future<void> deleteHistoryForStation(String stationId) async =>
+      savedHistory.clear();
 }
 
 class MemoryApi extends AlertaRioApi {
   MemoryApi() : super(baseUrl: 'https://example.invalid');
   bool offline = false;
   bool revoked = false;
+  List<MapStation> mapStations = [];
+
+  @override
+  Future<List<MapStation>> stationsInBounds(String bbox) async => mapStations;
 
   @override
   Future<Map<String, dynamic>> summaryJson(String id) async {
@@ -56,6 +77,23 @@ class MemoryApi extends AlertaRioApi {
       'noticeCoverage': {'status': 'unavailable'},
       'notices': [],
       'dataVersion': 'fixture',
+    };
+  }
+
+  @override
+  Future<Map<String, dynamic>> historyJson(String id) async {
+    if (offline) throw DioException(requestOptions: RequestOptions(path: id));
+    return {
+      'seriesId': id,
+      'unit': 'm',
+      'cadenceSeconds': 3600,
+      'generatedAt': '2026-10-03T12:00:00Z',
+      'truncated': false,
+      'points': [
+        {'observedAt': '2026-10-03T06:00:00Z', 'value': 7.2},
+        {'observedAt': '2026-10-03T07:00:00Z', 'value': 7.3},
+        {'observedAt': '2026-10-03T12:00:00Z', 'value': 7.5},
+      ],
     };
   }
 }
@@ -89,6 +127,43 @@ void main() {
     expect(await store.readSummary('station-1'), isNull);
   });
 
+  test('history cache preserves gaps while offline', () async {
+    final api = MemoryApi();
+    final store = MemoryStore();
+    final repository = SummaryRepository(api, store);
+    expect(
+      (await repository.loadHistory('station-1', 'series-1')).offline,
+      false,
+    );
+    api.offline = true;
+    final cached = await repository.loadHistory('station-1', 'series-1');
+    expect(cached.offline, true);
+    final segments = contiguousHistorySegments(cached.history);
+    expect(segments.length, 2);
+    expect(segments.first.length, 2);
+    expect(segments.last.length, 1);
+  });
+
+  test('history rejects unordered or non-finite cached readings', () {
+    final history = {
+      'seriesId': 'series-1',
+      'unit': 'm',
+      'cadenceSeconds': 3600,
+      'generatedAt': '2026-10-03T12:00:00Z',
+      'truncated': false,
+      'points': [
+        {'observedAt': '2026-10-03T12:00:00Z', 'value': 7.5},
+        {'observedAt': '2026-10-03T11:00:00Z', 'value': 7.4},
+      ],
+    };
+    expect(() => SeriesHistory.fromJson(history), throwsFormatException);
+    (history['points'] as List)[1] = {
+      'observedAt': '2026-10-03T13:00:00Z',
+      'value': double.nan,
+    };
+    expect(() => SeriesHistory.fromJson(history), throwsFormatException);
+  });
+
   testWidgets('favorites empty state is explicit', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
@@ -100,5 +175,71 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Todavía no guardaste estaciones.'), findsOneWidget);
     expect(find.byType(TextField), findsNothing);
+  });
+
+  testWidgets('map without an approved style keeps the station list', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(body: MapListPage(onOpenStation: (_) async {})),
+        ),
+      ),
+    );
+    expect(
+      find.textContaining('proveedor de tiles autorizado'),
+      findsOneWidget,
+    );
+    expect(find.text('Buscar estaciones en el área'), findsOneWidget);
+  });
+
+  testWidgets('map filters only curated province associations', (tester) async {
+    final api =
+        MemoryApi()
+          ..mapStations = const [
+            MapStation(
+              'a',
+              'Estación A',
+              'Río A',
+              -58,
+              -31,
+              provinceNames: ['Entre Ríos'],
+            ),
+            MapStation(
+              'b',
+              'Estación B',
+              'Río B',
+              -59,
+              -32,
+              provinceNames: ['Santa Fe'],
+            ),
+            MapStation(
+              'c',
+              'Estación C',
+              'Río C',
+              -58.5,
+              -31.5,
+              provinceNames: ['Entre Ríos', 'Santa Fe'],
+            ),
+          ];
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [apiProvider.overrideWithValue(api)],
+        child: MaterialApp(
+          home: Scaffold(body: MapListPage(onOpenStation: (_) async {})),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Buscar estaciones en el área'));
+    await tester.pumpAndSettle();
+    expect(find.text('Estación A'), findsOneWidget);
+    await tester.tap(find.text('Todas las provincias asociadas'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Santa Fe').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Estación A'), findsNothing);
+    expect(find.text('Estación B'), findsOneWidget);
+    expect(find.text('Estación C'), findsOneWidget);
   });
 }

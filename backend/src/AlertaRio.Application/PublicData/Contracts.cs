@@ -10,7 +10,7 @@ public sealed record StationDto(
 
 public sealed record StationMapPointDto(
     string Id, string Name, string RiverName, double Longitude,
-    double Latitude, bool Synthetic);
+    double Latitude, IReadOnlyList<string> ProvinceNames, bool Synthetic);
 
 public sealed record SourceDto(
     string Id, string Name, string Kind, string Attribution, string License, bool Synthetic);
@@ -19,6 +19,13 @@ public sealed record MeasurementDto(
     string SeriesId, decimal Value, string Unit, DateTimeOffset ObservedAt,
     DateTimeOffset? SourceUpdatedAt, DateTimeOffset IngestedAt,
     string Quality, string Freshness, string SourceId);
+
+public sealed record HistoryPointDto(DateTimeOffset ObservedAt, decimal Value);
+
+public sealed record SeriesHistoryDto(
+    string SeriesId, string Unit, int? CadenceSeconds,
+    DateTimeOffset GeneratedAt, bool Synthetic, bool Truncated,
+    IReadOnlyList<HistoryPointDto> Points);
 
 public sealed record ChangeDto(
     int WindowHours, decimal? Delta, string Unit, DateTimeOffset? ReferenceAt,

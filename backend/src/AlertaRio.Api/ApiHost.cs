@@ -37,10 +37,14 @@ public static class ApiHost
             builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
             builder.Services.AddSingleton<IPersistedSummaryReader, PostgresSummaryReader>();
             builder.Services.AddSingleton<IPersistedStationMapReader, PostgresStationMapReader>();
+            builder.Services.AddSingleton<IPersistedHistoryReader, PostgresHistoryReader>();
             builder.Services.AddSingleton<IPublicDataReader, UnavailablePublicDataReader>();
         }
         else if (syntheticEnabled)
+        {
             builder.Services.AddSingleton<IPublicDataReader, SyntheticPublicDataReader>();
+            builder.Services.AddSingleton<IPersistedHistoryReader, SyntheticHistoryReader>();
+        }
         else
             builder.Services.AddSingleton<IPublicDataReader, UnavailablePublicDataReader>();
         configureServices?.Invoke(builder.Services);

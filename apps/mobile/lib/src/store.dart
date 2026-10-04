@@ -15,7 +15,7 @@ class LocalStore {
         databasePath ?? '${await getDatabasesPath()}/alertario_mobile.db';
     return openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: (db, version) async {
         await db.execute('''
         CREATE TABLE favorites (
@@ -27,9 +27,19 @@ class LocalStore {
           station_id TEXT PRIMARY KEY, schema_version INTEGER NOT NULL,
           payload TEXT NOT NULL)
       ''');
+        await _createHistoryCache(db);
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) await _createHistoryCache(db);
       },
     );
   }
+
+  static Future<void> _createHistoryCache(Database db) => db.execute('''
+    CREATE TABLE history_cache (
+      series_id TEXT PRIMARY KEY, station_id TEXT NOT NULL,
+      schema_version INTEGER NOT NULL, payload TEXT NOT NULL)
+  ''');
 
   Future<List<Station>> favorites() async {
     final rows = await (await database).query(
@@ -91,4 +101,38 @@ class LocalStore {
     where: 'station_id = ?',
     whereArgs: [stationId],
   );
+
+  Future<void> saveHistory(
+    String stationId,
+    String seriesId,
+    String json,
+  ) async => (await database).insert('history_cache', {
+    'series_id': seriesId,
+    'station_id': stationId,
+    'schema_version': 1,
+    'payload': json,
+  }, conflictAlgorithm: ConflictAlgorithm.replace);
+
+  Future<String?> readHistory(String seriesId) async {
+    final rows = await (await database).query(
+      'history_cache',
+      where: 'series_id = ? AND schema_version = 1',
+      whereArgs: [seriesId],
+      limit: 1,
+    );
+    return rows.isEmpty ? null : rows.single['payload'] as String;
+  }
+
+  Future<void> deleteHistory(String seriesId) async => (await database).delete(
+    'history_cache',
+    where: 'series_id = ?',
+    whereArgs: [seriesId],
+  );
+
+  Future<void> deleteHistoryForStation(String stationId) async =>
+      (await database).delete(
+        'history_cache',
+        where: 'station_id = ?',
+        whereArgs: [stationId],
+      );
 }

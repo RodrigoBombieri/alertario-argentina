@@ -41,7 +41,7 @@ public sealed class SyntheticPublicDataReader(TimeProvider clock) : IPublicDataR
     {
         if (stationId != StationId) return null;
 
-        var observationTime = new DateTimeOffset(2026, 9, 29, 12, 0, 0, TimeSpan.Zero);
+        var observationTime = clock.GetUtcNow().AddMinutes(-10);
         var height = new MeasurementDto(
             SeriesId, 7.48m, "m", observationTime,
             observationTime.AddMinutes(2), observationTime.AddMinutes(4),
