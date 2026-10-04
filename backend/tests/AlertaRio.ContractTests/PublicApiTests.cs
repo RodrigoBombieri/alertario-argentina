@@ -133,6 +133,7 @@ public sealed class PublicApiTests
         Assert.True(paths.TryGetProperty("/v1/stations/{id}/summary", out _));
         Assert.True(paths.TryGetProperty("/v1/stations/map", out _));
         Assert.True(paths.TryGetProperty("/v1/series/{id}/recent", out _));
+        Assert.True(paths.TryGetProperty("/v1/series/{id}/history", out _));
         Assert.True(paths.TryGetProperty("/v1/notices", out _));
         Assert.True(paths.TryGetProperty("/v1/sources", out _));
         Assert.False(json.RootElement.TryGetProperty("servers", out _));

@@ -148,6 +148,64 @@ class SeriesHistory {
       SeriesHistory.fromJson(jsonDecode(encoded));
 }
 
+class SeriesHistoryPage {
+  const SeriesHistoryPage(
+    this.seriesId,
+    this.unit,
+    this.synthetic,
+    this.from,
+    this.to,
+    this.nextCursor,
+    this.points,
+  );
+
+  final String seriesId;
+  final String unit;
+  final bool synthetic;
+  final DateTime from;
+  final DateTime to;
+  final String? nextCursor;
+  final List<HistoryPoint> points;
+
+  factory SeriesHistoryPage.fromJson(Object? value) {
+    final json = object(value);
+    final from = DateTime.parse(json['from'] as String);
+    final to = DateTime.parse(json['to'] as String);
+    final points = (json['points'] as List).map(HistoryPoint.fromJson).toList();
+    if (!from.isBefore(to) ||
+        to.difference(from) > const Duration(days: 31) ||
+        points.length > 500) {
+      throw const FormatException('Invalid history page.');
+    }
+    for (var index = 0; index < points.length; index++) {
+      if (points[index].observedAt.isBefore(from) ||
+          !points[index].observedAt.isBefore(to) ||
+          index > 0 &&
+              !points[index].observedAt.isBefore(
+                points[index - 1].observedAt,
+              )) {
+        throw const FormatException(
+          'History page is unordered or out of range.',
+        );
+      }
+    }
+    final cursor = json['nextCursor'] as String?;
+    if (cursor != null &&
+        (points.isEmpty || DateTime.parse(cursor) != points.last.observedAt)) {
+      throw const FormatException('Invalid history cursor.');
+    }
+    return SeriesHistoryPage(
+      json['seriesId'] as String,
+      json['unit'] as String,
+      json['synthetic'] as bool,
+      from,
+      to,
+      cursor,
+      points,
+    );
+  }
+}
+
 class HistoryResult {
   const HistoryResult(this.history, this.offline);
   final SeriesHistory history;

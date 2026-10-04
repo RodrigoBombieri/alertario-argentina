@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Text.Json;
 using Npgsql;
 using NpgsqlTypes;
@@ -30,6 +32,19 @@ public sealed record IngestionCheckpoint(
 public sealed class PostgresIngestionStore(NpgsqlDataSource dataSource)
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly Meter Meter = new("AlertaRio.Ingestion");
+    private static readonly Counter<long> SuccessfulBatches =
+        Meter.CreateCounter<long>("ingestion_batches_success_total");
+    private static readonly Counter<long> FailedBatches =
+        Meter.CreateCounter<long>("ingestion_batches_failed_total");
+    private static readonly Counter<long> InsertedRecords =
+        Meter.CreateCounter<long>("ingestion_records_inserted_total");
+    private static readonly Counter<long> RevisedRecords =
+        Meter.CreateCounter<long>("ingestion_records_revised_total");
+    private static readonly Counter<long> QuarantinedRecords =
+        Meter.CreateCounter<long>("ingestion_records_quarantined_total");
+    private static readonly Histogram<double> BatchDuration =
+        Meter.CreateHistogram<double>("ingestion_batch_duration_seconds", "s");
 
     public async Task<bool> ClaimLeaseAsync(
         string provider, string streamKey, string owner, TimeSpan duration,
@@ -78,38 +93,56 @@ public sealed class PostgresIngestionStore(NpgsqlDataSource dataSource)
                 record.SourceUpdatedAt is { Offset: var offset } && offset != TimeSpan.Zero))
             throw new ArgumentException("Ingestion timestamps must be UTC.", nameof(batch));
 
-        await using var command = dataSource.CreateCommand(
-            "SELECT inserted, unchanged, revised, quarantined " +
-            "FROM commit_ingestion_outcomes($1, $2, $3, $4, $5, $6, $7, $8)");
-        command.Parameters.Add(new NpgsqlParameter { Value = batch.Provider });
-        command.Parameters.Add(new NpgsqlParameter { Value = batch.StreamKey });
-        command.Parameters.Add(new NpgsqlParameter { Value = batch.LeaseOwner });
-        command.Parameters.Add(new NpgsqlParameter
+        var started = Stopwatch.GetTimestamp();
+        try
         {
-            Value = (object?)batch.Cursor ?? DBNull.Value,
-            NpgsqlDbType = NpgsqlDbType.Text
-        });
-        command.Parameters.Add(new NpgsqlParameter { Value = batch.Coverage });
-        command.Parameters.Add(new NpgsqlParameter
+            await using var command = dataSource.CreateCommand(
+                "SELECT inserted, unchanged, revised, quarantined " +
+                "FROM commit_ingestion_outcomes($1, $2, $3, $4, $5, $6, $7, $8)");
+            command.Parameters.Add(new NpgsqlParameter { Value = batch.Provider });
+            command.Parameters.Add(new NpgsqlParameter { Value = batch.StreamKey });
+            command.Parameters.Add(new NpgsqlParameter { Value = batch.LeaseOwner });
+            command.Parameters.Add(new NpgsqlParameter
+            {
+                Value = (object?)batch.Cursor ?? DBNull.Value,
+                NpgsqlDbType = NpgsqlDbType.Text
+            });
+            command.Parameters.Add(new NpgsqlParameter { Value = batch.Coverage });
+            command.Parameters.Add(new NpgsqlParameter
+            {
+                Value = batch.TransportSucceededAt,
+                NpgsqlDbType = NpgsqlDbType.TimestampTz
+            });
+            command.Parameters.Add(new NpgsqlParameter
+            {
+                Value = JsonSerializer.Serialize(batch.Records, JsonOptions),
+                NpgsqlDbType = NpgsqlDbType.Jsonb
+            });
+            command.Parameters.Add(new NpgsqlParameter
+            {
+                Value = JsonSerializer.Serialize(batch.RejectedRecords ?? [], JsonOptions),
+                NpgsqlDbType = NpgsqlDbType.Jsonb
+            });
+            await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+            if (!await reader.ReadAsync(cancellationToken))
+                throw new InvalidDataException("Ingestion function returned no result.");
+            var result = new IngestionBatchResult(reader.GetInt32(0), reader.GetInt32(1),
+                reader.GetInt32(2), reader.GetInt32(3));
+            SuccessfulBatches.Add(1);
+            InsertedRecords.Add(result.Inserted);
+            RevisedRecords.Add(result.Revised);
+            QuarantinedRecords.Add(result.Quarantined);
+            return result;
+        }
+        catch
         {
-            Value = batch.TransportSucceededAt,
-            NpgsqlDbType = NpgsqlDbType.TimestampTz
-        });
-        command.Parameters.Add(new NpgsqlParameter
+            FailedBatches.Add(1);
+            throw;
+        }
+        finally
         {
-            Value = JsonSerializer.Serialize(batch.Records, JsonOptions),
-            NpgsqlDbType = NpgsqlDbType.Jsonb
-        });
-        command.Parameters.Add(new NpgsqlParameter
-        {
-            Value = JsonSerializer.Serialize(batch.RejectedRecords ?? [], JsonOptions),
-            NpgsqlDbType = NpgsqlDbType.Jsonb
-        });
-        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (!await reader.ReadAsync(cancellationToken))
-            throw new InvalidDataException("Ingestion function returned no result.");
-        return new IngestionBatchResult(reader.GetInt32(0), reader.GetInt32(1),
-            reader.GetInt32(2), reader.GetInt32(3));
+            BatchDuration.Record(Stopwatch.GetElapsedTime(started).TotalSeconds);
+        }
     }
 
     public async Task<IngestionCheckpoint?> ReadCheckpointAsync(

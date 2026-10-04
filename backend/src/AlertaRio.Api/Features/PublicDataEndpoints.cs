@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using AlertaRio.Application.Ports;
 using AlertaRio.Application.PublicData;
 
@@ -123,6 +124,41 @@ internal static class PublicDataEndpoints
         .ProducesProblem(404)
         .ProducesProblem(503);
 
+        api.MapGet("/series/{id}/history", async (string id, string? from,
+            string? to, string? cursor, int? limit, HttpContext context, TimeProvider clock,
+            CancellationToken cancellationToken) =>
+        {
+            if (!TryParseInstant(from, out var start) ||
+                !TryParseInstant(to, out var end) || start >= end ||
+                end - start > TimeSpan.FromDays(31) || end > clock.GetUtcNow())
+                return ApiProblems.Create(context, 400, "invalidRange",
+                    "History range must be at most 31 days with explicit UTC offsets.");
+            if (limit is < 1 or > 500)
+                return ApiProblems.Create(context, 400, "invalidLimit",
+                    "Limit must be between 1 and 500.");
+            DateTimeOffset? before = null;
+            if (cursor is not null)
+            {
+                if (!TryParseInstant(cursor, out var parsed) ||
+                    parsed <= start || parsed > end)
+                    return ApiProblems.Create(context, 400, "invalidCursor",
+                        "Cursor must be inside the requested range.");
+                before = parsed;
+            }
+            var historyReader = context.RequestServices.GetService<IPersistedHistoryReader>();
+            if (historyReader is null) return Unconfigured(context);
+            var page = await historyReader.GetPageAsync(id, start, end, before,
+                limit ?? 200, cancellationToken);
+            return page is null
+                ? ApiProblems.Create(context, 404, "seriesNotFound", "Series not found.")
+                : Results.Ok(page);
+        })
+        .WithName("GetSeriesHistoryPage")
+        .Produces<SeriesHistoryPageDto>()
+        .ProducesProblem(400)
+        .ProducesProblem(404)
+        .ProducesProblem(503);
+
         api.MapGet("/notices", (string? locationId, IPublicDataReader reader,
             HttpContext context) =>
         {
@@ -175,5 +211,15 @@ internal static class PublicDataEndpoints
         box = new StationBoundingBox(coordinates[0], coordinates[1],
             coordinates[2], coordinates[3]);
         return true;
+    }
+
+    private static bool TryParseInstant(string? raw, out DateTimeOffset value)
+    {
+        value = default;
+        return !string.IsNullOrWhiteSpace(raw) &&
+            Regex.IsMatch(raw, @"(?:Z|[+-](?:0\d|1[0-4]):[0-5]\d)$",
+                RegexOptions.IgnoreCase | RegexOptions.CultureInvariant) &&
+            DateTimeOffset.TryParse(raw, CultureInfo.InvariantCulture,
+                DateTimeStyles.None, out value);
     }
 }

@@ -322,6 +322,19 @@ class _StationPageState extends ConsumerState<StationPage> {
                 const Text('Gráfico guardado: puede estar desactualizado.'),
               if (historyError != null) Text(historyError!),
               if (history != null) HistoryChart(history: history!.history),
+              if (summary.height != null)
+                TextButton(
+                  onPressed:
+                      () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder:
+                              (_) => ExtendedHistoryPage(
+                                seriesId: summary.height!.seriesId,
+                              ),
+                        ),
+                      ),
+                  child: const Text('Ver historial de 7 días'),
+                ),
               const SizedBox(height: 12),
               Text(
                 'Variaciones por ventana',
@@ -378,6 +391,97 @@ class _StationPageState extends ConsumerState<StationPage> {
           ],
         ],
       ),
+    ),
+  );
+}
+
+class ExtendedHistoryPage extends ConsumerStatefulWidget {
+  const ExtendedHistoryPage({super.key, required this.seriesId});
+
+  final String seriesId;
+
+  @override
+  ConsumerState<ExtendedHistoryPage> createState() =>
+      _ExtendedHistoryPageState();
+}
+
+class _ExtendedHistoryPageState extends ConsumerState<ExtendedHistoryPage> {
+  late final DateTime to = DateTime.now().toUtc();
+  late final DateTime from = to.subtract(const Duration(days: 7));
+  final List<HistoryPoint> points = [];
+  String? cursor;
+  String? error;
+  String? unit;
+  bool synthetic = false;
+  bool loading = false;
+  bool loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    if (loading || loaded && cursor == null) return;
+    setState(() {
+      loading = true;
+      error = null;
+    });
+    try {
+      final page = await ref
+          .read(apiProvider)
+          .historyPage(widget.seriesId, from, to, cursor);
+      if (!mounted) return;
+      if (page.seriesId != widget.seriesId ||
+          page.from.toUtc() != from ||
+          page.to.toUtc() != to ||
+          unit != null && page.unit != unit) {
+        throw const FormatException('Inconsistent history page.');
+      }
+      setState(() {
+        points.addAll(page.points);
+        cursor = page.nextCursor;
+        unit = page.unit;
+        synthetic = page.synthetic;
+        loaded = true;
+      });
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () =>
+              error =
+                  'No se pudo cargar el historial. Revisá la conexión e intentá de nuevo.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text('Historial de 7 días')),
+    body: ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Text('Desde ${utc(from)} hasta ${utc(to)}'),
+        if (synthetic) const Text('DATOS SINTÉTICOS · solo para pruebas'),
+        if (loading) const LinearProgressIndicator(),
+        if (error != null) Text(error!),
+        if (loaded && points.isEmpty)
+          const Text('No hay lecturas en este rango.'),
+        for (final point in points)
+          ListTile(
+            title: Text('${point.value.toStringAsFixed(2)} ${unit ?? ''}'),
+            subtitle: Text(utc(point.observedAt)),
+          ),
+        if (!loading && (!loaded || cursor != null))
+          TextButton(
+            onPressed: _load,
+            child: Text(loaded ? 'Cargar lecturas anteriores' : 'Reintentar'),
+          ),
+      ],
     ),
   );
 }

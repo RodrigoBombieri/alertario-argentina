@@ -27,6 +27,11 @@ public sealed record SeriesHistoryDto(
     DateTimeOffset GeneratedAt, bool Synthetic, bool Truncated,
     IReadOnlyList<HistoryPointDto> Points);
 
+public sealed record SeriesHistoryPageDto(
+    string SeriesId, string Unit, int? CadenceSeconds, DateTimeOffset GeneratedAt,
+    bool Synthetic, DateTimeOffset From, DateTimeOffset To,
+    string? NextCursor, IReadOnlyList<HistoryPointDto> Points);
+
 public sealed record ChangeDto(
     int WindowHours, decimal? Delta, string Unit, DateTimeOffset? ReferenceAt,
     int? ActualDurationSeconds, string Method, string Trend, string Availability,

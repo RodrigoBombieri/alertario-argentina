@@ -96,6 +96,28 @@ class MemoryApi extends AlertaRioApi {
       ],
     };
   }
+
+  @override
+  Future<SeriesHistoryPage> historyPage(
+    String seriesId,
+    DateTime from,
+    DateTime to,
+    String? cursor,
+  ) async {
+    final point =
+        cursor == null
+            ? HistoryPoint(to.subtract(const Duration(hours: 1)), 7.5)
+            : HistoryPoint(to.subtract(const Duration(hours: 2)), 7.3);
+    return SeriesHistoryPage(
+      seriesId,
+      'm',
+      true,
+      from,
+      to,
+      cursor == null ? point.observedAt.toIso8601String() : null,
+      [point],
+    );
+  }
 }
 
 void main() {
@@ -242,4 +264,25 @@ void main() {
     expect(find.text('Estación B'), findsOneWidget);
     expect(find.text('Estación C'), findsOneWidget);
   });
+
+  testWidgets(
+    'extended history loads an older page without repeating a point',
+    (tester) async {
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [apiProvider.overrideWithValue(MemoryApi())],
+          child: const MaterialApp(
+            home: ExtendedHistoryPage(seriesId: 'series-demo'),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('7.50 m'), findsOneWidget);
+      await tester.tap(find.text('Cargar lecturas anteriores'));
+      await tester.pumpAndSettle();
+      expect(find.text('7.50 m'), findsOneWidget);
+      expect(find.text('7.30 m'), findsOneWidget);
+      expect(find.text('Cargar lecturas anteriores'), findsNothing);
+    },
+  );
 }

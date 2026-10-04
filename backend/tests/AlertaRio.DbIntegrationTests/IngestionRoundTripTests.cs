@@ -174,6 +174,28 @@ public sealed class IngestionRoundTripTests
                 Assert.Equal(2, points.Length);
                 Assert.Equal(7.30m, points[0].GetProperty("value").GetDecimal());
                 Assert.Equal(7.50m, points[1].GetProperty("value").GetDecimal());
+                var range = $"from={Uri.EscapeDataString(oldAt.AddMinutes(-1).ToString("O"))}" +
+                    $"&to={Uri.EscapeDataString(now.ToString("O"))}&limit=1";
+                using var pageOneResponse = await client.GetAsync(
+                    $"/v1/series/{seriesId:D}/history?{range}");
+                Assert.Equal(HttpStatusCode.OK, pageOneResponse.StatusCode);
+                using var pageOne = JsonDocument.Parse(
+                    await pageOneResponse.Content.ReadAsStringAsync());
+                Assert.Equal(7.50m, Assert.Single(pageOne.RootElement
+                    .GetProperty("points").EnumerateArray()).GetProperty("value").GetDecimal());
+                var cursor = pageOne.RootElement.GetProperty("nextCursor").GetString();
+                Assert.NotNull(cursor);
+                using var pageTwoResponse = await client.GetAsync(
+                    $"/v1/series/{seriesId:D}/history?{range}&cursor={Uri.EscapeDataString(cursor)}");
+                using var pageTwo = JsonDocument.Parse(
+                    await pageTwoResponse.Content.ReadAsStringAsync());
+                Assert.Equal(7.30m, Assert.Single(pageTwo.RootElement
+                    .GetProperty("points").EnumerateArray()).GetProperty("value").GetDecimal());
+                Assert.Equal(JsonValueKind.Null, pageTwo.RootElement
+                    .GetProperty("nextCursor").ValueKind);
+                Assert.Equal(HttpStatusCode.BadRequest,
+                    (await client.GetAsync($"/v1/series/{seriesId:D}/history?" +
+                        "from=2026-01-01T00:00:00&to=2026-01-02T00:00:00Z")).StatusCode);
                 Assert.Equal("notConfigured", body.RootElement.GetProperty("noticeCoverage")
                     .GetProperty("status").GetString());
                 Assert.Empty(body.RootElement.GetProperty("notices").EnumerateArray());
@@ -254,6 +276,9 @@ public sealed class IngestionRoundTripTests
                     (await client.GetAsync($"/v1/stations/{stationId:D}/summary")).StatusCode);
                 Assert.Equal(HttpStatusCode.NotFound,
                     (await client.GetAsync($"/v1/series/{seriesId:D}/recent"))
+                    .StatusCode);
+                Assert.Equal(HttpStatusCode.NotFound,
+                    (await client.GetAsync($"/v1/series/{seriesId:D}/history?{range}"))
                     .StatusCode);
             }
             finally

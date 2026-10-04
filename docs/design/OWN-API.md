@@ -10,6 +10,7 @@
 | GET `/v1/locations/{id}/stations?radiusKm=` | Candidatos y asociaciones revisadas; radio máximo propuesto 100 km | Público |
 | GET `/v1/stations?bbox=&riverId=&provinceId=&cursor=&limit=` | Lista/mapa; bbox validado; máximo 500 registros por página propuesto | Público |
 | GET `/v1/stations/map?bbox=oeste,sur,este,norte&limit=` | Preview Development con estaciones aprobadas dentro de bbox, río y provincias de localidades asociadas y aprobadas; límite 500 y ancho máximo 10° por eje | Público, sin datos en producción |
+| GET `/v1/series/{id}/history?from=&to=&cursor=&limit=` | Preview Development de observaciones aceptadas, rango máximo 31 días y página de hasta 500; orden descendente y cursor exclusivo | Público, sin datos en producción |
 | GET `/v1/stations/{id}` | Metadatos, series habilitadas y procedencia | Público |
 | GET `/v1/stations/{id}/summary` | Latest por variable, variaciones, ejes de estado y umbrales | Público |
 | GET `/v1/series/{id}/recent` | Preview Development: 24 h de puntos instantáneos aceptados, ordenados y acotados a 2.000; informa unidad, cadencia y truncamiento | Público, sin datos en producción |

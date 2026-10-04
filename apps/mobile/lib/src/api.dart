@@ -66,6 +66,24 @@ class AlertaRioApi {
     return object(response.data);
   }
 
+  Future<SeriesHistoryPage> historyPage(
+    String seriesId,
+    DateTime from,
+    DateTime to,
+    String? cursor,
+  ) async {
+    final response = await _client.get<Object?>(
+      _url('/v1/series/${Uri.encodeComponent(seriesId)}/history'),
+      queryParameters: {
+        'from': from.toUtc().toIso8601String(),
+        'to': to.toUtc().toIso8601String(),
+        'limit': 100,
+        if (cursor != null) 'cursor': cursor,
+      },
+    );
+    return SeriesHistoryPage.fromJson(response.data);
+  }
+
   Future<List<MapStation>> stationsInBounds(String bbox) async {
     final response = await _client.get<Object?>(
       _url('/v1/stations/map'),
