@@ -270,6 +270,11 @@ public sealed class IngestionRoundTripTests
                 var address = server.Features.Get<IServerAddressesFeature>()?.Addresses.Single()
                     ?? throw new InvalidOperationException("Kestrel did not publish an address.");
                 using var client = new HttpClient { BaseAddress = new Uri(address) };
+                using var storage = await client.GetAsync("/health/storage");
+                Assert.Equal(HttpStatusCode.OK, storage.StatusCode);
+                using var storageBody = JsonDocument.Parse(
+                    await storage.Content.ReadAsStringAsync());
+                Assert.Equal("ready", storageBody.RootElement.GetProperty("status").GetString());
                 using var response = await client.GetAsync($"/v1/stations/{stationId:D}/summary");
                 Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());

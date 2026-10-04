@@ -17,6 +17,22 @@ F3 continúa con [normalización aislada, selección revisada por serie y fixtur
 
 Para probar el backend sintético: `dotnet test backend/AlertaRio.sln --no-restore` después de restaurar dependencias según [F2](docs/implementation/F2.md).
 
+### Ver la demo local
+
+La interfaz es una app Flutter para Android; `http://127.0.0.1:51737/` es la raíz de la API y no sirve una página web. Con el emulador Android iniciado, ejecutar en dos terminales desde la raíz del repositorio:
+
+```powershell
+$env:ASPNETCORE_ENVIRONMENT = 'Development'
+dotnet run --project backend/src/AlertaRio.Api --urls http://127.0.0.1:51737
+```
+
+```powershell
+cd apps/mobile
+flutter run -d emulator-5556 --dart-define=API_BASE_URL=http://10.0.2.2:51737
+```
+
+Si el emulador tiene otro ID, consultarlo con `flutter devices` y reemplazar `emulator-5556`. En la app, buscar `ejemplo` para abrir la localidad y estación ficticias. `/health/ready` indica si el backend de demo puede servir datos sintéticos; `/health/storage` verifica PostgreSQL y migraciones solo cuando se configura el modo persistido. Esta demo no representa cobertura ni alertas oficiales.
+
 ## Documentación
 
 | Documento | Contenido |

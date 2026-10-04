@@ -62,6 +62,16 @@ public static class ApiHost
                     : ApiProblems.Create(context, StatusCodes.Status503ServiceUnavailable,
                         "dataNotConfigured", "No public data source is configured."))
             .ExcludeFromDescription();
+        app.MapGet("/health/storage", async (IServiceProvider services, HttpContext context) =>
+            {
+                var dataSource = services.GetService<NpgsqlDataSource>();
+                if (dataSource is null)
+                    return Results.Json(new { status = "notConfigured" }, statusCode: 503);
+
+                var status = await StorageHealth.CheckAsync(dataSource, context.RequestAborted);
+                return Results.Json(new { status }, statusCode: status == "ready" ? 200 : 503);
+            })
+            .ExcludeFromDescription();
 
         app.MapPublicDataEndpoints();
         return app;

@@ -110,6 +110,10 @@ public sealed class PublicApiTests
             .StatusCode);
         Assert.Equal(HttpStatusCode.OK,
             (await api.Client.GetAsync("/health/live")).StatusCode);
+        using var storage = await api.Client.GetAsync("/health/storage");
+        Assert.Equal(HttpStatusCode.ServiceUnavailable, storage.StatusCode);
+        using var storageBody = await ReadJson(storage);
+        Assert.Equal("notConfigured", storageBody.RootElement.GetProperty("status").GetString());
     }
 
     [Fact]
@@ -119,6 +123,21 @@ public sealed class PublicApiTests
             synthetic: false, configured: false, persistedSummary: true);
         using var response = await api.Client.GetAsync("/v1/stations/any/summary");
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Storage_health_reports_unavailable_database_without_connection_details()
+    {
+        await using var api = await RunningApi.StartAsync(
+            synthetic: true, persistedSummary: true,
+            connectionString: "Host=127.0.0.1;Port=1;Database=unavailable;" +
+                "Username=unavailable;Password=private-marker;Timeout=1");
+        using var response = await api.Client.GetAsync("/health/storage");
+        Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+        var body = await response.Content.ReadAsStringAsync();
+        using var json = JsonDocument.Parse(body);
+        Assert.Equal("storageUnavailable", json.RootElement.GetProperty("status").GetString());
+        Assert.DoesNotContain("private-marker", body);
     }
 
     [Fact]
@@ -209,7 +228,7 @@ public sealed class PublicApiTests
 
         public static async Task<RunningApi> StartAsync(
             bool synthetic, bool? configured = null, IPublicDataReader? reader = null,
-            bool persistedSummary = false)
+            bool persistedSummary = false, string? connectionString = null)
         {
             var environment = synthetic ? "Development" : "Production";
             var app = ApiHost.Build(new WebApplicationOptions
@@ -220,6 +239,8 @@ public sealed class PublicApiTests
             {
                 builder.Configuration["SyntheticData:Enabled"] = (configured ?? synthetic).ToString();
                 builder.Configuration["PersistedSummary:Enabled"] = persistedSummary.ToString();
+                if (connectionString is not null)
+                    builder.Configuration["ConnectionStrings:Ingestion"] = connectionString;
             },
                 services =>
                 {
