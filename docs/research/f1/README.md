@@ -8,9 +8,9 @@
 |---|---|---|---|---|
 | INA A5, red `alturas_prefe` (procedencia PNA) | [Catálogo y API INA](https://www.argentina.gob.ar/ina/recursos/catalogo-informacion-hidrologica), [Swagger](https://alerta.ina.gob.ar/a5/apiUI) | Acceso de lectura comprobado; no se encontró licencia que autorice expresamente almacenar y redistribuir datos de esta red en el producto. INA advierte que datos en tiempo real no están consistidos ni validados. | Sin cuota contractual confirmada. | **pending** para publicación, historia y monitoreo repetido. `public=true` es filtro necesario, no permiso suficiente. |
 | GeoRef v2, localidades y centroides | [Condiciones específicas](https://www.argentina.gob.ar/georef/condiciones-de-uso-y-licencia), consultadas el 1/10/2026 | CC BY 4.0; atribuir “Servicio Georef – argentina.gob.ar/georef” e indicar modificaciones al redistribuir. La página autoriza uso, reutilización e integración. | Para usuarios fuera de APN: 10/s, 40/min, 2000/h, 10000/día. | **documented** para estas capas; falta revisión del responsable legal antes de publicar y registrar versión/atribución en producto. |
-| SMN CAP / SAT / ACP | [Índice CAP oficial](https://ssl.smn.gob.ar/CAP/AR.php), [página SAT](https://ws2.smn.gob.ar/alertas) | Existe CAP público, pero no se confirmó que la licencia editorial del sitio cubra el feed, archivo histórico y redistribución. | Sin cuota del feed confirmada. | **pending**; no habilitar adapter de avisos ni declarar cobertura completa. |
+| SMN CAP / SAT / ACP | [Índice CAP oficial](https://ssl.smn.gob.ar/CAP/AR.php), [página SAT](https://ws2.smn.gob.ar/alertas) | Existe CAP público. No se identificaron términos específicos para el feed actual; el [catálogo histórico de alertas en datos.gob.ar](https://datos.gob.ar/dataset/smn-alertas-meteorologicas-365-dias) dice «Licencia: No se especificó», lo que tampoco define el uso del CAP actual. Una licencia abierta aplicable bastaría; no se exige permiso individual por defecto. | Sin cuota del feed confirmada. | **pending técnico/documental**; no declarar cobertura completa hasta verificar feed, ciclo y términos aplicables. |
 
-No se enviaron consultas a organismos. [Borradores para INA y SMN](OUTREACH.md). Retención y uso comercial de datos INA/SMN quedan pendientes; GeoRef exige atribución y señalización de modificaciones.
+No se enviaron consultas a organismos. [Borradores para INA y SMN](OUTREACH.md). Para INA/PNA faltan condiciones por red; para SMN falta identificar términos aplicables al feed concreto y verificar su funcionamiento. Esto no presupone que SMN deba otorgar una autorización individual. GeoRef exige atribución y señalización de modificaciones.
 
 ## US-02 — inventario candidato
 
@@ -58,7 +58,7 @@ Ejecutar desde la raíz del repositorio, actualizando rango y nombre en cada cor
 
 ## US-03 — avisos SMN
 
-El índice CAP oficial respondió HTTP 200 el **2/10/2026 01:26 UTC** como `text/html; charset=UTF-8`, ~101 kB, con enlaces a XML; no contenía mención a RSS en su HTML. Esta comprobación puntual **no establece un feed machine-readable completo ni su ciclo Alert/Update/Cancel**. No se extrajeron mensajes en forma operativa. SAT/ACP, política de consulta, completitud, licencias y perfil color/severidad siguen pendientes de confirmación con SMN. El MUST de avisos continúa abierto.
+El índice CAP oficial respondió HTTP 200 el **2/10/2026 01:26 UTC** como `text/html; charset=UTF-8`, ~101 kB, con enlaces a XML; no contenía mención a RSS en su HTML. Esta comprobación puntual **no establece un feed machine-readable completo ni su ciclo Alert/Update/Cancel**. No se extrajeron mensajes en forma operativa. SAT/ACP, política de consulta, completitud, términos aplicables y perfil color/severidad siguen pendientes de verificación documental o consulta técnica con SMN. No se ha demostrado que haga falta permiso individual para usar datos abiertos. El MUST de avisos continúa abierto.
 
 ## Evidencia de esta corrida
 

@@ -4,7 +4,9 @@ using System.Net;
 using System.Text.Json;
 using AlertaRio.Api;
 using AlertaRio.Core.Trends;
+using AlertaRio.Core.Notifications;
 using AlertaRio.Infrastructure.Ingestion;
+using AlertaRio.Infrastructure.Notifications;
 using AlertaRio.Worker;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Server;
@@ -22,6 +24,90 @@ public sealed class IngestionRoundTripTests
         Environment.GetEnvironmentVariable("ALERTARIO_TEST_POSTGRES") ??
         "Host=127.0.0.1;Port=5433;Database=alertario_dev;" +
         "Username=alertario_dev;Password=local_only_change_me";
+
+    [Fact]
+    public async Task Notification_episode_and_outbox_survive_replay_and_cancel_pending_delivery()
+    {
+        await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
+        var sourceId = Guid.NewGuid();
+        var stationId = Guid.NewGuid();
+        var seriesId = Guid.NewGuid();
+        var installationId = Guid.NewGuid();
+        var ruleId = Guid.NewGuid();
+        var now = DateTimeOffset.UtcNow;
+        try
+        {
+            await SeedAsync(dataSource, sourceId, stationId, seriesId);
+            await using (var seed = dataSource.CreateBatch())
+            {
+                Add(seed, """
+                    INSERT INTO notification_installations
+                        (id, credential_hash, platform, consent_version)
+                    VALUES ($1, $2, 'android', 'synthetic-v1')
+                    """, installationId, Enumerable.Repeat((byte)0xAB, 32).ToArray());
+                Add(seed, """
+                    INSERT INTO notification_rules
+                        (id, installation_id, series_id, trigger,
+                         maximum_age_seconds, delivery_ttl_seconds)
+                    VALUES ($1, $2, $3, 'aboveAlertThreshold', 3600, 900)
+                    """, ruleId, installationId, seriesId);
+                await seed.ExecuteNonQueryAsync();
+            }
+            var store = new PostgresNotificationStore(dataSource);
+            var signal = new NotificationSignal(seriesId, now.AddMinutes(-5),
+                DataStatus.Current, CalculatedCondition.AboveAlertThreshold,
+                true, true, false);
+            var competingEvaluations = await Task.WhenAll(
+                store.EvaluateAsync(ruleId, signal, now),
+                store.EvaluateAsync(ruleId, signal, now));
+            Assert.Single(competingEvaluations,
+                transition => transition == NotificationTransition.Open);
+            Assert.Single(competingEvaluations,
+                transition => transition == NotificationTransition.None);
+            Assert.Equal(NotificationTransition.None,
+                await store.EvaluateAsync(ruleId, signal, now));
+            await using (var count = dataSource.CreateCommand("""
+                SELECT count(*) FROM notification_outbox AS o
+                JOIN notification_episodes AS e ON e.id = o.episode_id
+                WHERE e.rule_id = $1 AND o.state = 'pending'
+                """))
+            {
+                count.Parameters.Add(new NpgsqlParameter { Value = ruleId });
+                Assert.Equal(1L, await count.ExecuteScalarAsync());
+            }
+            Assert.Equal(NotificationTransition.Close,
+                await store.EvaluateAsync(ruleId,
+                    signal with { Condition = CalculatedCondition.NoNotableChange }, now));
+            Assert.Equal(NotificationTransition.None,
+                await store.EvaluateAsync(ruleId,
+                    signal with { IsBackfill = true }, now));
+            await using (var cancelled = dataSource.CreateCommand("""
+                SELECT count(*) FROM notification_outbox AS o
+                JOIN notification_episodes AS e ON e.id = o.episode_id
+                WHERE e.rule_id = $1 AND o.state = 'cancelled'
+                """))
+            {
+                cancelled.Parameters.Add(new NpgsqlParameter { Value = ruleId });
+                Assert.Equal(1L, await cancelled.ExecuteScalarAsync());
+            }
+            await RevokeSourceAsync(dataSource, sourceId);
+            Assert.Equal(NotificationTransition.None,
+                await store.EvaluateAsync(ruleId, signal, now));
+        }
+        finally
+        {
+            await using var cleanup = dataSource.CreateBatch();
+            Add(cleanup, "DELETE FROM notification_outbox WHERE episode_id IN " +
+                "(SELECT id FROM notification_episodes WHERE rule_id = $1)", ruleId);
+            Add(cleanup, "DELETE FROM notification_episodes WHERE rule_id = $1", ruleId);
+            Add(cleanup, "DELETE FROM notification_rules WHERE id = $1", ruleId);
+            Add(cleanup, "DELETE FROM notification_installations WHERE id = $1",
+                installationId);
+            await cleanup.ExecuteNonQueryAsync();
+            await CleanupAsync(dataSource, sourceId, stationId, seriesId,
+                seriesId.ToString("D"));
+        }
+    }
 
     [Fact]
     public async Task Writer_and_trend_reader_survive_replay_correction_and_failed_batch()

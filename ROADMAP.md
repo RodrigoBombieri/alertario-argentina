@@ -41,6 +41,6 @@ El resultado NO-GO permite revisar el contrato mínimo de F2 y probar componente
 
 ## Estimación y camino crítico
 
-Camino crítico: permisos/feed → series/datum → normalización → persistencia → motores → interfaz/avisos → validación integral → beta. Feed SMN, permisos y revisión hidrológica son dependencias externas sin duración estimable aquí. Complejidad mayor: fuentes, geografía de avisos y notificaciones durables; menor: CRUD de favoritos locales.
+Camino crítico: condiciones INA/PNA y feed SMN → series/datum → normalización → persistencia → motores → interfaz/avisos → validación integral → beta. Un permiso individual SMN no es gate por defecto si una licencia abierta cubre el CAP; sí lo son la completitud del feed y sus términos aplicables. Revisión hidrológica y respuestas sobre condiciones faltantes son dependencias externas sin duración estimable aquí. Complejidad mayor: fuentes, geografía de avisos y notificaciones durables; menor: CRUD de favoritos locales.
 
 No se calcula una fecha de lanzamiento sin conocer equipo, experiencia Flutter/.NET, acceso macOS, presupuesto y respuesta de organismos. Una estimación por sprint debe realizarse tras F1 usando velocidad del equipo, no convertir tallas en horas por fórmula. Proteger un piloto reducido y no expandir cobertura mientras falle calidad.

@@ -2,7 +2,7 @@
 
 Fecha: 2026-09-29. **Propuestas de diseño** salvo restricciones solicitadas por el usuario. No equivalen a aprobación de contratos externos, presupuesto o despliegue.
 
-**Seguimiento 1/10/2026:** [F1 en curso](docs/research/f1/README.md). GeoRef publicó licencia CC BY 4.0 y cuotas en condiciones específicas; faltan revisión legal de publicación, permisos INA/SMN, 14 días de datos y aprobación hidrológica del piloto. D12 permanece propuesta.
+**Seguimiento 1/10/2026, corregido 4/10/2026:** [F1 en curso](docs/research/f1/README.md). GeoRef publicó licencia CC BY 4.0 y cuotas en condiciones específicas; faltan revisión legal de publicación, condiciones INA/PNA, contrato técnico y términos del CAP del SMN, 14 días de datos y aprobación hidrológica del piloto. Una licencia abierta aplicable al CAP no requeriría autorización individual del SMN. D12 permanece propuesta.
 
 **Evaluación 2/10/2026:** [la investigación inicial de F1 terminó con resultado NO-GO](docs/research/f1/CLOSURE.md); F1 no está aceptada. No se aprobaron series, umbrales, feed SMN ni cobertura del piloto. D12 y los pendientes de la tabla conservan su estado.
 
@@ -28,7 +28,7 @@ Fecha: 2026-09-29. **Propuestas de diseño** salvo restricciones solicitadas por
 | Pendiente | Quién valida | Evidencia de cierre | Bloquea |
 |---|---|---|---|
 | Permisos/redistribución por red INA y revisión de condiciones GeoRef | Responsable legal + organismos cuando corresponda | Ficha/permiso fechado para INA; licencia CC BY 4.0, atribución y cuotas GeoRef documentadas en F1; revisión del producto | Publicación de datos afectados |
-| Feed SMN estable, completo y autorizado, SAT/ACP | Integraciones + SMN | URL documentada, muestras Alert/Update/Cancel, política de consulta | MUST avisos y pushes oficiales |
+| Feed SMN estable y completo, SAT/ACP; términos aplicables | Integraciones; consulta a SMN si falta documentación | URL documentada, muestras Alert/Update/Cancel, política de consulta y licencia/términos del recurso | MUST avisos y pushes oficiales |
 | Zona horaria de metadata sin offset | Datos + proveedor | Definición por campo/dataset | Interpretar esos campos como instante |
 | Datum/unidad/vigencia/autoridad de umbrales | Especialista + fuente | Referencia comprobable y regla por serie | Comparación de umbrales |
 | Cadencia/retraso/ruido por serie | Datos/hidrología | Informe 14 días + aprobación de parámetros | Frescura/tendencia/reglas calculadas |

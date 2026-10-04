@@ -2,7 +2,7 @@
 
 **AlertaRío Argentina · Diseño inicial v1 · Cierre documental: 30 de septiembre de 2026.**
 
-**Seguimiento posterior:** [F1 inició el 1 de octubre de 2026](docs/research/f1/README.md). Se documentaron licencia/cuotas GeoRef y un inventario candidato; permisos INA/SMN, feed SMN y observación de 14 días siguen abiertos. El resto de este plan conserva su fecha de cierre y describe el estado inicial.
+**Seguimiento posterior, corregido 4/10/2026:** [F1 inició el 1 de octubre de 2026](docs/research/f1/README.md). Se documentaron licencia/cuotas GeoRef y un inventario candidato; condiciones INA/PNA, feed y términos del CAP SMN, y observación de 14 días siguen abiertos. No se presupone un permiso individual del SMN para datos abiertos. El resto de este plan conserva su fecha de cierre y describe el estado inicial.
 
 **Evaluación F1, 2 de octubre de 2026:** [acta NO-GO](docs/research/f1/CLOSURE.md). Terminó la investigación exploratoria, pero F1 no está aceptada y sus gates siguen abiertos. El backend sintético de F2 es material de revisión, no evidencia de aceptación de F1 o F2 ni habilitación para publicar fuentes oficiales.
 
@@ -16,7 +16,7 @@ AlertaRío debe convertir datos oficiales dispersos en una consulta ciudadana si
 
 Arquitectura recomendada: Flutter con Riverpod; ASP.NET Core 10 LTS; PostgreSQL con PostGIS; API y worker del mismo backend modular. Ingesta periódica, normalización y persistencia antes de servir al móvil. No se necesitan inicialmente microservicios, Redis, TimescaleDB, IA ni cuentas ciudadanas.
 
-La investigación comprobó respuestas reales de INA y GeoRef y un XML CAP oficial del SMN. Quedan pendientes permisos por dataset, validación de umbrales y un feed SMN estable y completo para automatizar avisos. Estos pendientes limitan la publicación, no impiden preparar y probar componentes independientes con datos sintéticos.
+La investigación comprobó respuestas reales de INA y GeoRef y un XML CAP oficial del SMN. Quedan pendientes condiciones de uso por dataset, validación de umbrales y un feed SMN estable y completo para automatizar avisos. Una licencia abierta aplicable no requiere autorización individual. Estos pendientes limitan la publicación, no impiden preparar y probar componentes independientes con datos sintéticos.
 
 ## 2. Problema
 
@@ -47,7 +47,7 @@ Una referencia oficial superada se presenta como comparación calculada. Nunca s
 |---|---|---|---|
 | INA A5 | OpenAPI leído; estaciones, series y observaciones respondieron HTTP 200 sin credenciales en las consultas ejecutadas | Hidrología principal del piloto | Permisos por red, cuotas, datum, cadencia y vigencia de umbrales |
 | GeoRef | Contrato oficial leído; búsqueda Concordia sobre `/api/v2.0` respondió 200 | Localidades, IDs y centroides | Licencia por dataset, importación completa y geometrías |
-| SMN CAP | Índice oficial HTML y un XML CAP 1.2 respondieron 200 | Avisos meteorológicos oficiales | Feed machine-readable estable, completo y autorizado; ciclo SAT/ACP |
+| SMN CAP | Índice oficial HTML y un XML CAP 1.2 respondieron 200 | Avisos meteorológicos oficiales | Feed machine-readable estable y completo, ciclo SAT/ACP y términos aplicables al recurso |
 | SMN WRF | Documentación del dataset gestionado por SMN en AWS | Pronóstico futuro | No se descargaron ni verificaron objetos S3 |
 | PNA, SNIH, Santa Fe y SINAGIR | Portales y documentación localizados | Procedencia PNA vía INA; integraciones adicionales futuras | APIs operativas y permisos específicos sin validar |
 
@@ -257,7 +257,7 @@ Primero contrato y permisos de fuentes; luego contrato propio y backend mínimo;
 ### Primeros 10 pasos concretos de un desarrollador
 
 1. Leer DATA-SOURCES, VERIFICATION y DECISIONS; abrir una lista de pendientes de US-01/02/03 y conservar la fecha de las capturas.
-2. Completar ficha de licencia/permiso y atribución por red INA, GeoRef y SMN; preparar solicitudes a canales oficiales donde falte información.
+2. Completar ficha de condiciones y atribución por red/recurso INA, GeoRef y SMN; consultar canales oficiales donde falte documentación. Una licencia abierta aplicable al CAP no requiere permiso individual.
 3. Confirmar feed SMN machine-readable estable, alcance SAT/ACP, actualizaciones/cancelaciones y reglas de consumo. Mantener integración deshabilitada hasta cerrar el gate.
 4. Seleccionar localidades y 10–30 estaciones candidatas; identificar series observadas, públicas y representativas, sin usar proximidad como única prueba.
 5. Ejecutar probes acotados autorizados y registrar cadencia/retraso/nulos durante el período de validación; probar GeoJSON, paginación y correcciones.

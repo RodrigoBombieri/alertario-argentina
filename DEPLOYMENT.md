@@ -1,6 +1,6 @@
 # DevOps y despliegue
 
-**No se elige ni contrata hosting en esta etapa.** Comparación documental al 2026-09-29; cotizar con región, recursos, respaldo, impuestos y tráfico al iniciar beta. Ninguna cifra de presupuesto siguiente es oferta contractual.
+**No se contrata hosting en esta etapa.** Comparación documental al 2026-09-29, con una [propuesta concreta para cotizar Render y un tope de referencia](docs/implementation/F12-OPERATING-BASELINE.md) verificada el 4/10/2026. Cotizar región, recursos, respaldo, impuestos y tráfico al iniciar beta. Ninguna cifra de presupuesto siguiente es oferta contractual.
 
 ## Perfil comparable
 
@@ -10,7 +10,7 @@ Piloto: una API .NET, un worker siempre activo, PostgreSQL/PostGIS, ~5–20 GB i
 |---|---|---|---|
 | Azure Container Apps + PostgreSQL | [Precio oficial Container Apps](https://azure.microsoft.com/en-us/pricing/details/container-apps/) | Integración .NET/identidades; sumar DB, almacenamiento, logs, red y worker activo. Un API que escala a cero no mantiene un worker continuo | Mayor superficie operativa y presupuesto; verificar región y extensión PostGIS de la oferta elegida |
 | Railway | [Precios](https://railway.com/pricing) | Hobby mínimo US$5, Pro mínimo US$20 con consumo incluido según página; no son precio total de API+DB+worker. Recursos y egress se suman | Conveniente para piloto; probar backup, restore y responsabilidad de operar PostgreSQL de la plantilla |
-| Render | [Planes/servicios](https://render.com/pricing), [extensiones PostgreSQL](https://render.com/docs/postgresql-extensions) | Web service + background worker + DB; PostGIS documentado. La página dinámica no expuso importes fiables en esta consulta: cotización pendiente | Validar ausencia de suspensión, disco y retención/PITR del plan; no asumir plan gratuito apto |
+| Render | [Planes/servicios](https://render.com/pricing), [extensiones PostgreSQL](https://render.com/docs/postgresql-extensions) | Web service + background worker + DB; PostGIS documentado. [Cálculo base fechado](docs/implementation/F12-OPERATING-BASELINE.md) para un piloto pequeño; cotización final pendiente | Validar memoria, disco, región, privacidad y retención/PITR del plan; no asumir plan gratuito apto |
 | Fly.io | [Precios de recursos](https://docs.fly.io/about/pricing/) | Machines, volúmenes, red y DB por separado; comparar Postgres gestionado con autogestionado | Más decisiones de operación/región/volúmenes; HA no surge de tener dos contenedores |
 | VPS (ej. Hetzner) | [Servidor cloud](https://docs.hetzner.com/cloud/servers/overview/), [cambio de tarifas 2026](https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/) | Control Docker/PostGIS y gasto base de VM; sumar IP, disco, backups externos y horas de mantenimiento | Un nodo es punto único de fallo; parches, DB, TLS y recuperación quedan a cargo del equipo |
 
