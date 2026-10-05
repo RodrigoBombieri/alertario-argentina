@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../main.dart';
 import 'history_chart.dart';
 import 'models.dart';
+import 'notices.dart';
 import 'station_map.dart';
 
 String utc(DateTime value) => '${value.toUtc().toIso8601String()} UTC';
@@ -125,10 +126,29 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('AlertaRío Argentina')),
+    appBar: AppBar(
+      title: const Text('AlertaRío Argentina'),
+      actions: [
+        IconButton(
+          tooltip: 'Avisos de seguimiento',
+          icon: const Icon(Icons.notifications_outlined),
+          onPressed:
+              () => Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const NoticesPage()),
+              ),
+        ),
+      ],
+    ),
     body: SafeArea(
       child: Column(
         children: [
+          if (dataMode == 'awaitingData')
+            const Padding(
+              padding: EdgeInsets.all(12),
+              child: Text(
+                'Todavía no hay mediciones reales habilitadas. Las estaciones aparecerán cuando se verifique su información.',
+              ),
+            ),
           if (dataMode == 'collecting')
             const Padding(
               padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
@@ -326,6 +346,16 @@ class _StationPageState extends ConsumerState<StationPage> {
       appBar: AppBar(
         title: Text(widget.station.name),
         actions: [
+          IconButton(
+            tooltip: 'Avisos de seguimiento',
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed:
+                () => Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => NoticesPage(station: widget.station),
+                  ),
+                ),
+          ),
           IconButton(
             onPressed: _toggleFavorite,
             tooltip: favorite ? 'Quitar de favoritos' : 'Guardar en favoritos',

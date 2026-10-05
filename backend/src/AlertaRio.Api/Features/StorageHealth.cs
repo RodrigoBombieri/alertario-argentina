@@ -15,7 +15,9 @@ internal static class StorageHealth
         "0007_quarantine_review",
         "0008_notification_outbox",
         "0009_outbox_revalidation",
-        "0010_cancel_unversioned_episodes"
+        "0010_cancel_unversioned_episodes",
+        "0011_worker_heartbeat",
+        "0012_follow_up_policy"
     ];
 
     internal static async Task<string> CheckAsync(

@@ -5,9 +5,9 @@ using Npgsql;
 
 namespace AlertaRio.Infrastructure.Ingestion;
 
-// Development preview. The graph reads accepted instantaneous observations only.
 public sealed class PostgresHistoryReader(
-    NpgsqlDataSource dataSource, TimeProvider clock) : IPersistedHistoryReader
+    NpgsqlDataSource dataSource, TimeProvider clock, bool synthetic = true)
+    : IPersistedHistoryReader
 {
     public async Task<SeriesHistoryPageDto?> GetPageAsync(
         string seriesId, DateTimeOffset from, DateTimeOffset to,
@@ -71,7 +71,7 @@ public sealed class PostgresHistoryReader(
         var nextCursor = hasMore ? points[^1].ObservedAt.ToUniversalTime().ToString("O") : null;
         await transaction.CommitAsync(cancellationToken);
         return new SeriesHistoryPageDto(id.ToString("D"), unit, cadence,
-            now, true, from, to, nextCursor, points);
+            now, synthetic, from, to, nextCursor, points);
     }
 
     public async Task<SeriesHistoryDto?> GetRecentAsync(
@@ -125,6 +125,6 @@ public sealed class PostgresHistoryReader(
         points.Reverse();
         await transaction.CommitAsync(cancellationToken);
         return new SeriesHistoryDto(id.ToString("D"), unit, cadence,
-            now, true, truncated, points);
+            now, synthetic, truncated, points);
     }
 }

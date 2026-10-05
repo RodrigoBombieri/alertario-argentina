@@ -1,16 +1,6 @@
 # Backlog profesional
 
-Jerarquía: **EPIC → FEATURE → USER STORY → TASK**. Estado inicial de implementación: todo **pendiente**. Fase 0 produjo investigación/documentos, no cierra historias de software. Tallas relativas S/M/L; orden por fases del [ROADMAP](ROADMAP.md), no por atractivo visual. Responsables son roles a asignar.
-
-**F1 no aceptada:** la evaluación exploratoria del 2/10/2026 terminó con [resultado NO-GO](docs/research/f1/CLOSURE.md). US-01, US-02 y US-03 no cumplen aceptación y siguen abiertas; EXT-01–05 registran los desbloqueos externos. El inventario y las sondas no son una allowlist de producción.
-
-**F2 no aceptada:** [corte de backend sintético y contrato HTTP](docs/implementation/F2.md) para US-04. Las rutas, OpenAPI y pruebas están implementadas, incluida una prueba de aislamiento con wrappers INA sintéticos. Falta revisión de producto/datos del contrato mínimo; los faltantes F1 por motivos externos siguen abiertos y no habilitan datos reales.
-
-**F3 iniciada:** [normalización INA y GeoRef con fixtures sintéticas](docs/implementation/F3.md) para US-05/US-07. Conserva identidad de estación/red/serie, localidades y observaciones; la búsqueda local preserva homónimos y los clientes acotados se prueban con handlers falsos. No están registrados en API ni Worker. La persistencia corresponde a F4; faltan series aprobadas para la API pública.
-
-**F4 iniciada:** [esquema PostGIS e ingesta pendiente](docs/implementation/F4.md) para US-06. La migración y el smoke pasaron en PostgreSQL real local; falta implementar el Worker transaccional y probar replay/concurrencia. Ningún dato oficial se persiste.
-
-**F5 iniciada:** [motor de tendencias aislado](docs/implementation/F5.md) para US-09/10. Calcula ventanas con parámetros sintéticos y estados de insuficiencia; faltan C/L/ε aprobados, persistencia e integración con el contrato público. No emite avisos ni notificaciones.
+**Estado vigente:** F1–F12 cerradas técnicamente bajo D18/D19. La [matriz de cierre](docs/implementation/TECHNICAL-CLOSURE.md) sustituye los criterios de este backlog histórico para el corte Android. Las historias siguientes conservan trazabilidad del diseño inicial, no son una lista actual de pendientes internos. Los externos y su resolución están en el acta; F13 producción no iniciada.
 
 ## E01 — Fuentes y confianza
 

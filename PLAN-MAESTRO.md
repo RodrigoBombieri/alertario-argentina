@@ -2,7 +2,9 @@
 
 **AlertaRío Argentina · Diseño inicial v1 · Cierre documental: 30 de septiembre de 2026.**
 
-**Seguimiento posterior, corregido 4/10/2026:** [F1 inició el 1 de octubre de 2026](docs/research/f1/README.md). Se documentaron licencia/cuotas GeoRef y un inventario candidato; condiciones INA/PNA, feed y términos del CAP SMN, y observación de 14 días siguen abiertos. No se presupone un permiso individual del SMN para datos abiertos. El resto de este plan conserva su fecha de cierre y describe el estado inicial.
+**Cierre técnico D18/D19, 4/10/2026:** F1–F12 terminadas en el alcance Android del [acta](docs/implementation/TECHNICAL-CLOSURE.md). La publicación de fuentes, beta pública y F13 conservan gates externos. El resto es el plan histórico, con criterios sustituidos expresamente por el acta.
+
+**Seguimiento histórico, corregido 4/10/2026:** [F1 inició el 1 de octubre de 2026](docs/research/f1/README.md). Se documentaron licencia/cuotas GeoRef y un inventario candidato; condiciones INA/PNA, feed y términos del CAP SMN, y observación de 14 días siguen abiertos. No se presupone un permiso individual del SMN para datos abiertos. El resto de este plan conserva su fecha de cierre y describe el estado inicial.
 
 **Decisión de producto 4/10/2026:** el titular permite un arranque en frío, sin observaciones ni afirmaciones de cobertura. Los 14 días de datos reales se reúnen después de abrir la app y dejan de ser requisito previo de lanzamiento. Su análisis sigue siendo necesario antes de habilitar políticas de cadencia, tendencias, comparaciones de umbral o reglas por serie; transcurrir 14 días por sí solo no demuestra que los datos sean aptos. Ver [D14](DECISIONS.md) y [F12](docs/implementation/F12.md).
 

@@ -1,3 +1,5 @@
+**Alcance vigente D19:** este documento conserva el diseño original. El corte Android usa [seguimiento periódico local](../runbooks/F8-ANDROID-NOTICES.md), con demoras explícitas y cálculos del servidor; FCM/APNs y monitoreo push continuo no son parte de esta entrega. Los avisos oficiales mantienen gate EXT-02.
+
 # Motores determinísticos
 
 Especificación propuesta v1, independiente de UI, HTTP y DB. Recibe datos normalizados y reloj inyectado. Todos los parámetros numéricos siguientes son políticas de AlertaRío **por validar**, no criterios oficiales de peligro.

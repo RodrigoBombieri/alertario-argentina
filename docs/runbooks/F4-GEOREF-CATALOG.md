@@ -1,0 +1,10 @@
+# F4 — importar catálogo GeoRef
+
+El importador GeoRef está apagado por defecto. Su cliente lee páginas acotadas de la API v2 oficial y solo entrega un snapshot completo. La importación comprueba los derechos de la fuente en PostgreSQL antes de consultar y dentro de la transacción que escribe el catálogo.
+
+1. Registrar una decisión fechada sobre condiciones, atribución y cadencia del dataset GeoRef. Crear `data_sources` con código que comience con `georef`, `permission_status=approved`, `rights_decision_id` y `reviewed_at` correspondientes. No usar el ID o la decisión de otra fuente.
+2. Ejecutar migraciones y backup. Configurar `ConnectionStrings__Ingestion`, `GeoRefIngestion__Enabled=true`, `GeoRefIngestion__ActivationAcknowledged=true`, `GeoRefIngestion__SourceId` y `GeoRefIngestion__RightsDecisionId`. El intervalo por defecto es siete días; `GeoRefIngestion__PollIntervalDays` admite de 1 a 30 según la cadencia revisada.
+3. El primer snapshot completo se activa de forma atómica. Las versiones nuevas quedan completas **sin activar**: sus localidades reciben nuevos IDs y las asociaciones localidad–estación no se heredan. Revisar identidades, cambios de geometría y cada asociación antes de activarlas. La activación explícita usa `SELECT activate_catalog_snapshot('<source-id>', '<version>')` en una transacción operativa; comprobar antes que el número de localidades y las asociaciones esperadas coincidan.
+4. Vigilar logs, cantidad de localidades y `active_catalogs`. Un error de paginación, derechos o DB deja vigente el catálogo anterior. Ante revocación, poner `GeoRefIngestion__Enabled=false`, reiniciar el worker y cambiar `permission_status`; la API dejará de exponer inmediatamente localidades de esa fuente.
+
+La importación no decide qué estación representa a una localidad. Esa asociación, igual que la serie hidrológica, exige revisión humana y queda cerrada hasta registrarla. No activar datos oficiales en la API con `PublishedData__Enabled=true` antes de completar los gates de publicación y probar búsqueda, ficha, histórico y revocación.

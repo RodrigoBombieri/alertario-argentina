@@ -1,3 +1,5 @@
+**Implementación vigente D19:** [entrega Android/Compose](docs/runbooks/F12-RELEASE.md) y [operación simple](docs/runbooks/F11-OPERATIONS.md). CI backend incluye PostgreSQL; CI mobile verifica Flutter y APK. Configuración efectiva en infrastructure/environments/beta/.env.example; migraciones SQL 0001–0012. El resto conserva propuestas de despliegue futuro, incluida publicación/registry de F13, no pendientes del corte técnico.
+
 # DevOps y despliegue
 
 **No se contrata hosting en esta etapa.** Comparación documental al 2026-09-29 y [ADR-008 con DigitalOcean como primera opción técnica para cotizar](docs/adr/008-hosting-beta.md), bajo el tope de referencia confirmado el 4/10/2026. Cotizar región, recursos, respaldo, impuestos y tráfico al iniciar beta. Ninguna cifra de presupuesto siguiente es oferta contractual.

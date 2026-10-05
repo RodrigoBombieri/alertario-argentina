@@ -10,26 +10,32 @@ var builder = Host.CreateApplicationBuilder(args);
 var syntheticEnabled = builder.Environment.IsDevelopment() &&
     builder.Configuration.GetValue<bool>("SyntheticIngestion:Enabled");
 var inaEnabled = builder.Configuration.GetValue<bool>("InaIngestion:Enabled");
-if (syntheticEnabled && inaEnabled)
-    throw new InvalidOperationException("Synthetic and INA ingestion cannot run together.");
+var geoRefEnabled = builder.Configuration.GetValue<bool>("GeoRefIngestion:Enabled");
+if (syntheticEnabled && (inaEnabled || geoRefEnabled))
+    throw new InvalidOperationException(
+        "Synthetic and official ingestion cannot run together.");
+var ingestionConnection = builder.Configuration.GetConnectionString("Ingestion");
+if (syntheticEnabled || inaEnabled || geoRefEnabled)
+{
+    if (ingestionConnection is null)
+        throw new InvalidOperationException("Ingestion connection string is required.");
+}
+if (ingestionConnection is not null)
+{
+    builder.Services.AddSingleton(NpgsqlDataSource.Create(ingestionConnection));
+    builder.Services.AddSingleton(TimeProvider.System);
+    builder.Services.AddHostedService<WorkerHeartbeatService>();
+}
 if (syntheticEnabled)
 {
-    var connectionString = builder.Configuration.GetConnectionString("Ingestion")
-        ?? throw new InvalidOperationException("Ingestion connection string is required.");
-    builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
     builder.Services.AddSingleton<PostgresIngestionStore>();
-    builder.Services.AddSingleton(TimeProvider.System);
     builder.Services.AddHostedService<SyntheticIngestionWorker>();
 }
-else if (inaEnabled)
+if (inaEnabled)
 {
     var options = InaPollingOptions.Read(builder.Configuration);
-    var connectionString = builder.Configuration.GetConnectionString("Ingestion")
-        ?? throw new InvalidOperationException("Ingestion connection string is required.");
     builder.Services.AddSingleton(options);
-    builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
     builder.Services.AddSingleton<PostgresIngestionStore>();
-    builder.Services.AddSingleton(TimeProvider.System);
     builder.Services.AddHttpClient<InaSeriesCatalogClient>(client =>
         client.BaseAddress = new Uri("https://alerta.ina.gob.ar/a5/"))
         .ConfigurePrimaryHttpMessageHandler(() =>
@@ -40,7 +46,17 @@ else if (inaEnabled)
             new HttpClientHandler { AllowAutoRedirect = false });
     builder.Services.AddHostedService<InaPollingWorker>();
 }
-else
+if (geoRefEnabled)
+{
+    builder.Services.AddSingleton(GeoRefPollingOptions.Read(builder.Configuration));
+    builder.Services.AddSingleton<PostgresGeoRefCatalogStore>();
+    builder.Services.AddHttpClient<GeoRefCatalogClient>(client =>
+        client.BaseAddress = new Uri("https://apis.datos.gob.ar/georef/api/v2.0/"))
+        .ConfigurePrimaryHttpMessageHandler(() =>
+            new HttpClientHandler { AllowAutoRedirect = false });
+    builder.Services.AddHostedService<GeoRefPollingWorker>();
+}
+if (!syntheticEnabled && !inaEnabled && !geoRefEnabled)
 {
     builder.Services.AddHostedService<IdleWorker>();
 }

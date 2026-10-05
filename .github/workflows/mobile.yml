@@ -1,0 +1,37 @@
+name: Android
+
+on:
+  push:
+    paths: ['apps/mobile/**', '.github/workflows/mobile.yml']
+  pull_request:
+    paths: ['apps/mobile/**', '.github/workflows/mobile.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Flutter
+        run: |
+          git clone --depth 1 --branch 3.29.2 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+          echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+      - name: Restore locked packages
+        working-directory: apps/mobile
+        run: flutter pub get --enforce-lockfile
+      - name: Analyze and test Flutter
+        working-directory: apps/mobile
+        run: |
+          flutter analyze
+          flutter test
+      - name: Verify native episode policy
+        run: |
+          mkdir -p apps/mobile/build/policy-tests
+          javac -d apps/mobile/build/policy-tests apps/mobile/android/app/src/main/java/com/example/alertario_mobile/NoticePolicy.java apps/mobile/android/policy-tests/NoticePolicyTest.java
+          java -cp apps/mobile/build/policy-tests NoticePolicyTest
+      - name: Build debug APK
+        working-directory: apps/mobile
+        run: flutter build apk --debug --dart-define=API_BASE_URL=https://example.invalid

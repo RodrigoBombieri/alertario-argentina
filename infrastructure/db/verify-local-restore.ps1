@@ -32,7 +32,8 @@ SELECT (SELECT string_agg(version, ',' ORDER BY version) FROM schema_migrations)
        (SELECT count(*) FROM measurements),
        (SELECT count(*) FROM quarantined_records),
        (SELECT count(*) FROM ingestion_checkpoints),
-       (SELECT count(*) FROM notification_outbox)
+       (SELECT count(*) FROM notification_outbox),
+       (SELECT count(*) FROM worker_heartbeats)
 "@
     $original = Invoke-DatabaseContainer -CommandArgs @('psql', '-U', 'alertario_dev',
         '-d', 'alertario_dev', '-At', '-c', $checkSql)

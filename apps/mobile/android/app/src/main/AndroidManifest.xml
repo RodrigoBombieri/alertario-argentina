@@ -1,9 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="AlertaRío Argentina"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher_river">
+        <service android:name=".NoticeJobService" android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -4,7 +4,8 @@ using Npgsql;
 namespace AlertaRio.Infrastructure.Ingestion;
 
 public sealed record ApprovedTrendConfiguration(
-    TrendPolicy Policy, IReadOnlyList<OfficialThreshold> Thresholds);
+    TrendPolicy Policy, IReadOnlyList<OfficialThreshold> Thresholds,
+    FollowUpRule? FollowUp = null);
 
 public sealed class PostgresTrendPolicyReader(NpgsqlDataSource dataSource)
 {
@@ -24,7 +25,8 @@ public sealed class PostgresTrendPolicyReader(NpgsqlDataSource dataSource)
             throw new ArgumentException("A series and UTC clock are required.");
         await using var policyCommand = new NpgsqlCommand("""
             SELECT p.cadence_seconds, p.allowed_lag_seconds, p.epsilon,
-                   p.methodology_version, s.unit, s.datum_ref, s.epoch
+                   p.methodology_version, s.unit, s.datum_ref, s.epoch,
+                   p.follow_up_window_hours, p.follow_up_minimum_rise
             FROM series_trend_policies AS p
             JOIN measurement_series AS s ON s.id = p.series_id
             JOIN data_sources AS d ON d.id = s.source_id
@@ -41,6 +43,7 @@ public sealed class PostgresTrendPolicyReader(NpgsqlDataSource dataSource)
         string unit;
         string datum;
         int epoch;
+        FollowUpRule? followUp;
         await using (var reader = await policyCommand.ExecuteReaderAsync(cancellationToken))
         {
             if (!await reader.ReadAsync(cancellationToken)) return null;
@@ -51,6 +54,8 @@ public sealed class PostgresTrendPolicyReader(NpgsqlDataSource dataSource)
             unit = reader.GetString(4);
             datum = reader.GetString(5);
             epoch = reader.GetInt32(6);
+            followUp = reader.IsDBNull(7) ? null :
+                new FollowUpRule(reader.GetInt32(7), reader.GetDecimal(8), true);
         }
 
         await using var thresholdCommand = new NpgsqlCommand("""
@@ -87,6 +92,6 @@ public sealed class PostgresTrendPolicyReader(NpgsqlDataSource dataSource)
         return new ApprovedTrendConfiguration(
             new TrendPolicy(TimeSpan.FromSeconds(cadenceSeconds),
                 TimeSpan.FromSeconds(lagSeconds), epsilon, methodologyVersion),
-            thresholds);
+            thresholds, followUp);
     }
 }

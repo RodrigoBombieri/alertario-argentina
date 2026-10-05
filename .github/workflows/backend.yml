@@ -5,11 +5,13 @@ on:
     paths:
       - 'backend/**'
       - 'contracts/openapi/**'
+      - 'infrastructure/db/**'
       - '.github/workflows/backend.yml'
   pull_request:
     paths:
       - 'backend/**'
       - 'contracts/openapi/**'
+      - 'infrastructure/db/**'
       - '.github/workflows/backend.yml'
 
 permissions:
@@ -29,3 +31,34 @@ jobs:
         run: dotnet format backend/AlertaRio.sln --verify-no-changes --no-restore
       - name: Build and run HTTP contract tests
         run: dotnet test backend/AlertaRio.sln --configuration Release --no-restore
+
+  postgres-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_DB: alertario_dev
+          POSTGRES_USER: alertario_dev
+          POSTGRES_PASSWORD: local_only_change_me
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U alertario_dev -d alertario_dev"
+          --health-interval 5s --health-timeout 5s --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.401'
+      - name: Fresh schema and SQL smokes
+        env:
+          DB_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for sql in infrastructure/db/migrations/*.sql infrastructure/db/tests/*.sql; do
+            docker exec -i "$DB_CONTAINER" psql -U alertario_dev -d alertario_dev -v ON_ERROR_STOP=1 < "$sql"
+          done
+      - name: Restore locked integration dependencies
+        run: dotnet restore backend/tests/AlertaRio.DbIntegrationTests --locked-mode
+      - name: Test PostgreSQL round trips
+        run: dotnet test backend/tests/AlertaRio.DbIntegrationTests --no-restore --configuration Release

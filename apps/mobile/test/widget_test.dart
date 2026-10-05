@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:alertario_mobile/main.dart';
 import 'package:alertario_mobile/src/api.dart';
 import 'package:alertario_mobile/src/history_chart.dart';
 import 'package:alertario_mobile/src/models.dart';
+import 'package:alertario_mobile/src/notices.dart';
 import 'package:alertario_mobile/src/pages.dart';
 import 'package:alertario_mobile/src/store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -145,6 +149,71 @@ class MemoryApi extends AlertaRioApi {
 }
 
 void main() {
+  testWidgets('awaiting real data never claims to show a synthetic sample', (
+    tester,
+  ) async {
+    final api = MemoryApi()..mode = 'awaitingData';
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          apiProvider.overrideWithValue(api),
+          storeProvider.overrideWithValue(MemoryStore()),
+        ],
+        child: const AlertaRioApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Todavía no hay mediciones reales'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('14 días simulados'), findsNothing);
+    final semantics = tester.ensureSemantics();
+    await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+    await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+    semantics.dispose();
+  });
+
+  testWidgets('notification permission denial keeps station disabled', (
+    tester,
+  ) async {
+    final calls = <String>[];
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(DeviceNotices.channel, (
+          MethodCall call,
+        ) async {
+          calls.add(call.method);
+          if (call.method == 'state') {
+            return jsonEncode({
+              'permission': false,
+              'rules': {},
+              'history': [],
+            });
+          }
+          if (call.method == 'permission') return false;
+          return null;
+        });
+    addTearDown(
+      () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(DeviceNotices.channel, null),
+    );
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: NoticesPage(station: Station('id', 'Prueba', 'Río')),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.byType(SwitchListTile));
+    await tester.tap(find.byType(SwitchListTile));
+    await tester.pumpAndSettle();
+    expect(calls, contains('permission'));
+    expect(calls, isNot(contains('set')));
+    expect(
+      tester.widget<SwitchListTile>(find.byType(SwitchListTile)).value,
+      false,
+    );
+  });
+
   test(
     'offline uses the saved response without claiming notice coverage',
     () async {
@@ -241,6 +310,32 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Localidad de ejemplo'), findsOneWidget);
     expect(find.textContaining('sin avisos vigentes'), findsNothing);
+  });
+
+  testWidgets('home stays usable with doubled system text size', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(400, 800);
+    tester.view.devicePixelRatio = 1;
+    tester.binding.platformDispatcher.textScaleFactorTestValue = 2;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.binding.platformDispatcher.clearTextScaleFactorTestValue();
+    });
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [apiProvider.overrideWithValue(MemoryApi())],
+        child: const AlertaRioApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(TextField), findsOneWidget);
+    expect(find.text('Buscar localidad'), findsOneWidget);
+    await tester.tap(find.text('Favoritos'));
+    await tester.pumpAndSettle();
+    expect(find.text('Todavía no guardaste estaciones.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('map without an approved style keeps the station list', (

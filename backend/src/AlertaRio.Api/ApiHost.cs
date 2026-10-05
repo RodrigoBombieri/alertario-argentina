@@ -28,18 +28,38 @@ public static class ApiHost
 
         var persistedSummaryEnabled = builder.Environment.IsDevelopment()
             && builder.Configuration.GetValue<bool>("PersistedSummary:Enabled");
+        var publishedEnabled = builder.Configuration.GetValue<bool>("PublishedData:Enabled");
         var syntheticEnabled = builder.Environment.IsDevelopment()
             && builder.Configuration.GetValue<bool>("SyntheticData:Enabled");
         var collectingEnabled = builder.Configuration.GetValue<bool>("ColdStart:Enabled");
-        if (persistedSummaryEnabled)
+        if (publishedEnabled && (persistedSummaryEnabled || syntheticEnabled || collectingEnabled))
+            throw new InvalidOperationException(
+                "Published data cannot be combined with preview or cold-start modes.");
+        if (publishedEnabled || persistedSummaryEnabled)
         {
             var connectionString = builder.Configuration.GetConnectionString("Ingestion")
                 ?? throw new InvalidOperationException("Ingestion connection string is required.");
             builder.Services.AddSingleton(NpgsqlDataSource.Create(connectionString));
-            builder.Services.AddSingleton<IPersistedSummaryReader, PostgresSummaryReader>();
-            builder.Services.AddSingleton<IPersistedStationMapReader, PostgresStationMapReader>();
-            builder.Services.AddSingleton<IPersistedHistoryReader, PostgresHistoryReader>();
-            builder.Services.AddSingleton<IPublicDataReader, UnavailablePublicDataReader>();
+            builder.Services.AddSingleton<IPersistedSummaryReader>(services =>
+                new PostgresSummaryReader(
+                    services.GetRequiredService<NpgsqlDataSource>(),
+                    services.GetRequiredService<TimeProvider>(),
+                    synthetic: !publishedEnabled));
+            builder.Services.AddSingleton<IPersistedStationMapReader>(services =>
+                new PostgresStationMapReader(
+                    services.GetRequiredService<NpgsqlDataSource>(),
+                    synthetic: !publishedEnabled));
+            builder.Services.AddSingleton<IPersistedHistoryReader>(services =>
+                new PostgresHistoryReader(
+                    services.GetRequiredService<NpgsqlDataSource>(),
+                    services.GetRequiredService<TimeProvider>(),
+                    synthetic: !publishedEnabled));
+            builder.Services.AddSingleton<IPublicDataReader>(services =>
+                publishedEnabled
+                    ? new PostgresPublicDataReader(
+                        services.GetRequiredService<NpgsqlDataSource>(),
+                        services.GetRequiredService<IPersistedSummaryReader>())
+                    : new UnavailablePublicDataReader());
         }
         else if (syntheticEnabled)
         {
@@ -83,8 +103,36 @@ public static class ApiHost
                 return Results.Json(new { status }, statusCode: status == "ready" ? 200 : 503);
             })
             .ExcludeFromDescription();
+        app.MapGet("/health/worker", async (IServiceProvider services,
+            TimeProvider clock, HttpContext context) =>
+            {
+                var dataSource = services.GetService<NpgsqlDataSource>();
+                if (dataSource is null)
+                    return Results.Json(new { status = "notConfigured" }, statusCode: 503);
+                var status = await WorkerHealth.CheckAsync(dataSource, clock,
+                    context.RequestAborted);
+                return Results.Json(new { status }, statusCode: status == "ready" ? 200 : 503);
+            })
+            .ExcludeFromDescription();
 
         app.MapPublicDataEndpoints();
+        app.MapGet("/health/data", async (IServiceProvider services, HttpContext context) =>
+            {
+                var dataSource = services.GetService<NpgsqlDataSource>();
+                if (dataSource is null)
+                    return Results.Json(new { status = "notConfigured" }, statusCode: 503);
+                try
+                {
+                    var healthy = await DataQualityHealth.CheckAsync(dataSource, context.RequestAborted);
+                    return Results.Json(new { status = healthy ? "ready" : "dataNeedsReview" },
+                        statusCode: healthy ? 200 : 503);
+                }
+                catch (NpgsqlException)
+                {
+                    return Results.Json(new { status = "storageUnavailable" }, statusCode: 503);
+                }
+            })
+            .ExcludeFromDescription();
         return app;
     }
 }

@@ -1,5 +1,7 @@
 # Evaluación exploratoria de F1 — resultado NO-GO
 
+**Cierre vigente D19:** F1 cerrada como investigación; los requisitos de habilitación externa siguen pendientes. La evidencia histórica NO-GO de abajo se conserva y no equivale a aprobación. Ver [acta técnica](../../implementation/TECHNICAL-CLOSURE.md).
+
 **Fecha:** 2 de octubre de 2026 (Argentina). **Estado de la fase:** F1 no aceptada; concluyó solamente la evaluación inicial de fuentes. **Resultado:** NO-GO para aprobar el piloto con datos oficiales y para declarar completo el MVP. Esta acta registra el resultado de la investigación; **no satisface todos los criterios de aceptación de F1** del [roadmap](../../../ROADMAP.md) ni cierra las historias US-01/02/03.
 
 **Corrección del 4/10/2026:** la versión inicial trataba una autorización individual del SMN como obligatoria. No hay evidencia de que lo sea para datos cubiertos por una licencia abierta. EXT-02 pide identificar los términos aplicables al CAP concreto y resolver un feed operativo completo; una licencia pública verificable puede satisfacer la parte de uso sin respuesta individual. El NO-GO se mantiene por el feed y las pruebas pendientes.

@@ -1,10 +1,10 @@
 # Roadmap de ejecución
 
-Los números preservan las fases solicitadas; calidad y observabilidad mínima son transversales. Estado: **F0 documentación entregada; F1–F2 no aceptadas; F3–F7 en implementación sintética; F8–F11 con cortes técnicos iniciales; F12 con gates de beta preparados, sin beta iniciada** ([evaluación F1 con NO-GO](docs/research/f1/CLOSURE.md), [F2](docs/implementation/F2.md), [F3](docs/implementation/F3.md), [F4](docs/implementation/F4.md), [F5](docs/implementation/F5.md), [F6](docs/implementation/F6.md), [F7](docs/implementation/F7.md), [F8](docs/implementation/F8.md), [F9](docs/implementation/F9.md), [F10](docs/implementation/F10.md), [F11](docs/implementation/F11.md), [F12](docs/implementation/F12.md)). Ninguna de F1–F12 está aceptada; no hay infraestructura desplegada. D14 mueve los 14 días reales a la maduración de cada serie posterior al arranque; D15 agrega una muestra simulada de 14 días para ver la app desde el inicio. Permanecen los gates externos para publicar datos y avisos oficiales. Tamaños relativos S=acotado, M=varios componentes, L=riesgo/integración alta; no son días ni compromiso de calendario.
+Estado vigente: **F1–F12 cerradas técnicamente bajo D18/D19**, con alcance y evidencia en el [acta](docs/implementation/TECHNICAL-CLOSURE.md). F13 no iniciada. La tabla siguiente conserva el diseño original; los criterios ajustados del acta prevalecen para este corte Android. No hay beta pública, infraestructura contratada ni fuentes oficiales habilitadas. Los gates externos de datos y operación conservan trazabilidad.
 
 Cada fase se divide en PRs/historias revisables. “Archivos” son destinos futuros excepto documentos ya existentes. Tareas en [BACKLOG](BACKLOG.md).
 
-El resultado NO-GO permite revisar el contrato mínimo de F2 y probar componentes aislados con datos sintéticos, pero no satisface la dependencia F1 ni aprueba F2. No habilita fuentes oficiales en producción, tendencias/umbrales, avisos ni beta. EXT-01–05 en el acta trazan lo necesario para desbloquear esos trabajos.
+El resultado NO-GO de F1 no se convierte en aprobación por cerrar implementaciones técnicas. Los workers oficiales y `PublishedData__Enabled` permanecen apagados por defecto. EXT-01–05 en el acta trazan lo necesario para habilitarlos y evaluar la beta.
 
 | Fase / tamaño | Objetivo y tareas | Archivos afectados | Dependencias | Criterio de aceptación | Tests / evidencia | Riesgos |
 |---|---|---|---|---|---|---|

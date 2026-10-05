@@ -6,9 +6,9 @@ using Npgsql;
 
 namespace AlertaRio.Infrastructure.Ingestion;
 
-// Development-only projection until catalog and notice feeds pass their gates.
 public sealed class PostgresSummaryReader(
-    NpgsqlDataSource dataSource, TimeProvider clock) : IPersistedSummaryReader
+    NpgsqlDataSource dataSource, TimeProvider clock, bool synthetic = true)
+    : IPersistedSummaryReader
 {
     private static readonly int[] Windows = [1, 3, 6, 12, 24];
 
@@ -113,7 +113,7 @@ public sealed class PostgresSummaryReader(
         var level = new CurrentLevel(seriesId, observedAt, value, unit,
             datum, epoch, calculationApproved);
         var state = CalculatedStateEngine.Evaluate(trend, level,
-            configuration.Thresholds, null, [], NoticeCoverage.Unavailable, now);
+            configuration.Thresholds, configuration.FollowUp, [], NoticeCoverage.Unavailable, now);
         var changes = trend.Windows.Select(window => new ChangeDto(
             window.WindowHours, window.Delta, unit, window.ReferenceAt,
             window.ActualDurationSeconds, "observedEndpoints",
@@ -126,7 +126,7 @@ public sealed class PostgresSummaryReader(
                     state.DataStatus == DataStatus.Current
                     ? value >= threshold.Value ? "above" : "below"
                     : "unavailable")).ToArray();
-        var summary = new StationSummaryDto(stationId, now, true,
+        var summary = new StationSummaryDto(stationId, now, synthetic,
             new MeasurementDto(seriesId.ToString("D"), value, unit,
                 observedAt, sourceUpdatedAt, ingestedAt, "accepted",
                 Camel(trend.Freshness), sourceId.ToString("D")),
@@ -138,9 +138,9 @@ public sealed class PostgresSummaryReader(
         return summary;
     }
 
-    private static StationSummaryDto Unavailable(
+    private StationSummaryDto Unavailable(
         string stationId, DateTimeOffset now, string reason) =>
-        new(stationId, now, true, null, null, "noApprovedSeries",
+        new(stationId, now, synthetic, null, null, "noApprovedSeries",
             Windows.Select(window => new ChangeDto(window, null, "m", null, null,
                 "observedEndpoints", "unavailable", "insufficientData", reason))
                 .ToArray(),

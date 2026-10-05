@@ -11,17 +11,21 @@ internal static class PublicDataEndpoints
     {
         var api = app.MapGroup("/v1");
 
-        api.MapGet("/status", (IPublicDataReader reader) =>
-            Results.Ok(new PublicDataStatusDto(
+        api.MapGet("/status", async (IPublicDataReader reader,
+            CancellationToken cancellationToken) =>
+        {
+            var official = await reader.HasOfficialDataAsync(cancellationToken);
+            return Results.Ok(new PublicDataStatusDto(
                 reader.IsCollecting ? "collecting" :
                 reader.IsSynthetic ? "synthetic" :
-                reader.IsConfigured ? "live" : "unavailable",
-                reader.IsConfigured && !reader.IsSynthetic && !reader.IsCollecting)))
+                official ? "live" : reader.IsConfigured ? "awaitingData" : "unavailable",
+                official));
+        })
             .WithName("GetPublicDataStatus")
             .Produces<PublicDataStatusDto>();
 
-        api.MapGet("/locations", (string? query, int? limit, IPublicDataReader reader,
-            HttpContext context) =>
+        api.MapGet("/locations", async (string? query, int? limit, IPublicDataReader reader,
+            HttpContext context, CancellationToken cancellationToken) =>
         {
             if (!reader.IsConfigured) return Unconfigured(context);
             if (query is null || query.Length is < 2 or > 80)
@@ -29,34 +33,35 @@ internal static class PublicDataEndpoints
             if (limit is < 1 or > 50)
                 return ApiProblems.Create(context, 400, "invalidLimit", "Limit must be between 1 and 50.");
             return Results.Ok(new ListResponse<LocationDto>(reader.IsSynthetic,
-                reader.SearchLocations(query, limit ?? 20), null));
+                await reader.SearchLocationsAsync(query, limit ?? 20, cancellationToken), null));
         })
         .WithName("SearchLocations")
         .Produces<ListResponse<LocationDto>>()
         .ProducesProblem(400)
         .ProducesProblem(503);
 
-        api.MapGet("/locations/{id}/stations", (string id, IPublicDataReader reader,
-            HttpContext context) =>
+        api.MapGet("/locations/{id}/stations", async (string id, IPublicDataReader reader,
+            HttpContext context, CancellationToken cancellationToken) =>
         {
             if (!reader.IsConfigured) return Unconfigured(context);
-            if (reader.GetLocation(id) is null)
+            if (await reader.GetLocationAsync(id, cancellationToken) is null)
                 return ApiProblems.Create(context, 404, "locationNotFound", "Location not found.");
             return Results.Ok(new ListResponse<StationDto>(reader.IsSynthetic,
-                reader.GetStationsForLocation(id), null));
+                await reader.GetStationsForLocationAsync(id, cancellationToken), null));
         })
         .WithName("GetLocationStations")
         .Produces<ListResponse<StationDto>>()
         .ProducesProblem(404)
         .ProducesProblem(503);
 
-        api.MapGet("/stations", (int? limit, IPublicDataReader reader, HttpContext context) =>
+        api.MapGet("/stations", async (int? limit, IPublicDataReader reader,
+            HttpContext context, CancellationToken cancellationToken) =>
         {
             if (!reader.IsConfigured) return Unconfigured(context);
             if (limit is < 1 or > 50)
                 return ApiProblems.Create(context, 400, "invalidLimit", "Limit must be between 1 and 50.");
             return Results.Ok(new ListResponse<StationDto>(reader.IsSynthetic,
-                reader.ListStations(limit ?? 20), null));
+                await reader.ListStationsAsync(limit ?? 20, cancellationToken), null));
         })
         .WithName("ListStations")
         .Produces<ListResponse<StationDto>>()
@@ -79,17 +84,19 @@ internal static class PublicDataEndpoints
             if (mapReader is null) return Unconfigured(context);
             var stations = await mapReader.GetStationsAsync(box!, limit ?? 200,
                 cancellationToken);
-            return Results.Ok(new ListResponse<StationMapPointDto>(true, stations, null));
+            return Results.Ok(new ListResponse<StationMapPointDto>(
+                publicReader.IsSynthetic || !publicReader.IsConfigured, stations, null));
         })
         .WithName("ListStationsInMapBounds")
         .Produces<ListResponse<StationMapPointDto>>()
         .ProducesProblem(400)
         .ProducesProblem(503);
 
-        api.MapGet("/stations/{id}", (string id, IPublicDataReader reader, HttpContext context) =>
+        api.MapGet("/stations/{id}", async (string id, IPublicDataReader reader,
+            HttpContext context, CancellationToken cancellationToken) =>
         {
             if (!reader.IsConfigured) return Unconfigured(context);
-            var station = reader.GetStation(id);
+            var station = await reader.GetStationAsync(id, cancellationToken);
             return station is null
                 ? ApiProblems.Create(context, 404, "stationNotFound", "Station not found.")
                 : Results.Ok(station);
@@ -102,6 +109,9 @@ internal static class PublicDataEndpoints
         api.MapGet("/stations/{id}/summary", async (string id, IPublicDataReader reader,
             HttpContext context, CancellationToken cancellationToken) =>
         {
+            if (reader.IsConfigured && !reader.IsSynthetic &&
+                await reader.GetStationAsync(id, cancellationToken) is null)
+                return ApiProblems.Create(context, 404, "stationNotFound", "Station not found.");
             var persisted = context.RequestServices.GetService<IPersistedSummaryReader>();
             if (persisted is not null)
             {
@@ -111,7 +121,7 @@ internal static class PublicDataEndpoints
                     : Results.Ok(projected);
             }
             if (!reader.IsConfigured) return Unconfigured(context);
-            var summary = reader.GetSummary(id);
+            var summary = await reader.GetSummaryAsync(id, cancellationToken);
             return summary is null
                 ? ApiProblems.Create(context, 404, "stationNotFound", "Station not found.")
                 : Results.Ok(summary);
@@ -121,9 +131,12 @@ internal static class PublicDataEndpoints
         .ProducesProblem(404)
         .ProducesProblem(503);
 
-        api.MapGet("/series/{id}/recent", async (string id, HttpContext context,
-            CancellationToken cancellationToken) =>
+        api.MapGet("/series/{id}/recent", async (string id, IPublicDataReader reader,
+            HttpContext context, CancellationToken cancellationToken) =>
         {
+            if (reader.IsConfigured && !reader.IsSynthetic &&
+                !await reader.CanReadSeriesAsync(id, cancellationToken))
+                return ApiProblems.Create(context, 404, "seriesNotFound", "Series not found.");
             var historyReader = context.RequestServices.GetService<IPersistedHistoryReader>();
             if (historyReader is null) return Unconfigured(context);
             var history = await historyReader.GetRecentAsync(id, cancellationToken);
@@ -137,8 +150,8 @@ internal static class PublicDataEndpoints
         .ProducesProblem(503);
 
         api.MapGet("/series/{id}/history", async (string id, string? from,
-            string? to, string? cursor, int? limit, HttpContext context, TimeProvider clock,
-            CancellationToken cancellationToken) =>
+            string? to, string? cursor, int? limit, IPublicDataReader reader,
+            HttpContext context, TimeProvider clock, CancellationToken cancellationToken) =>
         {
             if (!TryParseInstant(from, out var start) ||
                 !TryParseInstant(to, out var end) || start >= end ||
@@ -157,6 +170,9 @@ internal static class PublicDataEndpoints
                         "Cursor must be inside the requested range.");
                 before = parsed;
             }
+            if (reader.IsConfigured && !reader.IsSynthetic &&
+                !await reader.CanReadSeriesAsync(id, cancellationToken))
+                return ApiProblems.Create(context, 404, "seriesNotFound", "Series not found.");
             var historyReader = context.RequestServices.GetService<IPersistedHistoryReader>();
             if (historyReader is null) return Unconfigured(context);
             var page = await historyReader.GetPageAsync(id, start, end, before,
@@ -171,15 +187,16 @@ internal static class PublicDataEndpoints
         .ProducesProblem(404)
         .ProducesProblem(503);
 
-        api.MapGet("/notices", (string? locationId, IPublicDataReader reader,
-            HttpContext context) =>
+        api.MapGet("/notices", async (string? locationId, IPublicDataReader reader,
+            HttpContext context, CancellationToken cancellationToken) =>
         {
             if (!reader.IsConfigured) return Unconfigured(context);
             if (string.IsNullOrWhiteSpace(locationId))
                 return ApiProblems.Create(context, 400, "invalidLocationId", "Location ID is required.");
-            if (reader.GetLocation(locationId) is null)
+            if (await reader.GetLocationAsync(locationId, cancellationToken) is null)
                 return ApiProblems.Create(context, 404, "locationNotFound", "Location not found.");
-            return Results.Ok(reader.GetNoticesForLocation(locationId));
+            return Results.Ok(await reader.GetNoticesForLocationAsync(locationId,
+                cancellationToken));
         })
         .WithName("ListNotices")
         .Produces<NoticeListDto>()
@@ -187,10 +204,11 @@ internal static class PublicDataEndpoints
         .ProducesProblem(404)
         .ProducesProblem(503);
 
-        api.MapGet("/sources", (IPublicDataReader reader, HttpContext context) =>
+        api.MapGet("/sources", async (IPublicDataReader reader, HttpContext context,
+            CancellationToken cancellationToken) =>
             reader.IsConfigured
                 ? Results.Ok(new ListResponse<SourceDto>(reader.IsSynthetic,
-                    reader.ListSources(), null))
+                    await reader.ListSourcesAsync(cancellationToken), null))
                 : Unconfigured(context))
         .WithName("ListSources")
         .Produces<ListResponse<SourceDto>>()

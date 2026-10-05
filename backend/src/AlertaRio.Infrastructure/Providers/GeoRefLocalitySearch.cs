@@ -52,7 +52,7 @@ public sealed class GeoRefLocalitySearch
             .ToArray();
     }
 
-    private static string Normalize(string value)
+    public static string Normalize(string value)
     {
         var decomposed = value.Normalize(NormalizationForm.FormD);
         var result = new StringBuilder(decomposed.Length);

@@ -6,7 +6,6 @@ services:
     env_file: .env
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ColdStart__Enabled: "true"
     expose:
       - "8080"
     restart: unless-stopped

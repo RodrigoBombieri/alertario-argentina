@@ -271,6 +271,7 @@ public sealed class IngestionRoundTripTests
                 .ReadAsync(seriesId, now);
             Assert.NotNull(configuration);
             Assert.Single(configuration.Thresholds);
+            Assert.Equal(new FollowUpRule(6, 0.10m, true), configuration.FollowUp);
             var initialTrend = await trendReader.ReadAsync(seriesId, configuration.Policy, now);
             Assert.NotNull(initialTrend);
             Assert.Equal(0.30m, Assert.Single(initialTrend.Windows,
@@ -645,6 +646,164 @@ public sealed class IngestionRoundTripTests
     }
 
     [Fact]
+    public async Task Worker_health_reports_a_recent_database_heartbeat()
+    {
+        await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
+        var instanceId = Guid.NewGuid().ToString("N");
+        try
+        {
+            await using (var heartbeat = dataSource.CreateCommand("""
+                INSERT INTO worker_heartbeats (instance_id, last_seen_at)
+                VALUES ($1, now())
+                """))
+            {
+                heartbeat.Parameters.Add(new NpgsqlParameter { Value = instanceId });
+                await heartbeat.ExecuteNonQueryAsync();
+            }
+            await using var app = ApiHost.Build(new WebApplicationOptions
+            {
+                EnvironmentName = "Development",
+                ApplicationName = typeof(ApiHost).Assembly.GetName().Name
+            }, builder =>
+            {
+                builder.Configuration["PersistedSummary:Enabled"] = "true";
+                builder.Configuration["ConnectionStrings:Ingestion"] = ConnectionString;
+            });
+            app.Urls.Add("http://127.0.0.1:0");
+            await app.StartAsync();
+            try
+            {
+                var server = app.Services.GetRequiredService<IServer>();
+                var address = server.Features.Get<IServerAddressesFeature>()?
+                    .Addresses.Single() ?? throw new InvalidOperationException(
+                        "Kestrel did not publish an address.");
+                using var client = new HttpClient { BaseAddress = new Uri(address) };
+                using var response = await client.GetAsync("/health/worker");
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+                using var body = JsonDocument.Parse(
+                    await response.Content.ReadAsStringAsync());
+                Assert.Equal("ready", body.RootElement.GetProperty("status").GetString());
+                await using var stale = dataSource.CreateCommand(
+                    "UPDATE worker_heartbeats SET last_seen_at = now() - interval '5 minutes' WHERE instance_id = $1");
+                stale.Parameters.Add(new NpgsqlParameter { Value = instanceId });
+                await stale.ExecuteNonQueryAsync();
+                Assert.Equal(HttpStatusCode.ServiceUnavailable,
+                    (await client.GetAsync("/health/worker")).StatusCode);
+                Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/health/data")).StatusCode);
+                await using var incomplete = dataSource.CreateCommand("""
+                    INSERT INTO ingestion_checkpoints(provider, stream_key, coverage)
+                    VALUES ('health-fixture', $1, 'partial')
+                    """);
+                incomplete.Parameters.Add(new NpgsqlParameter { Value = instanceId });
+                await incomplete.ExecuteNonQueryAsync();
+                Assert.Equal(HttpStatusCode.ServiceUnavailable,
+                    (await client.GetAsync("/health/data")).StatusCode);
+            }
+            finally
+            {
+                await app.StopAsync();
+            }
+        }
+        finally
+        {
+            await using var delete = dataSource.CreateCommand(
+                "DELETE FROM worker_heartbeats WHERE instance_id = $1");
+            delete.Parameters.Add(new NpgsqlParameter { Value = instanceId });
+            await delete.ExecuteNonQueryAsync();
+            await using var checkpoint = dataSource.CreateCommand(
+                "DELETE FROM ingestion_checkpoints WHERE provider = 'health-fixture' AND stream_key = $1");
+            checkpoint.Parameters.Add(new NpgsqlParameter { Value = instanceId });
+            await checkpoint.ExecuteNonQueryAsync();
+        }
+    }
+
+    [Fact]
+    public async Task GeoRef_snapshot_activation_is_atomic_and_rights_gated()
+    {
+        await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
+        var sourceId = Guid.NewGuid();
+        const string rights = "synthetic-georef-rights";
+        try
+        {
+            await using (var source = dataSource.CreateCommand("""
+                INSERT INTO data_sources (id, code, name, permission_status,
+                    rights_decision_id, reviewed_at)
+                VALUES ($1, $2, 'GeoRef fixture', 'approved', $3, now())
+                """))
+            {
+                source.Parameters.Add(new NpgsqlParameter { Value = sourceId });
+                source.Parameters.Add(new NpgsqlParameter
+                {
+                    Value = $"georef-test-{sourceId:N}"
+                });
+                source.Parameters.Add(new NpgsqlParameter { Value = rights });
+                await source.ExecuteNonQueryAsync();
+            }
+            var snapshot = new GeoRefCatalogSnapshot(2,
+            [
+                new GeoRefLocalityCandidate("1", "Concordía", "localidad",
+                    "ER", "Entre Ríos", -31.4, -58.0),
+                new GeoRefLocalityCandidate("2", "Gualeguaychú", "localidad",
+                    "ER", "Entre Ríos", null, null)
+            ]);
+            var store = new PostgresGeoRefCatalogStore(dataSource);
+            Assert.True(await store.CanImportAsync(sourceId, rights));
+            Assert.True(await store.ImportAsync(sourceId, rights, "fixture-v1", snapshot));
+            Assert.False(await store.ImportAsync(sourceId, rights, "fixture-v1", snapshot));
+            Assert.True(await store.ImportAsync(sourceId, rights, "fixture-v2", snapshot));
+            await using (var active = dataSource.CreateCommand("""
+                SELECT ac.catalog_version, count(loc.id)
+                FROM active_catalogs AS ac
+                JOIN locations AS loc ON loc.source_id = ac.source_id AND
+                    loc.catalog_version = ac.catalog_version
+                WHERE ac.source_id = $1
+                GROUP BY ac.catalog_version
+                """))
+            {
+                active.Parameters.Add(new NpgsqlParameter { Value = sourceId });
+                await using var reader = await active.ExecuteReaderAsync();
+                Assert.True(await reader.ReadAsync());
+                Assert.Equal("fixture-v1", reader.GetString(0));
+                Assert.Equal(2, reader.GetInt64(1));
+            }
+            await using (var staged = dataSource.CreateCommand("""
+                SELECT status FROM catalog_snapshots
+                WHERE source_id = $1 AND version = 'fixture-v2'
+                """))
+            {
+                staged.Parameters.Add(new NpgsqlParameter { Value = sourceId });
+                Assert.Equal("complete", await staged.ExecuteScalarAsync());
+            }
+            await using (var revoke = dataSource.CreateCommand("""
+                UPDATE data_sources SET permission_status = 'denied' WHERE id = $1
+                """))
+            {
+                revoke.Parameters.Add(new NpgsqlParameter { Value = sourceId });
+                await revoke.ExecuteNonQueryAsync();
+            }
+            Assert.False(await store.CanImportAsync(sourceId, rights));
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                store.ImportAsync(sourceId, rights, "fixture-v3", snapshot));
+            await using (var unchanged = dataSource.CreateCommand("""
+                SELECT catalog_version FROM active_catalogs WHERE source_id = $1
+                """))
+            {
+                unchanged.Parameters.Add(new NpgsqlParameter { Value = sourceId });
+                Assert.Equal("fixture-v1", await unchanged.ExecuteScalarAsync());
+            }
+        }
+        finally
+        {
+            await using var cleanup = dataSource.CreateBatch();
+            Add(cleanup, "DELETE FROM active_catalogs WHERE source_id = $1", sourceId);
+            Add(cleanup, "DELETE FROM locations WHERE source_id = $1", sourceId);
+            Add(cleanup, "DELETE FROM catalog_snapshots WHERE source_id = $1", sourceId);
+            Add(cleanup, "DELETE FROM data_sources WHERE id = $1", sourceId);
+            await cleanup.ExecuteNonQueryAsync();
+        }
+    }
+
+    [Fact]
     public async Task Map_bbox_returns_only_approved_stations_inside_the_bounds()
     {
         await using var dataSource = NpgsqlDataSource.Create(ConnectionString);
@@ -725,7 +884,93 @@ public sealed class IngestionRoundTripTests
                 using var empty = JsonDocument.Parse(await outside.Content.ReadAsStringAsync());
                 Assert.Empty(empty.RootElement.GetProperty("items").EnumerateArray());
 
-                await RevokeSourceAsync(dataSource, sourceId);
+                await using (var measurement = dataSource.CreateCommand("""
+                    INSERT INTO measurements (series_id, observed_start_at,
+                        observed_end_at, value, quality, ingested_at, payload_hash)
+                    VALUES ($1, now() - interval '1 hour',
+                        now() - interval '1 hour', 7.25, 'accepted', now(), $2)
+                    """))
+                {
+                    measurement.Parameters.Add(new NpgsqlParameter { Value = seriesId });
+                    measurement.Parameters.Add(new NpgsqlParameter
+                    {
+                        Value = new string('a', 64)
+                    });
+                    await measurement.ExecuteNonQueryAsync();
+                }
+
+                await using var published = ApiHost.Build(new WebApplicationOptions
+                {
+                    EnvironmentName = "Production",
+                    ApplicationName = typeof(ApiHost).Assembly.GetName().Name
+                }, builder =>
+                {
+                    builder.Configuration["PublishedData:Enabled"] = "true";
+                    builder.Configuration["ConnectionStrings:Ingestion"] = ConnectionString;
+                });
+                published.Urls.Add("http://127.0.0.1:0");
+                await published.StartAsync();
+                try
+                {
+                    var publishedServer = published.Services.GetRequiredService<IServer>();
+                    var publishedAddress = publishedServer.Features
+                        .Get<IServerAddressesFeature>()?.Addresses.Single()
+                        ?? throw new InvalidOperationException("Kestrel did not publish an address.");
+                    using var publishedClient = new HttpClient
+                    {
+                        BaseAddress = new Uri(publishedAddress)
+                    };
+                    using var statusResponse = await publishedClient.GetAsync("/v1/status");
+                    using var status = JsonDocument.Parse(
+                        await statusResponse.Content.ReadAsStringAsync());
+                    Assert.Equal("live", status.RootElement.GetProperty("mode").GetString());
+                    Assert.True(status.RootElement.GetProperty("officialDataAvailable")
+                        .GetBoolean());
+
+                    using var searchResponse = await publishedClient.GetAsync(
+                        "/v1/locations?query=Fixture");
+                    using var search = JsonDocument.Parse(
+                        await searchResponse.Content.ReadAsStringAsync());
+                    Assert.False(search.RootElement.GetProperty("synthetic").GetBoolean());
+                    Assert.Equal(locationId.ToString("D"), Assert.Single(search.RootElement
+                        .GetProperty("items").EnumerateArray()).GetProperty("id").GetString());
+
+                    using var stationsResponse = await publishedClient.GetAsync("/v1/stations");
+                    using var stations = JsonDocument.Parse(
+                        await stationsResponse.Content.ReadAsStringAsync());
+                    var publicStation = Assert.Single(stations.RootElement
+                        .GetProperty("items").EnumerateArray());
+                    Assert.Equal(stationId.ToString("D"),
+                        publicStation.GetProperty("id").GetString());
+                    Assert.False(publicStation.GetProperty("synthetic").GetBoolean());
+                    Assert.Equal(seriesId.ToString("D"), Assert.Single(publicStation
+                        .GetProperty("seriesIds").EnumerateArray()).GetString());
+                    using var summaryResponse = await publishedClient.GetAsync(
+                        $"/v1/stations/{stationId:D}/summary");
+                    using var summary = JsonDocument.Parse(
+                        await summaryResponse.Content.ReadAsStringAsync());
+                    Assert.False(summary.RootElement.GetProperty("synthetic").GetBoolean());
+
+                    await RevokeSourceAsync(dataSource, sourceId);
+                    using var revokedStatusResponse = await publishedClient.GetAsync("/v1/status");
+                    using var revokedStatus = JsonDocument.Parse(
+                        await revokedStatusResponse.Content.ReadAsStringAsync());
+                    Assert.False(revokedStatus.RootElement
+                        .GetProperty("officialDataAvailable").GetBoolean());
+                    Assert.Equal("awaitingData", revokedStatus.RootElement
+                        .GetProperty("mode").GetString());
+                    Assert.Equal(HttpStatusCode.NotFound,
+                        (await publishedClient.GetAsync($"/v1/stations/{stationId:D}"))
+                        .StatusCode);
+                    Assert.Equal(HttpStatusCode.NotFound,
+                        (await publishedClient.GetAsync($"/v1/series/{seriesId:D}/recent"))
+                        .StatusCode);
+                }
+                finally
+                {
+                    await published.StopAsync();
+                }
+
                 using var revoked = await client.GetAsync(
                     "/v1/stations/map?bbox=-59,-32,-58,-31");
                 using var revokedBody = JsonDocument.Parse(
@@ -965,9 +1210,10 @@ public sealed class IngestionRoundTripTests
         Add(batch, """
             INSERT INTO series_trend_policies (series_id, version, cadence_seconds,
                 allowed_lag_seconds, epsilon, methodology_version, datum_ref,
-                epoch, active, hydrology_decision_id, reviewed_at)
+                epoch, active, hydrology_decision_id, reviewed_at,
+                follow_up_window_hours, follow_up_minimum_rise)
             VALUES ($1, 'integration-v1', 3600, 1800, 0.02, 'integration-v1',
-                'integration-datum', 1, true, 'synthetic-hydrology', now())
+                'integration-datum', 1, true, 'synthetic-hydrology', now(), 6, 0.10)
             """, seriesId);
         Add(batch, """
             INSERT INTO official_thresholds (id, series_id, version, kind, value,
