@@ -1,14 +1,16 @@
-# Architecture Decision Records
+# Decisiones de arquitectura
 
-Todos los ADR siguientes están **propuestos**, con restricciones de producto confirmadas cuando se indica. Fecha común: 2026-09-29. Aceptarlos o reemplazarlos con evidencia en la fase correspondiente; conservar historial.
+Revisión de estado: 5/10/2026. Las propuestas originales se ajustaron a D19.
 
-1. [Backend e ingesta](001-backend-e-ingesta.md)
-2. [Persistencia](002-persistencia.md)
-3. [Mobile](003-mobile.md)
-4. [Semántica y motores](004-semantica.md)
-5. [Identidad y push](005-identidad-y-push.md)
-6. [Mapas](006-mapas.md)
-7. [Fuentes y gates](007-fuentes-y-gates.md)
-8. [Hosting candidato para beta](008-hosting-beta.md)
+| ADR | Estado vigente |
+|---|---|
+| [001 · Backend](001-backend-e-ingesta.md) | Implementado |
+| [002 · Persistencia](002-persistencia.md) | Implementado |
+| [003 · Mobile](003-mobile.md) | Implementado con sqflite |
+| [004 · Semántica](004-semantica.md) | Vigente |
+| [005 · Identidad y avisos](005-identidad-y-push.md) | Sustituido por avisos locales D19 |
+| [006 · Mapas](006-mapas.md) | Lista implementada; tiles opcionales |
+| [007 · Fuentes](007-fuentes-y-gates.md) | Controles implementados; fuentes sin activar |
+| [008 · Hosting](008-hosting-beta.md) | Provisional, sin contratación |
 
-Para futuros ADR: contexto, decisión, alternativas, consecuencias, validación, fecha y estado. ADR-008 prepara la elección de hosting; la contratación y el despliegue siguen pendientes.
+[Registro de decisiones](../../DECISIONS.md)

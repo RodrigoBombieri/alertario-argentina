@@ -42,11 +42,11 @@ Son recursos, validaciones o decisiones **fuera del repositorio**. Algunos corre
 | EXT-06 · Distribución | Titular aporta Android físico/usuarios/TalkBack, custodia firma y eventual cuenta de tienda; ejecuta registro beta | APK debug y emulador; iOS fuera de corte |
 | EXT-07 · Operación | Titular confirma hosting dentro de US$100/mes, dominio/contacto/responsable; operador despliega Compose, conecta monitor, prueba capacidad/restore/copia externa y privacidad | Demo local sin gasto; paquete listo |
 
-No hay pendientes de código para este alcance. Resolver externos habilita operación real o ampliaciones; defectos que aparezcan en esas pruebas se registran y corrigen sin atribuirles aceptación anticipada.
+Este cierre corresponde al corte local D19. La revisión documental del 5/10/2026 identifica trabajo técnico adicional para Google Play: objetivo API 36, verificación de bibliotecas con páginas de 16 KB y política de privacidad accesible en la app. Ver [preparación de tienda](../PLAY-STORE.md). No se clasifica ese trabajo como externo ni como ya cumplido.
 
 ## Procedimientos
 
 [GeoRef](../runbooks/F4-GEOREF-CATALOG.md), [INA](../runbooks/F4-INA-COLLECTION.md), [publicación](../runbooks/F5-PUBLICATION.md), [avisos Android](../runbooks/F8-ANDROID-NOTICES.md), [operación](../runbooks/F11-OPERATIONS.md), [entrega y beta](../runbooks/F12-RELEASE.md).
 
-Commit breve: `feat: cerrar F1-F12 con seguimiento Android y operación verificable`
+
 [Resultados de verificación](VALIDATION-2026-10-05.md).

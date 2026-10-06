@@ -1,13 +1,9 @@
-# ADR-004 — Datos, umbrales, cálculos y avisos separados
+# ADR-004 · Semántica hidrológica
 
-Estado: propuesta técnica; distinción de categorías es requisito confirmado. Fecha: 2026-09-29.
+**Vigente e implementado en los cálculos.** Original: 29/9/2026; revisión: 5/10/2026.
 
-Contexto: un nivel por encima de una referencia no demuestra que exista alerta u orden de autoridad. Datos viejos y avisos vigentes pueden coexistir.
+Separar medición, calidad, frescura, tendencia, umbral y aviso oficial. Un umbral necesita referencia/vigencia compatibles; superarlo no implica evacuación.
 
-Decisión: estado multidimensional; umbral versionado con datum/vigencia; aviso con emisor/identidad/ciclo de vida. Tendencias determinísticas por ventana con insuficiencia explícita, sin IA ni interpolación v1.
+Las tendencias son determinísticas, sin interpolación ni pronóstico. Datos insuficientes se muestran como no disponibles. Se rechaza un semáforo único que atribuya autoridad a un cálculo propio.
 
-Alternativas: semáforo único “NORMAL/ALERTA/EVACUACIÓN” inferido del nivel se rechaza por ambigüedad y falsa atribución. Porcentaje de altura se excluye por referencia arbitraria del cero.
-
-Consecuencias: más precisión de lenguaje y algunos resultados no disponibles. Se prioriza honestidad frente a completar todas las cifras.
-
-Validación: casos TR/NT y prueba ciudadana; parámetros por serie con especialista. Fuente de una eventual orden de evacuación debe incorporarse explícitamente, no derivarse de INA por umbral.
+[Motores](../design/ENGINES.md) · [Dominio](../../DOMAIN.md)

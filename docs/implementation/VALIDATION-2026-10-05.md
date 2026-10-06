@@ -20,4 +20,4 @@ Los [faltantes externos](TECHNICAL-CLOSURE.md) conservan resolución explícita.
 
 Para reproducir el build con menos procesos y memoria se fijaron dos workers Gradle, heap máximo de 4 GiB y compilación Kotlin dentro del proceso Gradle. Esto evita depender de un daemon Kotlin separado.
 
-APK final: apps/mobile/build/app/outputs/flutter-apk/app-debug.apk. Build debug normal de lib/main.dart aprobado el 5/10/2026, URL local de emulador http://10.0.2.2:51737. Tamaño: 254422843 bytes. SHA-256: E00EF49A7BB7D23CE371554855BFE779BA2599E489780F3B417C9C93A5667EE1. Prueba nativa final repetida y aprobada después de ajustar Kotlin y TTL.
+APK validado en ese corte: apps/mobile/build/app/outputs/flutter-apk/app-debug.apk. El archivo se regenera al compilar; el [registro de capturas](../images/README.md) identifica el build posterior usado para documentación. Build debug normal de lib/main.dart aprobado el 5/10/2026, URL local de emulador http://10.0.2.2:51737. Tamaño: 254422843 bytes. SHA-256: E00EF49A7BB7D23CE371554855BFE779BA2599E489780F3B417C9C93A5667EE1. Prueba nativa final repetida y aprobada después de ajustar Kotlin y TTL.

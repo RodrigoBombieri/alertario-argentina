@@ -1,6 +1,6 @@
 # F1 — validación controlada de fuentes y piloto
 
-**Estado: investigación exploratoria concluida el 2 de octubre de 2026 con resultado NO-GO; F1 no aceptada.** [Acta de evaluación y trabajos de desbloqueo](CLOSURE.md). Las sondas se ejecutaron entre el 1 y el 2 de octubre UTC. Son consultas puntuales, no monitoreo de continuidad. [F0 conserva su fecha y evidencia originales](../VERIFICATION.md).
+**Evidencia histórica del 1–2/10/2026. Investigación cerrada técnicamente bajo D19; fuentes pendientes con resultado NO-GO para activación.** [Acta de evaluación y trabajos de desbloqueo](CLOSURE.md). Las sondas se ejecutaron entre el 1 y el 2 de octubre UTC. Son consultas puntuales, no monitoreo de continuidad. [F0 conserva su fecha y evidencia originales](../VERIFICATION.md).
 
 ## US-01 — permisos y contratos
 
@@ -39,7 +39,7 @@ Las series de altura 14, 19, 34 y 79 respondieron HTTP 200 para 28–30/9 UTC: *
 
 ### Plan de medición de 14 días, condicionado a presupuesto
 
-Tras D14, este plan es de maduración por serie **después** del arranque vacío de la app. No es una espera previa para abrir la interfaz. Solo puede consultar fuentes dentro de las condiciones y cuotas aplicables; al completar el período se evalúa la evidencia antes de activar cálculos de esa serie.
+Tras D14, este plan es de maduración por serie **después** del arranque de la app con muestra ficticia D15. No es una espera previa para abrir la interfaz. Solo puede consultar fuentes dentro de las condiciones y cuotas aplicables; al completar el período se evalúa la evidencia antes de activar cálculos de esa serie.
 
 1. Obtener del INA permiso/condiciones de monitoreo y presupuesto de consultas por red. Para las cuatro series iniciales, un muestreo diario durante 14 días supone **56 GET** más eventuales reintentos; evaluar frecuencia adicional solo si se busca certificar resolución subdiaria.
 2. Ejecutar sondas seriales con ventana móvil máxima de tres días, guardando hora de consulta, status, tipo, hash de respuesta y tiempos/huellas de observaciones, sin valores medidos en el reporte. Comparar IDs repetidos para detectar cambios de payload. No seguir `next_page` provisto por la fuente.
@@ -60,7 +60,7 @@ Ejecutar desde la raíz del repositorio, actualizando rango y nombre en cada cor
 
 ## US-03 — avisos SMN
 
-El índice CAP oficial respondió HTTP 200 el **2/10/2026 01:26 UTC** como `text/html; charset=UTF-8`, ~101 kB, con enlaces a XML; no contenía mención a RSS en su HTML. Esta comprobación puntual **no establece un feed machine-readable completo ni su ciclo Alert/Update/Cancel**. No se extrajeron mensajes en forma operativa. SAT/ACP, política de consulta, completitud, términos aplicables y perfil color/severidad siguen pendientes de verificación documental o consulta técnica con SMN. No se ha demostrado que haga falta permiso individual para usar datos abiertos. El MUST de avisos continúa abierto.
+El índice CAP oficial respondió HTTP 200 el **2/10/2026 01:26 UTC** como `text/html; charset=UTF-8`, ~101 kB, con enlaces a XML; no contenía mención a RSS en su HTML. Esta comprobación puntual **no establece un feed machine-readable completo ni su ciclo Alert/Update/Cancel**. No se extrajeron mensajes en forma operativa. SAT/ACP, política de consulta, completitud, términos aplicables y perfil color/severidad siguen pendientes de verificación documental o consulta técnica con SMN. No se ha demostrado que haga falta permiso individual para usar datos abiertos. La integración automática queda fuera del alcance Android D19; la consulta manual no equivale a cobertura oficial.
 
 ## Evidencia de esta corrida
 
@@ -73,4 +73,4 @@ El índice CAP oficial respondió HTTP 200 el **2/10/2026 01:26 UTC** como `text
 
 ## Gates posteriores al cierre exploratorio
 
-El [acta de evaluación F1](CLOSURE.md) registra un resultado **NO-GO** para publicar datos oficiales sin condiciones, feed y revisión de representatividad. D14 movió los 14 días a la maduración posterior al arranque vacío; EXT-03 bloquea cálculos por serie, no la apertura de una beta sin datos. Los demás trabajos EXT siguen abiertos. GeoRef tiene licencia y cuota publicadas; falta aplicar su atribución y revisión legal del producto. Ningún archivo de esta carpeta es una allowlist de producción.
+El [acta de evaluación F1](CLOSURE.md) registra un resultado **NO-GO** para publicar datos oficiales sin condiciones, feed y revisión de representatividad. D14/D15 movieron los 14 días reales a la maduración posterior al arranque con muestra ficticia; EXT-03 bloquea cálculos por serie, no la apertura de una beta sin datos. Los demás trabajos EXT siguen abiertos. GeoRef tiene licencia y cuota publicadas; falta aplicar su atribución y revisión legal del producto. Ningún archivo de esta carpeta es una allowlist de producción.

@@ -1,13 +1,9 @@
-# ADR-005 — Consulta anónima y push por instalación
+# ADR-005 · Consulta y avisos locales
 
-Estado: propuesto. Fecha: 2026-09-29.
+**Propuesta de push remoto sustituida por D19 (4/10/2026).**
 
-Contexto: consultar y guardar favoritos no requiere cuenta, pero editar reglas remotas exige autorización.
+Consulta sin cuenta; favoritos, reglas e historial locales. Android usa JobScheduler para consultar la API propia y preparar avisos con permiso. No hay registro de instalación, token FCM/APNs ni dispatcher activo.
 
-Decisión: favoritos locales; instalación seudónima con credencial opaca y token FCM protegido. Reglas/evaluación/outbox propios; IPushSender para transporte. JWT y refresh de cuentas quedan para futura necesidad OIDC.
+Reduce dependencias y datos personales en el backend. La contrapartida es que Android puede demorar o suspender consultas; no se promete entrega inmediata. Reinstalar pierde estado local.
 
-Alternativas: cuenta obligatoria añade fricción y datos personales; confiar en token FCM como autenticación es insuficiente; OneSignal agrega tercero y funciones de campañas no requeridas.
-
-Consecuencias: reinstalación pierde recuperación automática de reglas; push no garantiza entrega. Borrado y retención son necesarios aunque no exista nombre/email.
-
-Validación: ownership, revocación, idempotencia de alta, duplicación de transporte y TTL; privacy review antes de beta.
+[Especificación de avisos](../runbooks/F8-ANDROID-NOTICES.md). El outbox del servidor se conserva inactivo como posible ampliación.

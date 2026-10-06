@@ -1,15 +1,11 @@
-# ADR-007 — Fuentes verificadas y funciones condicionadas
+# ADR-007 · Activación de fuentes
 
-Estado: propuesto; no inventar interfaces/alertas es requisito confirmado. Fecha: 2026-09-29.
+**Controles implementados; fuentes no habilitadas.** Original: 29/9/2026; revisión: 5/10/2026.
 
-Contexto: INA y GeoRef respondieron; XML CAP SMN fue leído, pero feed estable/completo no se confirmó. Permisos por red y umbrales requieren validación.
+Derechos por dataset, selección exacta de serie, aprobación hidrológica y publicación son controles independientes. Se conserva evidencia fechada; ni HTTP 200 ni una muestra prueban permiso o continuidad.
 
-Corrección 4/10/2026: el gate SMN es de términos aplicables y operación del feed, no de autorización individual por defecto. Si el CAP está cubierto por una licencia abierta, se aplica esa licencia. La evidencia de otro dataset del SMN no se traslada automáticamente al feed CAP.
+SMN requiere verificar feed completo y términos aplicables. No se exige autorización individual si una licencia abierta cubre el recurso. Mientras tanto, la app enlaza el sitio oficial e informa cobertura no confirmada.
 
-Decisión: registry de fuentes approved/pending/denied, allowlist de series, gate SMN y evidencia versionada. No producción con datos no aprobados ni scraping operativo de HTML como sustituto improvisado. No usar endpoint interno descubierto por tokens de web.
+La demo usa 14 días ficticios. La maduración de datos reales sucede después de activar recolección; no bloquea abrir la demo.
 
-Alternativas: asumir permiso por HTTP 200 o continuidad por una muestra se rechaza. Una beta limitada puede enlazar sitio oficial e informar indisponibilidad; no equivale al MVP completo solicitado.
-
-Consecuencias: posible bloqueo externo del lanzamiento completo; trabajo independiente de UI/motores puede avanzar con fixtures sintéticas. Configuración no confunde fuente vacía con caída.
-
-Validación: contratos/permiso por escrito o licencia explícita, feed/cancelaciones y 14 días de observación. Revisión ante cambios upstream o de titularidad.
+[Fuentes](../../DATA-SOURCES.md) · [Activación](../../API-INTEGRATIONS.md)

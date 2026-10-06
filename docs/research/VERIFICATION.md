@@ -59,4 +59,4 @@ Las referencias no se presentan como autorización de operación. Fase 1 debe ag
 
 **Entrada posterior:** [F1, 1/10/2026](f1/README.md) incorpora la licencia/cuotas GeoRef, 12 estaciones candidatas, series, muestras de observaciones y pruebas acotadas de GeoJSON/paginación. Este registro del 29/9 se conserva como evidencia histórica.
 
-**Cierre posterior:** [acta F1 del 2/10/2026](f1/CLOSURE.md), con resultado NO-GO y criterios aún pendientes.
+**Cierre posterior:** [acta F1 del 2/10/2026](f1/CLOSURE.md), con resultado NO-GO para fuentes no habilitadas. El cierre técnico posterior D19 está registrado allí; esta evidencia no se refecha.

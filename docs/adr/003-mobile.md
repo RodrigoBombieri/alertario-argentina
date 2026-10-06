@@ -1,13 +1,9 @@
-# ADR-003 — Flutter feature-first con Riverpod
+# ADR-003 · Mobile
 
-Estado: propuesto, sujeto a spike. Fecha: 2026-09-29.
+**Implementado con ajustes.** Propuesta original: 29/9/2026; estado revisado: 5/10/2026.
 
-Contexto: Android/iOS, estados async y offline, lectura accesible y gráficos.
+Flutter, Riverpod y Dio; sqflite para caché/favoritos; modelos propios y gráficos dibujados en la app. Reemplaza la propuesta de Drift/Freezed y organización futura por features.
 
-Decisión: Flutter estable fijado, Riverpod, Dio, modelos inmutables/json_serializable y Freezed donde ahorre trabajo; Drift/SQLite para cache/favoritos. UI y datos separadas por feature; dominio local solo cuando tenga lógica real.
+Android 8+ es la entrega validada localmente. iOS queda fuera de D19. La app muestra fuente, hora y calidad; no convierte nivel en aviso oficial.
 
-Alternativas: Bloc/Cubit válido con equipo experto; React Native si experiencia TS domina; nativo duplica trabajo para alcance actual. No existe necesidad de clean architecture ceremonial de muchas clases por pantalla.
-
-Consecuencias: toolchain Dart y pruebas nativas para plugins; macOS/signing necesarios para iOS. Mobile nunca decide aviso oficial a partir de altura.
-
-Validación: gráficos con huecos/lector pantalla, MapLibre, push y compilación iOS temprana. No fijar versiones de paquetes no ensayadas en documentación como si fueran lockfile.
+[App](../../apps/mobile/README.md) · [Publicación](../PLAY-STORE.md)

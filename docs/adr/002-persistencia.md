@@ -1,13 +1,9 @@
-# ADR-002 — PostgreSQL y PostGIS sin extensiones temporales iniciales
+# ADR-002 · Persistencia
 
-Estado: propuesto. Fecha: 2026-09-29.
+**Implementado.** Propuesta original: 29/9/2026; estado revisado: 5/10/2026.
 
-Contexto: consultas espaciales reales, observaciones históricas, transacciones y claves de deduplicación.
+PostgreSQL 17/PostGIS 3.5 con Npgsql y SQL directo: transacciones, revisiones, índices espaciales, leases y checkpoints. Doce migraciones versionadas; latest reconstruible.
 
-Decisión: PostgreSQL + PostGIS, índices serie/tiempo y geometría, latest reconstruible; outbox/leases en DB. Cache limitada en proceso. Sin TimescaleDB ni Redis al inicio.
+No se incorporaron EF Core, Redis ni TimescaleDB. Agregar particionado o extensiones solo si volumen y operación lo justifican.
 
-Alternativas: SQLite servidor insuficiente para operación concurrente/espacial planteada; TimescaleDB podría facilitar retención/compresión a escala pero agrega restricciones de hosting/licencia; Redis no reemplaza durabilidad.
-
-Consecuencias: menos componentes; requiere medir crecimiento, vacuum y planes. Particionado nativo o TimescaleDB se reconsideran si pruebas de volumen justifican coste.
-
-Validación: carga representativa, migraciones y restore con PostGIS real; hosting compatible. [Sizing](../../ARCHITECTURE.md).
+[Procedimiento de migración](../runbooks/F4-MIGRATIONS.md) · [Recuperación](../runbooks/F11-OPERATIONS.md)
