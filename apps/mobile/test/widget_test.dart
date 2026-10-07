@@ -304,10 +304,26 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.textContaining('14 días simulados'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Localidad de ejemplo'),
+      180,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Localidad de ejemplo'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.byType(TextField).first,
+      -180,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.enterText(find.byType(TextField).first, 'ejemplo');
+    await tester.ensureVisible(find.text('Buscar localidad'));
     await tester.tap(find.text('Buscar localidad'));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Localidad de ejemplo'),
+      180,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Localidad de ejemplo'), findsOneWidget);
     expect(find.textContaining('sin avisos vigentes'), findsNothing);
   });
@@ -330,7 +346,17 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.byType(TextField),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.byType(TextField), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Buscar localidad'),
+      150,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Buscar localidad'), findsOneWidget);
     await tester.tap(find.text('Favoritos'));
     await tester.pumpAndSettle();
@@ -416,6 +442,11 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('7.50 m'),
+        250,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('7.50 m'), findsOneWidget);
       await tester.ensureVisible(find.text('7.50 m'));
       await tester.tap(find.text('7.50 m'));
@@ -428,7 +459,17 @@ void main() {
       );
       await tester.tap(find.text('Cargar lecturas anteriores'));
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('7.50 m'),
+        -250,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('7.50 m'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('7.30 m'),
+        250,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('7.30 m'), findsOneWidget);
       expect(find.text('Cargar lecturas anteriores'), findsNothing);
     },
@@ -452,8 +493,17 @@ void main() {
     await tester.tap(find.text('30 días'));
     await tester.pumpAndSettle();
     expect(api.requestedHistoryDays, [7, 30]);
+    await tester.scrollUntilVisible(
+      find.text('7.50 m'),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('7.50 m'), findsOneWidget);
     expect(find.text('7.30 m'), findsNothing);
+    await tester.scrollUntilVisible(
+      find.textContaining('gráfico es parcial'),
+      -250,
+    );
     expect(find.textContaining('gráfico es parcial'), findsOneWidget);
   });
 }

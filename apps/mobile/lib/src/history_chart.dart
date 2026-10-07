@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'models.dart';
+import 'visuals.dart';
 
 List<List<HistoryPoint>> contiguousHistorySegments(SeriesHistory history) {
   final segments = <List<HistoryPoint>>[];
@@ -66,8 +67,8 @@ class HistoryChart extends StatelessWidget {
             'Se muestran los 2.000 puntos más recientes; hay más lecturas en el período.',
           ),
         Text(
-          'Desde ${first.observedAt.toUtc().toIso8601String()} UTC '
-          'hasta ${last.observedAt.toUtc().toIso8601String()} UTC',
+          '${readingTime(first.observedAt)} → ${readingTime(last.observedAt)}',
+          style: const TextStyle(fontSize: 11, color: riverMuted),
         ),
         if (showReadings)
           ExpansionTile(
@@ -78,9 +79,7 @@ class HistoryChart extends StatelessWidget {
                   title: Text(
                     '${point.value.toStringAsFixed(2)} ${history.unit}',
                   ),
-                  subtitle: Text(
-                    '${point.observedAt.toUtc().toIso8601String()} UTC',
-                  ),
+                  subtitle: Text(readingTime(point.observedAt)),
                 ),
               if (history.points.length > 200)
                 const ListTile(
@@ -103,6 +102,7 @@ class _HistoryPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     const inset = 12.0;
+    const left = 48.0;
     final values = history.points.map((point) => point.value);
     var minValue = values.reduce(math.min);
     var maxValue = values.reduce(math.max);
@@ -110,16 +110,34 @@ class _HistoryPainter extends CustomPainter {
       minValue -= 0.5;
       maxValue += 0.5;
     }
+    for (var i = 0; i <= 3; i++) {
+      final y = inset + (size.height - 2 * inset) * i / 3;
+      canvas.drawLine(
+        Offset(left, y),
+        Offset(size.width - inset, y),
+        Paint()
+          ..color = const Color(0xFFE4ECEF)
+          ..strokeWidth = 1,
+      );
+      final label = TextPainter(
+        text: TextSpan(
+          text: (maxValue - (maxValue - minValue) * i / 3).toStringAsFixed(2),
+          style: const TextStyle(fontSize: 10, color: riverMuted),
+        ),
+        textDirection: TextDirection.ltr,
+      )..layout(maxWidth: left - 6);
+      label.paint(canvas, Offset(0, y - label.height / 2));
+    }
     final firstTime = history.points.first.observedAt.microsecondsSinceEpoch;
     final lastTime = history.points.last.observedAt.microsecondsSinceEpoch;
     Offset position(HistoryPoint point) {
       final x =
           firstTime == lastTime
               ? size.width / 2
-              : inset +
+              : left +
                   (point.observedAt.microsecondsSinceEpoch - firstTime) /
                       (lastTime - firstTime) *
-                      (size.width - 2 * inset);
+                      (size.width - left - inset);
       final y =
           size.height -
           inset -
@@ -132,7 +150,9 @@ class _HistoryPainter extends CustomPainter {
     final paint =
         Paint()
           ..color = color
-          ..strokeWidth = 2
+          ..strokeWidth = 2.5
+          ..strokeJoin = StrokeJoin.round
+          ..strokeCap = StrokeCap.round
           ..style = PaintingStyle.stroke;
     for (final segment in contiguousHistorySegments(history)) {
       if (segment.length == 1) {
@@ -146,6 +166,23 @@ class _HistoryPainter extends CustomPainter {
         final offset = position(point);
         path.lineTo(offset.dx, offset.dy);
       }
+      final area =
+          Path.from(path)
+            ..lineTo(position(segment.last).dx, size.height - inset)
+            ..lineTo(position(segment.first).dx, size.height - inset)
+            ..close();
+      canvas.drawPath(
+        area,
+        Paint()
+          ..shader = LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              color.withValues(alpha: .22),
+              color.withValues(alpha: .02),
+            ],
+          ).createShader(Offset.zero & size),
+      );
       canvas.drawPath(path, paint);
     }
   }

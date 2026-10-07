@@ -1,4 +1,6 @@
-# 🌊 AlertaRío Argentina
+<p align="center"><img src="docs/images/logo.svg" width="80" alt="Logo de AlertaRío"></p>
+
+<h1 align="center">AlertaRío Argentina</h1>
 
 **El estado de los ríos, con contexto y datos trazables.**
 
@@ -10,11 +12,11 @@ App Android para buscar localidades, consultar estaciones, comparar niveles y gu
 
 ## Así se ve
 
-Capturas reales de la app en un emulador Android. **La estación y los 14 días de lecturas son ficticios**, para recorrer la interfaz sin habilitar fuentes reales.
+Interfaz renovada: identidad propia, tarjetas de lectura y gráficos con escala. Capturas reales del rediseño, tomadas en Android. **La estación y los 14 días de lecturas son ficticios**, para recorrer la interfaz sin habilitar fuentes reales.
 
 <p align="center">
   <img src="docs/images/busqueda.png" width="240" alt="Búsqueda de una localidad de ejemplo">
-  <img src="docs/images/estacion.png" width="240" alt="Ficha de estación con fuente, medición y tendencias">
+  <img src="docs/images/estacion.png" width="240" alt="Ficha de estación con nivel, fuente y gráfico reciente">
   <img src="docs/images/historial.png" width="240" alt="Historial de lecturas de la estación de ejemplo">
 </p>
 

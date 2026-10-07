@@ -6,8 +6,9 @@ import 'history_chart.dart';
 import 'models.dart';
 import 'notices.dart';
 import 'station_map.dart';
+import 'visuals.dart';
 
-String utc(DateTime value) => '${value.toUtc().toIso8601String()} UTC';
+String utc(DateTime value) => readingTime(value);
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -127,7 +128,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: AppBar(
-      title: const Text('AlertaRío Argentina'),
+      leading: const Padding(padding: EdgeInsets.all(8), child: RiverMark()),
+      title: const Text('AlertaRío'),
       actions: [
         IconButton(
           tooltip: 'Avisos de seguimiento',
@@ -140,44 +142,34 @@ class _HomePageState extends ConsumerState<HomePage> {
       ],
     ),
     body: SafeArea(
-      child: Column(
-        children: [
-          if (dataMode == 'awaitingData')
-            const Padding(
-              padding: EdgeInsets.all(12),
-              child: Text(
-                'Todavía no hay mediciones reales habilitadas. Las estaciones aparecerán cuando se verifique su información.',
-              ),
-            ),
-          if (dataMode == 'collecting')
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: Card(
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Text(
-                    'DATOS DE MUESTRA · 14 días simulados para explorar la app. La recopilación de mediciones reales aún no está habilitada; no hay avisos oficiales verificados.',
-                  ),
-                ),
-              ),
-            ),
-          Expanded(
-            child: switch (tab) {
-              0 => _searchPage(),
-              1 => _favoritesPage(),
-              _ => MapListPage(onOpenStation: _openStation),
-            },
-          ),
-        ],
-      ),
+      child: switch (tab) {
+        0 => _searchPage(),
+        1 => _favoritesPage(),
+        _ => MapListPage(
+          onOpenStation: _openStation,
+          showSample: dataMode == 'collecting' || dataMode == 'synthetic',
+        ),
+      },
     ),
     bottomNavigationBar: NavigationBar(
       selectedIndex: tab,
       onDestinationSelected: (value) => setState(() => tab = value),
       destinations: const [
-        NavigationDestination(icon: Icon(Icons.search), label: 'Buscar'),
-        NavigationDestination(icon: Icon(Icons.star), label: 'Favoritos'),
-        NavigationDestination(icon: Icon(Icons.list_alt), label: 'Explorar'),
+        NavigationDestination(
+          icon: Icon(Icons.search_rounded),
+          selectedIcon: Icon(Icons.travel_explore_rounded),
+          label: 'Buscar',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.star_border_rounded),
+          selectedIcon: Icon(Icons.star_rounded),
+          label: 'Favoritos',
+        ),
+        NavigationDestination(
+          icon: Icon(Icons.explore_outlined),
+          selectedIcon: Icon(Icons.explore_rounded),
+          label: 'Explorar',
+        ),
       ],
     ),
   );
@@ -185,8 +177,24 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget _searchPage() => ListView(
     padding: const EdgeInsets.all(16),
     children: [
-      const Text(
-        'Buscá una localidad y elegí una estación. La estación más cercana no siempre representa tu río.',
+      const RiverHero(
+        eyebrow: 'OBSERVAR · ENTENDER · SEGUIR',
+        title: 'Tu río,\nen perspectiva.',
+        subtitle: 'Consultá sus niveles y explorá cómo cambian en el tiempo.',
+      ),
+      if (dataMode == 'collecting' || dataMode == 'synthetic')
+        const SampleNotice(home: true),
+      if (dataMode == 'awaitingData')
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 16),
+          child: Text(
+            'Todavía no hay mediciones reales habilitadas. Las estaciones aparecerán cuando se verifique su información.',
+          ),
+        ),
+      const SizedBox(height: 12),
+      Text(
+        'Encontrá tu localidad',
+        style: Theme.of(context).textTheme.titleMedium,
       ),
       const SizedBox(height: 12),
       TextField(
@@ -194,7 +202,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         textInputAction: TextInputAction.search,
         decoration: const InputDecoration(
           labelText: 'Localidad',
-          border: OutlineInputBorder(),
+          prefixIcon: Icon(Icons.search_rounded),
         ),
         onSubmitted: (_) => _search(),
       ),
@@ -220,17 +228,35 @@ class _HomePageState extends ConsumerState<HomePage> {
                 : 'No se encontraron localidades con ese nombre.',
           ),
         ),
+      const SizedBox(height: 18),
       for (final location in locations)
-        ListTile(
-          title: Text(location.name),
-          subtitle: Text(location.provinceName),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => _selectLocation(location),
+        Card(
+          elevation: 0,
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 10,
+            ),
+            leading: const CircleAvatar(
+              backgroundColor: Color(0xFFE0F1F1),
+              child: Icon(Icons.place_outlined, color: riverTeal),
+            ),
+            title: Text(location.name),
+            subtitle: Text(location.provinceName),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _selectLocation(location),
+          ),
         ),
       if (!loading && stations.isEmpty && locations.isNotEmpty)
         const Padding(
           padding: EdgeInsets.all(16),
-          child: Text('Elegí una localidad para ver sus estaciones.'),
+          child: Text(
+            'Elegí una localidad para ver sus estaciones. La más cercana no siempre representa tu río.',
+          ),
         ),
       for (final station in stations) _stationTile(station),
     ],
@@ -239,9 +265,15 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget _favoritesPage() => ListView(
     padding: const EdgeInsets.all(16),
     children: [
-      const Text(
-        'Estaciones guardadas en este dispositivo, sin cuenta ni GPS.',
+      const RiverHero(
+        eyebrow: 'TU SEGUIMIENTO',
+        title: 'Tus ríos, a mano.',
+        subtitle:
+            'Estaciones guardadas en este dispositivo, sin cuenta ni GPS.',
       ),
+      const SizedBox(height: 20),
+      if (dataMode == 'collecting' || dataMode == 'synthetic')
+        const SampleNotice(),
       if (error != null) Text(error!),
       if (favorites.isEmpty)
         const Padding(
@@ -252,13 +284,22 @@ class _HomePageState extends ConsumerState<HomePage> {
     ],
   );
 
-  Widget _stationTile(Station station) => ListTile(
-    title: Text(station.name),
-    subtitle: Text(
-      station.riverName.isEmpty ? 'Río no informado' : station.riverName,
+  Widget _stationTile(Station station) => Card(
+    elevation: 0,
+    color: Colors.white,
+    child: ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      leading: const CircleAvatar(
+        backgroundColor: Color(0xFFE0F1F1),
+        child: Icon(Icons.waves_rounded, color: riverTeal),
+      ),
+      title: Text(station.name),
+      subtitle: Text(
+        station.riverName.isEmpty ? 'Río no informado' : station.riverName,
+      ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: () => _openStation(station),
     ),
-    trailing: const Icon(Icons.chevron_right),
-    onTap: () => _openStation(station),
   );
 }
 
@@ -385,20 +426,30 @@ class _StationPageState extends ConsumerState<StationPage> {
                 ),
               ),
             if (summary != null) ...[
-              if (summary.synthetic)
-                const Text('DATOS SINTÉTICOS · solo para pruebas'),
+              if (summary.synthetic) const SampleNotice(),
               const SizedBox(height: 12),
               _measurement('Altura', summary.height),
               _measurement('Caudal', summary.discharge),
               const SizedBox(height: 12),
-              Text(
-                'Altura reciente · 24 horas',
-                style: Theme.of(context).textTheme.titleMedium,
+              RiverPanel(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Altura reciente · 24 horas',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    if (history?.offline == true)
+                      const Text(
+                        'Gráfico guardado: puede estar desactualizado.',
+                      ),
+                    if (historyError != null) Text(historyError!),
+                    if (history != null)
+                      HistoryChart(history: history!.history),
+                  ],
+                ),
               ),
-              if (history?.offline == true)
-                const Text('Gráfico guardado: puede estar desactualizado.'),
-              if (historyError != null) Text(historyError!),
-              if (history != null) HistoryChart(history: history!.history),
               if (summary.height != null)
                 TextButton(
                   onPressed:
@@ -423,20 +474,38 @@ class _StationPageState extends ConsumerState<StationPage> {
                   title: Text('${change.windowHours} h'),
                   subtitle: Text(
                     change.delta == null
-                        ? 'No disponible: ${change.reason ?? change.availability}'
-                        : 'Cambio observado: ${change.delta! >= 0 ? '+' : ''}${change.delta!.toStringAsFixed(2)} ${change.unit}',
+                        ? statusLabel(change.reason ?? change.availability)
+                        : 'Cambio observado: ${change.delta! >= 0 ? '+' : ''}${change.delta!.toStringAsFixed(2)} ${change.unit} · ${statusLabel(change.trend)}',
                   ),
-                  trailing: Text(change.trend),
+                  leading: const Icon(Icons.timeline_rounded, color: riverTeal),
                 ),
               const SizedBox(height: 12),
-              Text('Estado del dato: ${summary.dataStatus}'),
-              Text('Comparación calculada: ${summary.calculatedCondition}'),
+              Text('Estado del dato: ${statusLabel(summary.dataStatus)}'),
               Text(
-                'Avisos oficiales: ${summary.noticeCoverage == 'complete' && summary.notices.isEmpty ? 'sin avisos vigentes verificados' : 'cobertura no confirmada (${summary.noticeCoverage})'}',
+                'Comparación calculada: ${statusLabel(summary.calculatedCondition)}',
+              ),
+              Text(
+                'Avisos oficiales: ${summary.noticeCoverage == 'complete' && summary.notices.isEmpty ? 'sin avisos vigentes verificados' : 'cobertura no confirmada'}',
               ),
               const SizedBox(height: 8),
-              Text('Respuesta generada: ${utc(summary.generatedAt)}'),
-              Text('Versión de datos: ${summary.dataVersion}'),
+              ExpansionTile(
+                title: const Text('Detalles de los datos'),
+                children: [
+                  ListTile(
+                    title: Text(
+                      'Respuesta generada: ${utc(summary.generatedAt)}',
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('Versión de datos: ${summary.dataVersion}'),
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Estado original: ${summary.dataStatus} · ${summary.calculatedCondition}',
+                    ),
+                  ),
+                ],
+              ),
               if (result?.offline == true)
                 const Text(
                   'La hora del dispositivo puede ser incorrecta; consultá la hora absoluta de medición.',
@@ -448,29 +517,50 @@ class _StationPageState extends ConsumerState<StationPage> {
     );
   }
 
-  Widget _measurement(String label, Measurement? measurement) => Card(
-    child: Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
+  Widget _measurement(String label, Measurement? measurement) {
+    if (label == 'Altura' && measurement != null) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: RiverHero(
+          eyebrow: 'ALTURA DEL RÍO',
+          title: '${measurement.value.toStringAsFixed(2)} ${measurement.unit}',
+          subtitle:
+              'Medido: ${utc(measurement.observedAt)}\n'
+              '${sourceLabel(measurement.sourceId)} · ${statusLabel(measurement.freshness)}',
+        ),
+      );
+    }
+    return RiverPanel(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: Theme.of(context).textTheme.titleMedium),
-          Text(
-            measurement == null
-                ? 'No disponible'
-                : '${measurement.value.toStringAsFixed(2)} ${measurement.unit}',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          if (measurement != null) ...[
-            Text('Medido: ${utc(measurement.observedAt)}'),
-            Text(
-              'Fuente: ${measurement.sourceId} · calidad: ${measurement.freshness}',
+          const Icon(Icons.water_outlined, color: riverTeal),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(
+                  measurement == null
+                      ? 'No disponible'
+                      : '${measurement.value.toStringAsFixed(2)} ${measurement.unit}',
+                  style: const TextStyle(fontSize: 18, color: riverInk),
+                ),
+                if (measurement != null) ...[
+                  Text('Medido: ${utc(measurement.observedAt)}'),
+                  Text(
+                    'Fuente: ${sourceLabel(measurement.sourceId)} · ${statusLabel(measurement.freshness)}',
+                  ),
+                ],
+              ],
             ),
-          ],
+          ),
         ],
       ),
-    ),
-  );
+    );
+  }
 }
 
 class ExtendedHistoryPage extends ConsumerStatefulWidget {
@@ -608,10 +698,24 @@ class _ExtendedHistoryPageState extends ConsumerState<ExtendedHistoryPage> {
             onSelectionChanged: (selection) => _selectRange(selection.single),
           ),
           const SizedBox(height: 12),
-          Text('Desde ${utc(from)} hasta ${utc(to)}'),
+          Text(
+            'Evolución del nivel',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: riverInk,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '${utc(from)} → ${utc(to)}',
+            style: const TextStyle(fontSize: 12),
+          ),
           if (widget.sourceId != null)
-            Text('Fuente de la serie: ${widget.sourceId}'),
-          if (synthetic) const Text('DATOS SINTÉTICOS · solo para pruebas'),
+            Text(
+              'Fuente de la serie: ${sourceLabel(widget.sourceId!)}',
+              style: const TextStyle(fontSize: 12),
+            ),
+          if (synthetic) const SampleNotice(),
           if (loading) const LinearProgressIndicator(),
           if (error != null) Text(error!),
           if (loaded && points.isEmpty)
@@ -625,11 +729,26 @@ class _ExtendedHistoryPageState extends ConsumerState<ExtendedHistoryPage> {
               const Text(
                 'El gráfico es parcial. Cargá las páginas anteriores para ampliar el rango.',
               ),
-            HistoryChart(history: chart, showReadings: false),
+            const SizedBox(height: 12),
+            RiverPanel(
+              child: HistoryChart(history: chart, showReadings: false),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Registro de lecturas',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
           ],
           for (final point in points)
             ExpansionTile(
-              title: Text('${point.value.toStringAsFixed(2)} ${unit ?? ''}'),
+              leading: const Icon(Icons.water_drop_outlined, color: riverTeal),
+              title: Text(
+                '${point.value.toStringAsFixed(2)} ${unit ?? ''}',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: riverInk,
+                ),
+              ),
               subtitle: Text('Medido: ${utc(point.observedAt)}'),
               children: [
                 ListTile(
@@ -662,7 +781,12 @@ class _ExtendedHistoryPageState extends ConsumerState<ExtendedHistoryPage> {
 }
 
 class MapListPage extends ConsumerStatefulWidget {
-  const MapListPage({super.key, required this.onOpenStation});
+  const MapListPage({
+    super.key,
+    required this.onOpenStation,
+    this.showSample = false,
+  });
+  final bool showSample;
   final Future<void> Function(Station) onOpenStation;
 
   @override
@@ -741,6 +865,7 @@ class _MapListPageState extends ConsumerState<MapListPage> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (widget.showSample) const SampleNotice(),
         Text(
           mapStyleConfigured
               ? 'Explorá las estaciones en el mapa o elegilas en la lista.'
